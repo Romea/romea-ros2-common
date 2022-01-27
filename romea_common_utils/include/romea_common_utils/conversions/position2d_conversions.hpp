@@ -1,0 +1,36 @@
+#ifndef _romea_Position2DConversions_hpp_
+#define _romea_Position2DConversions_hpp_
+
+//std
+#include <string>
+
+//romea
+#include <romea_core_common/time/Time.hpp>
+#include <romea_core_common/geometry/Position2D.hpp>
+
+//romea_ros_msg
+#include <romea_common_msgs/msg/position2_d.hpp>
+#include <romea_common_msgs/msg/position2_d_stamped.hpp>
+#include <romea_common_utils/conversions/time_conversions.hpp>
+
+namespace romea
+{
+
+
+void to_ros_msg(const Position2D & romea_position2d,
+              romea_common_msgs::msg::Position2D & ros_position2d_msg);
+
+void to_ros_msg(const rclcpp::Time & stamp,
+              const std::string & frame_id,
+              const Position2D & position2D,
+              romea_common_msgs::msg::Position2DStamped & ros_position2d_stamped);
+
+
+void to_romea(const romea_common_msgs::msg::Position2D &msg,
+             Position2D & position2d);
+
+Position2D to_romea(const romea_common_msgs::msg::Position2D &msg);
+
+}// namespace
+
+#endif

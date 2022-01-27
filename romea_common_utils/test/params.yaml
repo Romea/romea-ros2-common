@@ -1,0 +1,9 @@
+test_ros_params:
+  ros__parameters:
+    vector3d: [2.3, 5.4, -8.9]
+    vector3i: [2, -5, 9]
+    geodetic: [45.85207, 3.16482, 300.0]
+    map:
+     foo: 0.34
+     bar: -2.7
+     baz: 5.5
