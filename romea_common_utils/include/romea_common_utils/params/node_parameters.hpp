@@ -66,7 +66,7 @@ public :
 //    }
     if(!node_->get_node_options().allow_undeclared_parameters())
     {
-      node_->declare_parameter(full_param_name);
+      node_->declare_parameter<T>(full_param_name);
     }
     return node_->get_parameter(full_param_name,value);
   }
@@ -79,7 +79,7 @@ public :
     std::string full_param_name=fullParamName_(param_name);
     if(!node_->get_node_options().allow_undeclared_parameters())
     {
-      node_->declare_parameter(full_param_name);
+      node_->declare_parameter<T>(full_param_name);
     }
 
     if(!node_->get_parameter(full_param_name,value))
@@ -101,7 +101,7 @@ public :
     std::string full_param_name=fullParamName_(param_name);
     if(!node_->get_node_options().allow_undeclared_parameters())
     {
-      node_->declare_parameter(full_param_name);
+      node_->declare_parameter<T>(full_param_name);
     }
 
     node_->get_parameter_or(full_param_name,value,default_value);

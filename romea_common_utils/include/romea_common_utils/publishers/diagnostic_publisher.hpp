@@ -78,7 +78,7 @@ DiagnosticPublisher<DataType>::DiagnosticPublisher(std::shared_ptr<rclcpp::Node>
     hardware_id_(),
     pub_(nullptr),
     next_time_(node->get_clock()->now()),
-    diagnostic_period_(0)
+    diagnostic_period_(rclcpp::Duration::from_seconds(0))
 {
     init(node,diagnostic_name,diagnostic_period,hardware_id,topic_name);
 }
