@@ -1,8 +1,10 @@
 #ifndef _romea_RosEigenParam_hpp_
 #define _romea_RosEigenParam_hpp_
 
+//eigen
+#include <Eigen/Core>
+
 //ros
-#include "RosParam.hpp"
 #include "node_parameters.hpp"
 
 //romea
@@ -10,22 +12,52 @@
 
 namespace romea {
 
-
-////-----------------------------------------------------------------------------
-//template <typename EigenVector>
-//inline EigenVector loadEigenVector(std::shared_ptr<rclcpp::Node> node,
-//                                   const std::string & paramName)
-//{
-//  return EigenVector(loadVector<typename EigenVector::Scalar>(node,paramName).data());
-//}
+//-----------------------------------------------------------------------------
+template <typename EigenVector>
+inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                                  const std::string & param_name)
+{
+  declare_vector_parameter<typename EigenVector::Scalar>(node,param_name);
+}
 
 //-----------------------------------------------------------------------------
 template <typename EigenVector>
-inline EigenVector loadEigenVector(NodeParameters & node_parameters,
-                                   const std::string & paramName)
+inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                                  const std::string & param_namespace,
+                                                  const std::string & param_name)
 {
-  return EigenVector(node_parameters.loadVector<typename EigenVector::Scalar>(paramName).data());
+  declare_eigen_vector_parameter<EigenVector>(
+        node,full_param_name(param_namespace,param_name));
 }
+
+
+//-----------------------------------------------------------------------------
+template <typename EigenVector>
+inline EigenVector get_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                              const std::string & param_name)
+{
+  return EigenVector(get_vector_parameter<typename EigenVector::Scalar>(node,param_name).data());
+}
+
+//-----------------------------------------------------------------------------
+template <typename EigenVector>
+inline EigenVector get_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                              const std::string & param_namespace,
+                                              const std::string & param_name)
+{
+  return get_eigen_vector_parameter<EigenVector>(
+        node,full_param_name(param_namespace,param_name));
+}
+
+
+////-----------------------------------------------------------------------------
+//template <typename EigenVector>
+//inline EigenVector loadEigenVector(NodeParameters & node_parameters,
+//                                   const std::string & paramName)
+//{
+
+//  return EigenVector(node_parameters.loadVector<typename EigenVector::Scalar>(paramName).data());
+//}
 
 
 ////-----------------------------------------------------------------------------
@@ -47,4 +79,3 @@ inline EigenVector loadEigenVector(NodeParameters & node_parameters,
 }
 
 #endif
-

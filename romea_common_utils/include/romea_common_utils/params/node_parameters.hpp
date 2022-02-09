@@ -9,181 +9,160 @@
 
 namespace romea {
 
-class NodeParameters
+//-----------------------------------------------------------------------------
+inline std::string full_param_name(const std::string & ns,
+                                   const std::string & param_name)
 {
+  return ns.empty() ? param_name : ns+"."+param_name;
+}
 
-public :
-
-  //-----------------------------------------------------------------------------
-  NodeParameters(std::shared_ptr<rclcpp::Node> node, const std::string & ns=""):
-    ns_(ns),
-    node_(node)
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_parameter(std::shared_ptr<rclcpp::Node> node,
+                              const std::string & param_name)
+{
+  try
   {
+    node->declare_parameter<T>(param_name);
   }
-
-  ////-----------------------------------------------------------------------------
-  //inline std::string searchParam(const ros::NodeHandle &nodeHandle,const std::string &paramName)
-  //{
-  //  std::string result;
-  //  if(!nodeHandle.searchParam(paramName,result))
-  //  {
-  //    throw(std::runtime_error("Failed to find "+ paramName +" from param server"));
-  //  }
-  //  return result;
-  //}
-
-
-  //-----------------------------------------------------------------------------
-  inline bool hasParam(const std::string &paramName)
+  catch (std::runtime_error & e)
   {
-    return node_->has_parameter(paramName);
+    throw std::runtime_error("Declare parameter " + param_name +" : "+e.what());
   }
+}
 
-  //-----------------------------------------------------------------------------
-  inline std::string resolveParamName(const std::string &paramName)
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                           const std::string & param_name,
+                                           const T & default_value)
+{
+  node->declare_parameter<T>(param_name,default_value);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_parameter(std::shared_ptr<rclcpp::Node> node,
+                              const std::string & param_namespace,
+                              const std::string & param_name)
+{
+  declare_parameter<T>(node,full_param_name(param_namespace,param_name));
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                           const std::string & param_namespace,
+                                           const std::string & param_name,
+                                           const T & default_value)
+{
+  declare_parameter_with_default<T>(node,full_param_name(param_namespace,param_name),
+                                    default_value);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline T get_parameter(std::shared_ptr<rclcpp::Node> node,
+                       const std::string & param_name)
+{
+  T value;
+  if(!node->get_parameter(param_name,value))
   {
-    std::string ns = node_->get_effective_namespace()+ns_;
-    if(ns.empty() || (ns.back() !='/'))
-    {
-      ns+="/";
-    }
-    ns+=paramName;
-    return ns;
+    std::stringstream ss;
+    ss << "Failed to read";
+    ss << param_name;
+    ss << " from param server";
+    throw(std::runtime_error(ss.str()));
   }
+  return value;
+}
 
-  //-----------------------------------------------------------------------------
-  template <typename T>
-  inline bool loadParam(const std::string &param_name, T & value)
+//-----------------------------------------------------------------------------
+template <typename T>
+inline T get_parameter(std::shared_ptr<rclcpp::Node> node,
+                       const std::string & param_namespace,
+                       const std::string & param_name)
+{
+  return get_parameter<T>(node,full_param_name(param_namespace,param_name));
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline T get_parameter_or(std::shared_ptr<rclcpp::Node> node,
+                          const std::string &param_name,
+                          const T & default_value)
+{
+  T value;
+  node->get_parameter_or(param_name,value,default_value);
+  return value;
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline T get_parameter_or(std::shared_ptr<rclcpp::Node> node,
+                          const std::string &param_namespace,
+                          const std::string &param_name,
+                          const T & default_value)
+{
+  T value;
+  node->get_parameter_or(full_param_name(param_namespace,param_name),
+                         value,default_value);
+  return value;
+}
+
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                     const std::string & param_name)
+{
+  node->declare_parameter<std::vector<T>>(param_name);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                     const std::string & param_namespace,
+                                     const std::string & param_name)
+{
+  declare_vector_parameter<T>(node,full_param_name(param_namespace,param_name));
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline std::vector<T> get_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                           const std::string &param_name)
+{
+  return get_parameter<std::vector<T>>(node,param_name);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline std::vector<T> get_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+                                           const std::string & param_namespace,
+                                           const std::string & param_name)
+{
+  return get_vector_parameter<T>(node,full_param_name(param_namespace,param_name));
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline std::map<std::string,T> get_parameters(std::shared_ptr<rclcpp::Node> node,
+                                              const std::string & params_namespace)
+{
+  std::map<std::string,T> map ;
+  if(!node->get_parameters(params_namespace,map))
   {
-    std::string full_param_name=fullParamName_(param_name);
-//    if (!node_->has_parameter(name))
-//    {
-//      return node_->declare_parameter<ParameterT>(name, default_value);
-//    }
-//    else
-//    {
-//      return node_->get_parameter(name).get_value<ParameterT>();
-//    }
-    if(!node_->get_node_options().allow_undeclared_parameters())
-    {
-      node_->declare_parameter<T>(full_param_name);
-    }
-    return node_->get_parameter(full_param_name,value);
+    std::stringstream ss;
+    ss << "Failed to read parameters from namespace ";
+    ss << params_namespace;
+    ss << " from param server";
+    throw(std::runtime_error(ss.str()));
   }
-
-  //-----------------------------------------------------------------------------
-  template <typename T>
-  inline T loadParam(const std::string &param_name)
-  {
-    T value;
-    std::string full_param_name=fullParamName_(param_name);
-    if(!node_->get_node_options().allow_undeclared_parameters())
-    {
-      node_->declare_parameter<T>(full_param_name);
-    }
-
-    if(!node_->get_parameter(full_param_name,value))
-    {
-      std::stringstream ss;
-      ss << "Failed to read ";
-      ss << resolveParamName(full_param_name);
-      ss << " from param server";
-      throw(std::runtime_error(ss.str()));
-    }
-    return value;
-  }
-
-  //-----------------------------------------------------------------------------
-  template <typename T>
-  inline T loadParamOr(const std::string &param_name, const T & default_value)
-  {
-    T value;
-    std::string full_param_name=fullParamName_(param_name);
-    if(!node_->get_node_options().allow_undeclared_parameters())
-    {
-      node_->declare_parameter<T>(full_param_name);
-    }
-
-    node_->get_parameter_or(full_param_name,value,default_value);
-    return value;
-  }
-
-
-  //-----------------------------------------------------------------------------
-  template <typename T>
-  inline std::vector<T> loadVector(const std::string &param_name)
-  {
-    return loadParam<std::vector<T>>(param_name);
-  }
-
-
-  //-----------------------------------------------------------------------------
-  template <typename T>
-  inline std::map<std::string,T> loadMap(const std::string & ns)
-  {
-
-    std::map<std::string,T> map;
-    std::string full_ns=fullNamespace_(ns);
-
-    if(!node_->get_node_options().allow_undeclared_parameters())
-    {
-      std::stringstream ss;
-      ss << "Failed to read map ";
-      ss << resolveParamName(full_ns);
-      ss << " from param server, because undeclare parameters are not allowed";
-      throw(std::runtime_error(ss.str()));
-    }
-
-    if(!node_->get_parameters(full_ns,map))
-    {
-      std::stringstream ss;
-      ss << "Failed to read parameters map from namespace ";
-      ss << resolveParamName(full_ns);
-      throw(std::runtime_error(ss.str()));
-    }
-    return map;
-  }
-
-
-private :
-
-  std::string fullParamName_(const std::string &param_name)
-  {
-    if(ns_.empty())
-    {
-      return param_name;
-    }
-    else
-    {
-      return ns_+"."+param_name;
-    }
-  }
-
-  std::string fullNamespace_(const std::string & sub_ns ) {
-    if(ns_.empty() && sub_ns.empty())
-    {
-      return "";
-    }
-    else if(ns_.empty())
-    {
-      return sub_ns;
-    }
-    else if(sub_ns.empty())
-    {
-      return ns_;
-    }
-    else
-    {
-      return ns_+"."+sub_ns;
-    }
-  }
-
-private :
-
-
-  std::string ns_;
-  std::shared_ptr<rclcpp::Node> node_;
-};
+  return map;
+}
 
 }
 

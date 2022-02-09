@@ -43,6 +43,7 @@ add_library(${PROJECT_NAME}
     src/conversions/position2d_conversions.cpp
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
+    src/params/geodesy_parameters.cpp
     src/rviz_display.cpp
     )
 

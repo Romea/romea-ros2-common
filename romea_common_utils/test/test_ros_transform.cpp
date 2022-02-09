@@ -68,7 +68,7 @@ TEST_F(TestRosTransform, lookupTransformOnce)
                      tf_buffer,
                      "a","b",
                      node->get_clock()->now(),
-                     rclcpp::Duration(10));});
+                     rclcpp::Duration::from_seconds(10));});
 
     EXPECT_NEAR(transform.linear()(0,0),1.,0.000001);
     EXPECT_NEAR(transform.linear()(1,1),1.,0.000001);
