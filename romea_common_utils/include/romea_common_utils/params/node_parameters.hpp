@@ -123,12 +123,33 @@ inline void declare_vector_parameter(std::shared_ptr<rclcpp::Node> node,
 
 //-----------------------------------------------------------------------------
 template <typename T>
+inline void declare_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                  const std::string & param_name,
+                                                  const std::vector<T> & default_values)
+{
+  node->declare_parameter<std::vector<T>>(param_name,default_values);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 inline void declare_vector_parameter(std::shared_ptr<rclcpp::Node> node,
                                      const std::string & param_namespace,
                                      const std::string & param_name)
 {
   declare_vector_parameter<T>(node,full_param_name(param_namespace,param_name));
 }
+
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void declare_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                  const std::string & param_namespace,
+                                                  const std::string & param_name,
+                                                  const std::vector<T> & default_values)
+{
+  declare_vector_parameter_with_default<T>(
+        node,full_param_name(param_namespace,param_name),default_values);
+}
+
 
 //-----------------------------------------------------------------------------
 template <typename T>

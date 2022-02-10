@@ -15,19 +15,41 @@ namespace romea {
 //-----------------------------------------------------------------------------
 template <typename EigenVector>
 inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
-                                                  const std::string & param_name)
+                                           const std::string & param_name)
 {
   declare_vector_parameter<typename EigenVector::Scalar>(node,param_name);
 }
 
 //-----------------------------------------------------------------------------
 template <typename EigenVector>
+inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                        const std::string & param_name,
+                                                        const EigenVector & default_values)
+{
+  using StdVector = std::vector<typename EigenVector::Scalar>;
+  StdVector default_vector(default_values.data(),default_values.data()+default_values.size());
+  declare_vector_parameter_with_default<typename EigenVector::Scalar>(node,param_name,default_vector);
+}
+
+//-----------------------------------------------------------------------------
+template <typename EigenVector>
 inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
-                                                  const std::string & param_namespace,
-                                                  const std::string & param_name)
+                                           const std::string & param_namespace,
+                                           const std::string & param_name)
 {
   declare_eigen_vector_parameter<EigenVector>(
         node,full_param_name(param_namespace,param_name));
+}
+
+//-----------------------------------------------------------------------------
+template <typename EigenVector>
+inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                        const std::string & param_namespace,
+                                                        const std::string & param_name,
+                                                        const EigenVector & default_values)
+{
+  declare_eigen_vector_parameter_with_default<EigenVector>(
+        node,full_param_name(param_namespace,param_name),default_values);
 }
 
 

@@ -89,7 +89,19 @@ TEST_F(TestRosParams, loadVectorOfInt) {
 }
 
 
-TEST_F(TestRosParams, loadEigenVector3d) {
+TEST_F(TestRosParams, loadVectorWithDefaultDeclaration) {
+
+  std::vector<long int> default_vector_of_int={4,6,-3};
+  std::vector<long int> vector_of_int;
+  romea::declare_vector_parameter_with_default<long int>(node,"vector_unset",default_vector_of_int);
+  EXPECT_NO_THROW({vector_of_int=romea::get_vector_parameter<long int>(node,"vector_unset");});
+  EXPECT_EQ(vector_of_int[0],4);
+  EXPECT_EQ(vector_of_int[1],6);
+  EXPECT_EQ(vector_of_int[2],-3);
+}
+
+
+TEST_F(TestRosParams, loadEigenVector) {
 
   Eigen::Vector3d eigen_vector3d;
   romea::declare_eigen_vector_parameter<Eigen::Vector3d>(node,"vector3d");
@@ -97,6 +109,17 @@ TEST_F(TestRosParams, loadEigenVector3d) {
   EXPECT_NEAR(eigen_vector3d.x(),2.3,0.000001);
   EXPECT_NEAR(eigen_vector3d.y(),5.4,0.000001);
   EXPECT_NEAR(eigen_vector3d.z(),-8.9,0.000001);
+}
+
+TEST_F(TestRosParams, loadUnsetEigenVector)
+{
+  Eigen::Vector3d default_eigen_vector3d(2,3,6);
+  Eigen::Vector3d eigen_vector3d;
+  romea::declare_eigen_vector_parameter_with_default<Eigen::Vector3d>(node,"unset_vector",default_eigen_vector3d);
+  EXPECT_NO_THROW({eigen_vector3d=romea::get_eigen_vector_parameter<Eigen::Vector3d>(node,"unset_vector");});
+  EXPECT_NEAR(eigen_vector3d.x(),2,0.000001);
+  EXPECT_NEAR(eigen_vector3d.y(),3,0.000001);
+  EXPECT_NEAR(eigen_vector3d.z(),6,0.000001);
 }
 
 //TEST_F(TestRosParams, loadEigenVector3i) {
