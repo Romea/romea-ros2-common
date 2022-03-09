@@ -185,7 +185,30 @@ inline std::map<std::string,T> get_parameters(std::shared_ptr<rclcpp::Node> node
   return map;
 }
 
+//-----------------------------------------------------------------------------
+template <typename T>
+inline void insert_parameter_to_map(std::shared_ptr<rclcpp::Node> node,
+                                    const std::string & params_namespace,
+                                    const std::string & param_name,
+                                    std::map<std::string,T> & params_map)
+{
+  if( params_map.find(param_name) == params_map.end())
+  {
+    params_map[param_name]= get_parameter<T>(node,params_namespace,param_name);
+    std::cout <<params_namespace <<" "<<param_name <<" "<<  params_map.at(param_name) << std::endl;
+  }
+  else
+  {
+    std::stringstream ss;
+    ss << "Failed to insert parameter ";
+    ss << param_name;
+    ss << " into map ";
+    ss << params_namespace;
+    ss << " from param server, because it's already exists";
+    throw(std::runtime_error(ss.str()));
+  }
+}
+
 }
 
 #endif
-
