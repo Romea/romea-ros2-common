@@ -73,10 +73,10 @@ void RealtimeMessagePublisher<DataType,MessageType>::init(std::shared_ptr<rclcpp
 template <class DataType, class MessageType>
 void RealtimeMessagePublisher<DataType,MessageType>::publish(const DataType &data)
 {
-  if(pub_->trylock())
+  if(rt_pub_->trylock())
   {
-    to_ros_msg(data,pub_->msg_);
-    realtime_pub->unlockAndPublish();
+    to_ros_msg(data,rt_pub_->msg_);
+    rt_pub->unlockAndPublish();
   }
 }
 

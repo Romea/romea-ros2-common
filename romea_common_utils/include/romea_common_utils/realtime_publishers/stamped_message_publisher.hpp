@@ -88,10 +88,10 @@ template <class DataType, class MessageType>
 void RealtimeStampedMessagePublisher<DataType,MessageType>::publish(const rclcpp::Time & stamp,
                                                                     const DataType &data)
 {
-  if(pub_->trylock())
+  if(rt_pub_->trylock())
   {
-      to_ros_msg(stamp,frame_id_,data,pub_->msg_);
-      pub_->unlockAndPublish();
+      to_ros_msg(stamp,frame_id_,data,rt_pub_->msg_);
+      rt_pub_->unlockAndPublish();
   }
 }
 
