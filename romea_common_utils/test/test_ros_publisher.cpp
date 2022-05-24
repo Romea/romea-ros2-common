@@ -6,8 +6,8 @@
 #include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
-#include "romea_common_utils/publishers/message_publisher.hpp"
-#include "romea_common_utils/publishers/stamped_message_publisher.hpp"
+#include "romea_common_utils/publishers/data_publisher.hpp"
+#include "romea_common_utils/publishers/stamped_data_publisher.hpp"
 #include "romea_common_utils/publishers/odom_publisher.hpp"
 #include "romea_common_utils/publishers/transform_publisher.hpp"
 #include "romea_common_utils/publishers/diagnostic_publisher.hpp"
@@ -43,7 +43,7 @@ protected:
 
 TEST_F(TestRosPublisher, testMessagePublisher)
 {
-  romea::MessagePublisher<std::string,std_msgs::msg::String> pub(node,"foo",0);
+  romea::DataPublisher<std::string,std_msgs::msg::String> pub(node,"foo",0);
   Subscription<std_msgs::msg::String> sub(node,"foo");
 
   pub.publish("bar");
