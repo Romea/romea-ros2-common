@@ -17,17 +17,9 @@ private :
 
 public :
 
-  RealtimeMessagePublisher();
-
   RealtimeMessagePublisher(std::shared<rclcpp::Node> node,
                            const std::string & topic_name,
-                          const size_t &queue_size);
-
-public :
-
-  void init(std::shared<rclcpp::Node> node,
-            const std::string & topic_name,
-            const size_t &queue_size);
+                           const rclcpp::QoS & qos);
 
   void publish(const DataType & data);
 
@@ -51,21 +43,10 @@ RealtimeMessagePublisher<DataType,MessageType>::MessagePublisher():
 template <class DataType, class MessageType>
 RealtimeMessagePublisher<DataType,MessageType>::RealtimeMessagePublisher(std::shared_ptr<rclcpp::Node> & node,
                                                                          const std::string & topic_name,
-                                                                         const size_t &queue_size):
-  pub_(nullptr),
-  rt_pub_(nullptr)
+                                                                         const rclcpp::QoS & qos):
+  pub_(node->create_publisher<MessageType>(topic_name,qos)),
+  rt_pub_(std::make_shared<RTPublisher>(pub_))
 {
-  init(node,topic_name,queue_size);
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void RealtimeMessagePublisher<DataType,MessageType>::init(std::shared_ptr<rclcpp::Node> & node,
-                                                          const std::string & topic_name,
-                                                          const size_t &queue_size)
-{
-  pub_ = node->create_publisher<MessageType>(topic_name,queue_size)
-  rt_pub_=std::make_shared<RTPublisher>(pub_)
 }
 
 

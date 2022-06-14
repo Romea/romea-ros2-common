@@ -42,10 +42,10 @@ public:
 
   DataListener(std::shared_ptr<rclcpp::Node> node,
                const std::string & topic_name,
-               const size_t &queue_size)
+               const rclcpp::QoS & qos)
   {
     auto callback = std::bind(&DataListener::callback_,this,std::placeholders::_1);
-    data_sub_ = node->create_subscription<MsgType>(topic_name,queue_size,callback);
+    data_sub_ = node->create_subscription<MsgType>(topic_name,qos,callback);
   }
 
   virtual std::string get_topic_name()const

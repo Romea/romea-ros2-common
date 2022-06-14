@@ -8,6 +8,7 @@
 
 //romea
 #include "../conversions/time_conversions.hpp"
+#include "../qos.hpp"
 
 namespace romea
 {
@@ -18,20 +19,11 @@ class OdomPublisher
 
 public :
 
-  OdomPublisher();
-
   OdomPublisher(std::shared_ptr<rclcpp::Node> node,
                 const std::string & topic_name,
                 const std::string & frame_id,
                 const std::string & child_frame_id,
-                const size_t &queue_size);
-public :
-
-  void init(std::shared_ptr<rclcpp::Node> nh,
-            const std::string & topic_name,
-            const std::string & frame_id,
-            const std::string & child_frame_id,
-            const size_t &queue_size);
+                const rclcpp::QoS & qos);
 
   void publish(const Duration & duration,
                const DataType &data);
@@ -46,15 +38,6 @@ public :
   std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> pub_;
 };
 
-//-----------------------------------------------------------------------------
-template <class DataType>
-OdomPublisher<DataType>::OdomPublisher():
-  frame_id_(),
-  child_frame_id_(),
-  pub_(nullptr)
-{
-
-}
 
 //-----------------------------------------------------------------------------
 template <class DataType>
@@ -62,28 +45,13 @@ OdomPublisher<DataType>::OdomPublisher(std::shared_ptr<rclcpp::Node> node,
                                        const std::string & topic_name,
                                        const std::string & frame_id,
                                        const std::string & child_frame_id,
-                                       const size_t &queue_size):
-  frame_id_(),
-  child_frame_id_(),
-  pub_(nullptr)
-{
-  init(node,topic_name,frame_id,child_frame_id,queue_size);
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType>
-void OdomPublisher<DataType>::init(std::shared_ptr<rclcpp::Node> node,
-                                   const std::string & topic_name,
-                                   const std::string & frame_id,
-                                   const std::string & child_frame_id,
-                                   const size_t &queue_size)
+                                       const rclcpp::QoS & qos):
+  frame_id_(frame_id),
+  child_frame_id_(child_frame_id),
+  pub_(node->create_publisher<nav_msgs::msg::Odometry>(topic_name,qos))
 {
   assert(!frame_id.empty());
   assert(!child_frame_id.empty());
-
-  child_frame_id_ = child_frame_id;
-  frame_id_=frame_id;
-  pub_= node->create_publisher<nav_msgs::msg::Odometry>(topic_name,queue_size);
 }
 
 //-----------------------------------------------------------------------------

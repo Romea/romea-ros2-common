@@ -11,18 +11,10 @@ class StampedMessagePublisher
 
 public :
 
-    StampedMessagePublisher();
-
     StampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
                             const std::string & topic_name,
                             const std::string & frame_id,
-                            const size_t &queue_size);
-public :
-
-    void init(std::shared_ptr<rclcpp::Node> node,
-              const std::string & topic_name,
-              const std::string & frame_id,
-              const size_t &queue_size);
+                            const rclcpp::QoS & qos);
 
     void publish(const rclcpp::Time & stamp,
                  const DataType & data);
@@ -40,37 +32,15 @@ protected :
 
 //-----------------------------------------------------------------------------
 template <class DataType, class MessageType>
-StampedMessagePublisher<DataType,MessageType>::StampedMessagePublisher():
-    frame_id_(),
-    pub_(nullptr)
-{
-
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
 StampedMessagePublisher<DataType,MessageType>::StampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
                                                                        const std::string & topic_name,
                                                                        const std::string & frame_id,
-                                                                       const size_t &queue_size):
-    frame_id_(),
-    pub_(nullptr)
+                                                                       const rclcpp::QoS & qos):
+    frame_id_(frame_id),
+    pub_(node->create_publisher<MessageType>(topic_name,qos))
 {
-    init(node,topic_name,frame_id,queue_size);
+  assert(!frame_id.empty());
 }
-
-//-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void StampedMessagePublisher<DataType,MessageType>::init(std::shared_ptr<rclcpp::Node> node,
-                                                         const std::string & topic_name,
-                                                         const std::string & frame_id,
-                                                         const size_t &queue_size)
-{
-    assert(!frame_id.empty());
-    frame_id_=frame_id;
-    pub_=node->create_publisher<MessageType>(topic_name,queue_size);
-}
-
 
 //-----------------------------------------------------------------------------
 template <class DataType, class MessageType>

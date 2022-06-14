@@ -31,7 +31,7 @@ public :
 
   DataPublisher(std::shared_ptr<rclcpp::Node> node,
                 const std::string & topic_name,
-                const size_t &queue_size);
+                const rclcpp::QoS & qos);
 
   virtual void publish(const DataType & data)override;
 
@@ -49,8 +49,8 @@ protected :
 template <class DataType, class MessageType>
 DataPublisher<DataType,MessageType>::DataPublisher(std::shared_ptr<rclcpp::Node> node,
                                                    const std::string & topic_name,
-                                                   const size_t &queue_size):
-  pub_(node->create_publisher<MessageType>(topic_name,queue_size))
+                                                   const rclcpp::QoS &qos):
+  pub_(node->create_publisher<MessageType>(topic_name,qos))
 {
 }
 

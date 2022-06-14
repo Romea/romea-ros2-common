@@ -18,18 +18,10 @@ private :
 
 public :
 
-  RealtimeStampedMessagePublisher();
-
   RealtimeStampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
                                   const std::string & topic_name,
                                   const std::string & frame_id,
-                                  const size_t &queue_size);
-public :
-
-  void init(std::shared_ptr<rclcpp::Node> node,
-            const std::string & topic_name,
-            const std::string & frame_id,
-            const size_t &queue_size);
+                                  const rclcpp::QoS & qos);
 
   void publish(const rclcpp::Time & stamp,
                const DataType & data);
@@ -48,40 +40,17 @@ protected :
 
 //-----------------------------------------------------------------------------
 template <class DataType, class MessageType>
-RealtimeStampedMessagePublisher<DataType,MessageType>::RealtimeStampedMessagePublisher():
-  frame_id_(),
-  pub_(nullptr),
-  rt_pub_(nullptr)
-{
-
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-RealtimeStampedMessagePublisher<DataType,MessageType>::RealtimeStampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
-                                                                                       const std::string & topic_name,
-                                                                                       const std::string & frame_id,
-                                                                                       const size_t &queue_size):
-  frame_id_(),
-  pub_(nullptr),
-  rt_pub_(nullptr)
-{
-  init(node,topic_name,frame_id,queue_size);
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void RealtimeStampedMessagePublisher<DataType,MessageType>::init(std::shared_ptr<rclcpp::Node> node,
-                                                                 const std::string & topic_name,
-                                                                 const std::string & frame_id,
-                                                                 const size_t &queue_size)
+RealtimeStampedMessagePublisher<DataType,MessageType>::
+RealtimeStampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
+                                const std::string & topic_name,
+                                const std::string & frame_id,
+                                const rclcpp::QoS & qos):
+  frame_id_(frame_id),
+  pub_(node->create_publisher<MessageType>(topic_name,qos)),
+  rt_pub_(std::make_shared<RTPublisher>(pub_))
 {
   assert(!frame_id.empty());
-  frame_id_ = frame_id;
-  pub_ = node->create_publisher<MessageType>(topic_name,queue_size);
-  rt_pub_= std::make_shared<RTPublisher>(pub_);
 }
-
 
 //-----------------------------------------------------------------------------
 template <class DataType, class MessageType>
@@ -90,8 +59,8 @@ void RealtimeStampedMessagePublisher<DataType,MessageType>::publish(const rclcpp
 {
   if(rt_pub_->trylock())
   {
-      to_ros_msg(stamp,frame_id_,data,rt_pub_->msg_);
-      rt_pub_->unlockAndPublish();
+    to_ros_msg(stamp,frame_id_,data,rt_pub_->msg_);
+    rt_pub_->unlockAndPublish();
   }
 }
 

@@ -1,5 +1,5 @@
-#ifndef _romea_Pose2DRvizDisplay_hpp_
-#define _romea_Pose2DRvizDisplay_hpp_
+#ifndef _romea_DRvizDisplay_hpp_
+#define _romea_DRvizDisplay_hpp_
 
 //ros
 #include <rviz_visual_tools/rviz_visual_tools.hpp>

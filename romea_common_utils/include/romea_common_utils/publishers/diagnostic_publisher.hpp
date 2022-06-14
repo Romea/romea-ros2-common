@@ -19,21 +19,12 @@ class DiagnosticPublisher
 
 public :
 
-    DiagnosticPublisher();
-
     DiagnosticPublisher(std::shared_ptr<rclcpp::Node> node,
                         const std::string & diagnostic_name,
                         const double & diagnostic_period,
                         const std::string & hardware_id_="",
-                        const std::string & topic_name="/diagnostics");
-
-public :
-
-    void init(std::shared_ptr<rclcpp::Node> node,
-              const std::string & diagnostic_name,
-              const double & diagnostic_period,
-              const std::string & hardware_id_="",
-              const std::string & topic_name="/diagnostics");
+                        const std::string & topic_name="/diagnostics",
+                        const rclcpp::QoS & qos = rclcpp::SystemDefaultsQoS());
 
     void publish(const Duration & duration,
                  const DataType &data);
@@ -55,17 +46,6 @@ private :
     rclcpp::Duration diagnostic_period_;
 };
 
-//-----------------------------------------------------------------------------
-template <class DataType>
-DiagnosticPublisher<DataType>::DiagnosticPublisher():
-    diagnostic_name_(),
-    hardware_id_(),
-    pub_(),
-    next_time_(),
-    diagnostic_period_(0)
-{
-
-}
 
 //-----------------------------------------------------------------------------
 template <class DataType>
@@ -73,28 +53,14 @@ DiagnosticPublisher<DataType>::DiagnosticPublisher(std::shared_ptr<rclcpp::Node>
                                                    const std::string & diagnostic_name,
                                                    const double & diagnostic_period,
                                                    const std::string & hardware_id,
-                                                   const std::string & topic_name):
-    diagnostic_name_(),
-    hardware_id_(),
-    pub_(nullptr),
+                                                   const std::string & topic_name,
+                                                   const rclcpp::QoS & qos):
+    diagnostic_name_(diagnostic_name),
+    hardware_id_(hardware_id),
+    pub_(node->create_publisher<diagnostic_msgs::msg::DiagnosticArray>(topic_name,qos)),
     next_time_(node->get_clock()->now()),
-    diagnostic_period_(rclcpp::Duration::from_seconds(0))
+    diagnostic_period_(rclcpp::Duration(romea::durationFromSecond(diagnostic_period)))
 {
-    init(node,diagnostic_name,diagnostic_period,hardware_id,topic_name);
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType>
-void DiagnosticPublisher<DataType>::init(std::shared_ptr<rclcpp::Node> node,
-                                         const std::string & diagnostic_name,
-                                         const double & diagnostic_period,
-                                         const std::string & hardware_id,
-                                         const std::string & topic_name)
-{
-    diagnostic_name_ = diagnostic_name;
-    hardware_id_ = hardware_id;
-    diagnostic_period_=rclcpp::Duration(romea::durationFromSecond(diagnostic_period));
-    pub_= node->create_publisher<diagnostic_msgs::msg::DiagnosticArray>(topic_name,1);
 }
 
 //-----------------------------------------------------------------------------

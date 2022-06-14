@@ -44,7 +44,8 @@ add_library(${PROJECT_NAME}
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
     src/params/geodesy_parameters.cpp
-    src/rviz_display.cpp
+    src/qos.cpp
+    src/rviz.cpp
     )
 
 ament_target_dependencies(${PROJECT_NAME}

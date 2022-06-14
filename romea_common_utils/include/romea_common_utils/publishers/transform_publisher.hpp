@@ -24,12 +24,6 @@ public :
 
   virtual ~TransformPublisher()=default;
 
-public :
-
-  virtual void init(std::shared_ptr<rclcpp::Node> node,
-                    const std::string & frame_id,
-                    const std::string & child_frame_id);
-
   virtual void publish(const rclcpp::Time & stamp,
                        const DataType & data);
 
@@ -58,21 +52,10 @@ TransformPublisher<DataType>::TransformPublisher(std::shared_ptr<rclcpp::Node> n
                                                  const std::string & frame_id,
                                                  const std::string & child_frame_id):
   transform_(),
-  broadcaster_()
-{
-  init(node,frame_id,child_frame_id);
-}
-
-//-----------------------------------------------------------------------------
-template <class DataType>
-void TransformPublisher<DataType>::init(std::shared_ptr<rclcpp::Node> node,
-                                        const std::string & frame_id,
-                                        const std::string & child_frame_id)
+  broadcaster_(std::make_shared<tf2_ros::TransformBroadcaster>(node))
 {
   assert(!frame_id.empty());
   assert(!child_frame_id.empty());
-
-  broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node);
 
   transform_.header.frame_id = frame_id;
   transform_.child_frame_id = child_frame_id;
@@ -84,7 +67,6 @@ void TransformPublisher<DataType>::init(std::shared_ptr<rclcpp::Node> node,
   transform_.transform.rotation.y=0;
   transform_.transform.rotation.z=0;
   transform_.transform.rotation.z=1;
-
 }
 
 

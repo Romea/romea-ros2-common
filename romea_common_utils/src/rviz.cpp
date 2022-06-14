@@ -1,4 +1,4 @@
-#include "romea_common_utils/rviz_display.hpp"
+#include "romea_common_utils/rviz.hpp"
 #include <tf2_eigen/tf2_eigen.h>
 
 namespace {
