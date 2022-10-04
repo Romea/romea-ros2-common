@@ -11,6 +11,18 @@ void declare_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
 }
 
 //-----------------------------------------------------------------------------
+void declare_geodetic_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                         const std::string &param_name,
+                                                         const GeodeticCoordinates & default_coordinates)
+{
+  std::vector<double> default_vector ={default_coordinates.latitude,
+                                       default_coordinates.longitude,
+                                       default_coordinates.altitude};
+
+  declare_vector_parameter_with_default<double>(node,param_name,default_vector);
+}
+
+//-----------------------------------------------------------------------------
 GeodeticCoordinates get_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                                        const std::string &param_name)
 {
@@ -23,6 +35,17 @@ void declare_wgs84_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                          const std::string &param_name)
 {
   declare_vector_parameter<double>(node,param_name);
+}
+
+//-----------------------------------------------------------------------------
+void declare_wgs84_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                      const std::string &param_name,
+                                                      const WGS84Coordinates & default_coordinates)
+{
+  std::vector<double> default_vector ={default_coordinates.latitude,
+                                       default_coordinates.longitude};
+
+  declare_vector_parameter_with_default<double>(node,param_name,default_vector);
 }
 
 //-----------------------------------------------------------------------------
