@@ -15,11 +15,19 @@ namespace romea {
 void declare_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                             const std::string &param_name);
 
+void declare_geodetic_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                         const std::string &param_name,
+                                                         const GeodeticCoordinates & default_coordinates);
+
 GeodeticCoordinates get_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                                        const std::string &param_name);
 
 void declare_wgs84_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                          const std::string &param_name);
+
+void declare_wgs84_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+                                                      const std::string &param_name,
+                                                      const GeodeticCoordinates & default_coordinates);
 
 WGS84Coordinates get_wgs84_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
                                                  const std::string &param_name);
