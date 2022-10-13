@@ -1,75 +1,66 @@
-#ifndef _romea_MessagePublisher_hpp_
-#define _romea_MessagePublisher_hpp_
+#ifndef _romea_DataPublisher_hpp_
+#define _romea_DataPublisher_hpp_
 
 //ros
-#include <rclcpp/node.hpp>
-#include <rclcpp/publisher.hpp>
+#include "publisher.hpp"
 #include "../conversions/time_conversions.hpp"
 
 namespace romea {
 
-template<class DataType>
-class DataPublisherBase
+template <typename DataType, typename MsgType, typename NodeType>
+class DataPublisher : public Publisher<DataType,MsgType,NodeType>
 {
-public :
 
-  DataPublisherBase(){}
+private:
 
-  virtual void publish(const DataType & data)=0;
-
-  virtual std::string get_topic_name()const =0;
-
-  virtual ~DataPublisherBase()=default;
-};
-
-
-template <class DataType, class MessageType>
-class DataPublisher : public DataPublisherBase<DataType>
-{
+  using Base = Publisher<DataType,MsgType,NodeType>;
+  using Options = typename Base::Options;
 
 public :
 
-  DataPublisher(std::shared_ptr<rclcpp::Node> node,
+  DataPublisher(std::shared_ptr<NodeType> node,
                 const std::string & topic_name,
-                const rclcpp::QoS & qos);
-
-  virtual void publish(const DataType & data)override;
-
-  virtual std::string get_topic_name()const override;
+                const rclcpp::QoS & qos,
+                const bool & activated);
 
   virtual ~DataPublisher()=default;
 
-protected :
+  void publish(const DataType & data);
 
-  std::shared_ptr<rclcpp::Publisher<MessageType>> pub_;
 };
 
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-DataPublisher<DataType,MessageType>::DataPublisher(std::shared_ptr<rclcpp::Node> node,
-                                                   const std::string & topic_name,
-                                                   const rclcpp::QoS &qos):
-  pub_(node->create_publisher<MessageType>(topic_name,qos))
+template <typename DataType, typename MsgType, typename NodeType>
+DataPublisher<DataType,MsgType,NodeType>::
+DataPublisher(std::shared_ptr<NodeType> node,
+              const std::string & topic_name,
+              const rclcpp::QoS &qos,
+              const bool &activated):
+  Base(node,topic_name,qos,Options(), activated)
 {
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void DataPublisher<DataType,MessageType>::publish(const DataType &data)
+template <typename DataType, typename MsgType, typename NodeType>
+void DataPublisher<DataType,MsgType,NodeType>::publish(const DataType &data)
 {
-  auto msg= std::make_unique<MessageType>();
+  auto msg= std::make_unique<MsgType>();
   to_ros_msg(data,*msg.get());
-  pub_->publish(std::move(msg));
+  this->publish_message_(std::move(msg));
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-std::string DataPublisher<DataType,MessageType>::get_topic_name() const
+template <typename DataType, typename MsgType, typename NodeType>
+std::shared_ptr<DataPublisher<DataType,MsgType,NodeType>>
+make_data_publisher(std::shared_ptr<NodeType> node,
+                    const std::string & topic_name,
+                    const rclcpp::QoS & qos,
+                    const bool & activated)
 {
-  return pub_->get_topic_name();
+  using Publisher = DataPublisher<DataType,MsgType,NodeType>;
+  return std::make_shared<Publisher>(node,topic_name,qos,activated);
 }
-
 
 }
 

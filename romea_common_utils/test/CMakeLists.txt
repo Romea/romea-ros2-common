@@ -7,11 +7,17 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ament_add_gtest(${PROJECT_NAME}_test_ros_conversions test_ros_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_ros_conversions ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_ros_params test_ros_params.cpp)
-target_link_libraries(${PROJECT_NAME}_test_ros_params ${PROJECT_NAME})
+ament_add_gtest(${PROJECT_NAME}_test_node_parameters test_node_parameters.cpp)
+target_link_libraries(${PROJECT_NAME}_test_node_parameters ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_ros_publisher test_ros_publisher.cpp)
-target_link_libraries(${PROJECT_NAME}_test_ros_publisher ${PROJECT_NAME})
+ament_add_gtest(${PROJECT_NAME}_test_lifecycle_node_parameters test_lifecycle_node_parameters.cpp)
+target_link_libraries(${PROJECT_NAME}_test_lifecycle_node_parameters ${PROJECT_NAME})
+
+ament_add_gtest(${PROJECT_NAME}_test_node_publisher test_node_publisher.cpp)
+target_link_libraries(${PROJECT_NAME}_test_node_publisher ${PROJECT_NAME})
+
+ament_add_gtest(${PROJECT_NAME}_test_lifecycle_node_publisher test_lifecycle_node_publisher.cpp)
+target_link_libraries(${PROJECT_NAME}_test_lifecycle_node_publisher ${PROJECT_NAME})
 
 ament_add_gtest(${PROJECT_NAME}_test_ros_transform test_ros_transform.cpp)
 target_link_libraries(${PROJECT_NAME}_test_ros_transform ${PROJECT_NAME})

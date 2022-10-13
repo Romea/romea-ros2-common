@@ -12,26 +12,64 @@
 namespace romea {
 
 
-void declare_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
-                                            const std::string &param_name);
+//-----------------------------------------------------------------------------
+template <typename Node>
+void declare_geodetic_coordinates_parameter(std::shared_ptr<Node> node,
+                                            const std::string &param_name)
+{
+  declare_vector_parameter<double>(node,param_name);
+}
 
-void declare_geodetic_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+//-----------------------------------------------------------------------------
+template <typename Node>
+void declare_geodetic_coordinates_parameter_with_default(std::shared_ptr<Node> node,
                                                          const std::string &param_name,
-                                                         const GeodeticCoordinates & default_coordinates);
+                                                         const GeodeticCoordinates & default_coordinates)
+{
+  std::vector<double> default_vector ={default_coordinates.latitude,
+                                       default_coordinates.longitude,
+                                       default_coordinates.altitude};
 
-GeodeticCoordinates get_geodetic_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
-                                                       const std::string &param_name);
+  declare_vector_parameter_with_default<double>(node,param_name,default_vector);
+}
 
-void declare_wgs84_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
-                                         const std::string &param_name);
+//-----------------------------------------------------------------------------
+template <typename Node>
+GeodeticCoordinates get_geodetic_coordinates_parameter(std::shared_ptr<Node> node,
+                                                       const std::string &param_name)
+{
+  std::vector<double> vector = get_vector_parameter<double>(node,param_name);
+  return makeGeodeticCoordinates(vector[0]/180.*M_PI,vector[1]/180.*M_PI,vector[2]);
+}
 
-void declare_wgs84_coordinates_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+//-----------------------------------------------------------------------------
+template <typename Node>
+void declare_wgs84_coordinates_parameter(std::shared_ptr<Node> node,
+                                         const std::string &param_name)
+{
+  declare_vector_parameter<double>(node,param_name);
+}
+
+//-----------------------------------------------------------------------------
+template <typename Node>
+void declare_wgs84_coordinates_parameter_with_default(std::shared_ptr<Node> node,
                                                       const std::string &param_name,
-                                                      const GeodeticCoordinates & default_coordinates);
+                                                      const WGS84Coordinates & default_coordinates)
+{
+  std::vector<double> default_vector ={default_coordinates.latitude,
+                                       default_coordinates.longitude};
 
-WGS84Coordinates get_wgs84_coordinates_parameter(std::shared_ptr<rclcpp::Node> node,
-                                                 const std::string &param_name);
+  declare_vector_parameter_with_default<double>(node,param_name,default_vector);
+}
 
+//-----------------------------------------------------------------------------
+template <typename Node>
+WGS84Coordinates get_wgs84_coordinates_parameter(std::shared_ptr<Node> node,
+                                                 const std::string &param_name)
+{
+  std::vector<double> vector = get_vector_parameter<double>(node,param_name);
+  return makeWGS84Coordinates(vector[0]/180.*M_PI,vector[1]/180.*M_PI);
+}
 
 }
 

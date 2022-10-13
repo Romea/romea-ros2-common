@@ -2,28 +2,32 @@
 #define _romea_OdomPublisher_hpp_
 
 //ros
-#include <rclcpp/node.hpp>
-#include <rclcpp/publisher.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 
 //romea
+#include "stamped_publisher.hpp"
 #include "../conversions/time_conversions.hpp"
-#include "../qos.hpp"
 
 namespace romea
 {
 
-template <class DataType>
-class OdomPublisher
+template <typename DataType, typename NodeType>
+class OdomPublisher : public StampedPublisher<DataType,nav_msgs::msg::Odometry,NodeType>
 {
+
+private :
+
+  using Base = StampedPublisher<DataType,nav_msgs::msg::Odometry,NodeType>;
+  using Options = typename Base::Options;
 
 public :
 
-  OdomPublisher(std::shared_ptr<rclcpp::Node> node,
+  OdomPublisher(std::shared_ptr<NodeType> node,
                 const std::string & topic_name,
                 const std::string & frame_id,
                 const std::string & child_frame_id,
-                const rclcpp::QoS & qos);
+                const rclcpp::QoS & qos,
+                const bool & activated);
 
   void publish(const Duration & duration,
                const DataType &data);
@@ -35,41 +39,60 @@ public :
 
   std::string frame_id_;
   std::string child_frame_id_;
-  std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> pub_;
 };
 
 
 //-----------------------------------------------------------------------------
-template <class DataType>
-OdomPublisher<DataType>::OdomPublisher(std::shared_ptr<rclcpp::Node> node,
-                                       const std::string & topic_name,
-                                       const std::string & frame_id,
-                                       const std::string & child_frame_id,
-                                       const rclcpp::QoS & qos):
+template <typename DataType, typename NodeType>
+OdomPublisher<DataType,NodeType>::OdomPublisher(std::shared_ptr<NodeType> node,
+                                                const std::string & topic_name,
+                                                const std::string & frame_id,
+                                                const std::string & child_frame_id,
+                                                const rclcpp::QoS & qos,
+                                                const bool & activated):
+  Base(node,topic_name,qos,Options(),activated),
   frame_id_(frame_id),
-  child_frame_id_(child_frame_id),
-  pub_(node->create_publisher<nav_msgs::msg::Odometry>(topic_name,qos))
+  child_frame_id_(child_frame_id)
 {
   assert(!frame_id.empty());
   assert(!child_frame_id.empty());
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType>
-void OdomPublisher<DataType>::publish(const Duration & duration,
-                                      const DataType &data)
+template <typename DataType, typename NodeType>
+void OdomPublisher<DataType, NodeType>::publish(const Duration & duration,
+                                                const DataType &data)
 {
   publish(to_ros_time(duration),data);
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType>
-void OdomPublisher<DataType>::publish(const rclcpp::Time & stamp,
-                                      const DataType &data)
+template <typename DataType, typename NodeType>
+void OdomPublisher<DataType,NodeType>::publish(const rclcpp::Time & stamp,
+                                               const DataType &data)
 {
   auto msg = std::make_unique<nav_msgs::msg::Odometry>();
   to_ros_odom_msg(stamp,data,frame_id_,child_frame_id_,*msg.get());
-  pub_->publish(std::move(msg));
+  this->publish_message_(std::move(msg));
+}
+
+//-----------------------------------------------------------------------------
+template <typename DataType, typename NodeType>
+std::shared_ptr<OdomPublisher<DataType,NodeType>>
+make_odom_publisher(std::shared_ptr<NodeType> node,
+                    const std::string & topic_name,
+                    const std::string & frame_id,
+                    const std::string & child_frame_id,
+                    const rclcpp::QoS & qos,
+                    const bool & activated)
+{
+  using Publisher = OdomPublisher<DataType,NodeType>;
+  return std::make_shared<Publisher>(node,
+                                     topic_name,
+                                     frame_id,
+                                     child_frame_id,
+                                     qos,
+                                     activated);
 }
 
 }

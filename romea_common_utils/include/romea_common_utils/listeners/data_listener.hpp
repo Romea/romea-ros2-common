@@ -35,22 +35,22 @@ protected:
 };
 
 
-template <typename DataType,typename MsgType>
+template <typename DataType,typename MsgType, typename NodeType>
 class DataListener : public DataListenerBase<DataType>
 {
 public:
 
-  DataListener(std::shared_ptr<rclcpp::Node> node,
+  DataListener(std::shared_ptr<NodeType> node,
                const std::string & topic_name,
                const rclcpp::QoS & qos)
   {
     auto callback = std::bind(&DataListener::callback_,this,std::placeholders::_1);
-    data_sub_ = node->create_subscription<MsgType>(topic_name,qos,callback);
+    data_sub_ = node->template create_subscription<MsgType>(topic_name,qos,callback);
   }
 
   virtual std::string get_topic_name()const
   {
-   return data_sub_->get_topic_name();
+    return data_sub_->get_topic_name();
   }
 
   virtual ~DataListener() = default;
@@ -65,6 +65,17 @@ private:
 
   std::shared_ptr<rclcpp::Subscription<MsgType>> data_sub_;
 };
+
+//-----------------------------------------------------------------------------
+template <typename DataType, typename MsgType, typename NodeType>
+std::shared_ptr<DataListener<DataType,MsgType,NodeType>>
+make_data_listener(std::shared_ptr<NodeType> node,
+                  const std::string & topic_name,
+                  const rclcpp::QoS & qos)
+{
+  using Listener = DataListener<DataType,MsgType,NodeType>;
+  return std::make_shared<Listener>(node,topic_name,qos);
+}
 
 }
 

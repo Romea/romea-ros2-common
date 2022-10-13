@@ -47,12 +47,14 @@ class  Subscription
 
 public :
 
-    Subscription(std::shared_ptr<rclcpp::Node> node,
+
+    template<typename Node>
+    Subscription(std::shared_ptr<Node> node,
                  const std::string & topic_name):
         data_()
     {
         auto callback = std::bind(&Subscription<MsgType>::cb_,this,std::placeholders::_1);
-        sub_ = node->create_subscription<MsgType>(topic_name, 0,callback);
+        sub_ = node->template create_subscription<MsgType>(topic_name, 0,callback);
     }
 
     size_t get_publisher_count()const

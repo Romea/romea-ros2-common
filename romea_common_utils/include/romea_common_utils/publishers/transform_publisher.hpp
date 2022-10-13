@@ -1,26 +1,31 @@
 //ros
-#include <rclcpp/node.hpp>
-#include <rclcpp/publisher.hpp>
-#include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <tf2_msgs/msg/tf_message.hpp>
+#include <tf2_ros/qos.hpp>
 
 //romea
+#include "stamped_publisher.hpp"
 #include "../conversions/time_conversions.hpp"
 #include "../conversions/transform_conversions.hpp"
 
 namespace romea {
 
-template <class DataType>
-class TransformPublisher
+template <typename DataType, typename NodeType>
+class TransformPublisher : public StampedPublisher<DataType,tf2_msgs::msg::TFMessage,NodeType>
 {
+private :
+
+  using Base =StampedPublisher<DataType,tf2_msgs::msg::TFMessage,NodeType>;
+  using Options =  typename Base::Options;
 
 public :
 
-  TransformPublisher();
+  //  TransformPublisher();
 
-  TransformPublisher(std::shared_ptr<rclcpp::Node> node,
+  TransformPublisher(std::shared_ptr<NodeType> node,
                      const std::string & frame_id,
-                     const std::string & child_frame_id);
+                     const std::string & child_frame_id,
+                     const bool & activated);
 
   virtual ~TransformPublisher()=default;
 
@@ -30,62 +35,95 @@ public :
   virtual void publish(const Duration & duration,
                        const DataType & data);
 
-protected :
+private :
 
-  geometry_msgs::msg::TransformStamped transform_;
-  std::shared_ptr<tf2_ros::TransformBroadcaster> broadcaster_;
+  static Options make_options();
+
+private :
+
+  tf2_msgs::msg::TFMessage message_;
+
 };
 
 
-//-----------------------------------------------------------------------------
-template <class DataType>
-TransformPublisher<DataType>::TransformPublisher():
-  transform_(),
-  broadcaster_(nullptr)
-{
+////-----------------------------------------------------------------------------
+//template <typename DataType, typename NodeType>
+//TransformPublisher<DataType,NodeType>::TransformPublisher():
+//  transform_(1)
+//{
 
-}
+//}
 
 //-----------------------------------------------------------------------------
-template <class DataType>
-TransformPublisher<DataType>::TransformPublisher(std::shared_ptr<rclcpp::Node> node,
-                                                 const std::string & frame_id,
-                                                 const std::string & child_frame_id):
-  transform_(),
-  broadcaster_(std::make_shared<tf2_ros::TransformBroadcaster>(node))
+template <typename DataType, typename NodeType>
+TransformPublisher<DataType,NodeType>::TransformPublisher(std::shared_ptr<NodeType> node,
+                                                          const std::string & frame_id,
+                                                          const std::string & child_frame_id,
+                                                          const bool & activated):
+  Base(node,"/tf",tf2_ros::DynamicBroadcasterQoS(),make_options(),activated),
+  message_()
 {
   assert(!frame_id.empty());
   assert(!child_frame_id.empty());
 
-  transform_.header.frame_id = frame_id;
-  transform_.child_frame_id = child_frame_id;
+  message_.transforms.resize(1);
+  message_.transforms[0].header.frame_id = frame_id;
+  message_.transforms[0].child_frame_id = child_frame_id;
 
-  transform_.transform.translation.x=0;
-  transform_.transform.translation.y=0;
-  transform_.transform.translation.z=0;
-  transform_.transform.rotation.x=0;
-  transform_.transform.rotation.y=0;
-  transform_.transform.rotation.z=0;
-  transform_.transform.rotation.z=1;
+  message_.transforms[0].transform.translation.x=0;
+  message_.transforms[0].transform.translation.y=0;
+  message_.transforms[0].transform.translation.z=0;
+  message_.transforms[0].transform.rotation.x=0;
+  message_.transforms[0].transform.rotation.y=0;
+  message_.transforms[0].transform.rotation.z=0;
+  message_.transforms[0].transform.rotation.z=1;
 }
 
-
 //-----------------------------------------------------------------------------
-template <class DataType>
-void TransformPublisher<DataType>::publish(const rclcpp::Time & stamp,
-                                           const DataType &data)
+template <typename DataType, typename NodeType>
+typename TransformPublisher<DataType,NodeType>::Options
+TransformPublisher<DataType,NodeType>::make_options()
 {
-  transform_.header.stamp = stamp;
-  to_ros_transform_msg(data,transform_.transform);
-  broadcaster_->sendTransform(transform_);
+  Options options;
+  options.qos_overriding_options = rclcpp::QosOverridingOptions{
+      rclcpp::QosPolicyKind::Depth,
+      rclcpp::QosPolicyKind::Durability,
+      rclcpp::QosPolicyKind::History,
+      rclcpp::QosPolicyKind::Reliability};
+  return options;
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType>
-void TransformPublisher<DataType>::publish(const romea::Duration & duration,
-                                           const DataType & data)
+template <typename DataType, typename NodeType>
+void TransformPublisher<DataType,NodeType>::publish(const rclcpp::Time & stamp,
+                                                    const DataType &data)
+{
+  message_.transforms[0].header.stamp = stamp;
+  to_ros_transform_msg(data,message_.transforms[0].transform);
+  this->publish_message_(message_);
+}
+
+//-----------------------------------------------------------------------------
+template <typename DataType, typename NodeType>
+void TransformPublisher<DataType,NodeType>::publish(const romea::Duration & duration,
+                                                    const DataType & data)
 {
   publish(to_ros_time(duration),data);
+}
+
+//-----------------------------------------------------------------------------
+template <typename DataType, typename NodeType>
+std::shared_ptr<TransformPublisher<DataType,NodeType>>
+make_transform_publisher(std::shared_ptr<NodeType> node,
+                         const std::string & frame_id,
+                         const std::string & child_frame_id,
+                         const bool & activated)
+{
+  using Publisher = TransformPublisher<DataType,NodeType>;
+  return std::make_shared<Publisher>(node,
+                                     frame_id,
+                                     child_frame_id,
+                                     activated);
 }
 
 }

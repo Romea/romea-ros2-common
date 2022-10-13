@@ -15,16 +15,16 @@
 namespace romea {
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameter(std::shared_ptr<Node> node,
                                            const std::string & param_name)
 {
   declare_vector_parameter<typename EigenVector::Scalar>(node,param_name);
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                         const std::string & param_name,
                                                         const EigenVector & default_values)
 {
@@ -34,8 +34,8 @@ inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameter(std::shared_ptr<Node> node,
                                            const std::string & param_namespace,
                                            const std::string & param_name)
 {
@@ -44,8 +44,8 @@ inline void declare_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                         const std::string & param_namespace,
                                                         const std::string & param_name,
                                                         const EigenVector & default_values)
@@ -56,16 +56,16 @@ inline void declare_eigen_vector_parameter_with_default(std::shared_ptr<rclcpp::
 
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_vector_parameter(std::shared_ptr<Node> node,
                                               const std::string & param_name)
 {
   return EigenVector(get_vector_parameter<typename EigenVector::Scalar>(node,param_name).data());
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_vector_parameter(std::shared_ptr<Node> node,
                                               const std::string & param_namespace,
                                               const std::string & param_name)
 {
@@ -75,15 +75,15 @@ inline EigenVector get_eigen_vector_parameter(std::shared_ptr<rclcpp::Node> node
 
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> node)
+template <typename EigenVector, typename Node>
+inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<Node> node)
 {
   declare_eigen_vector_parameter<EigenVector>(node,"xyz");
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<Node> node,
                                                const std::string & param_namespace)
 {
   declare_eigen_vector_parameter<EigenVector>(
@@ -91,16 +91,16 @@ inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> nod
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_xyz_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_xyz_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                             const EigenVector & default_values = EigenVector::Zero())
 {
   declare_eigen_vector_parameter_with_default<EigenVector>(node,"xyz",default_values);
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_xyz_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_xyz_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                             const std::string & param_namespace,
                                                             const EigenVector & default_values = EigenVector::Zero())
 {
@@ -109,15 +109,15 @@ inline void declare_eigen_xyz_vector_parameter_with_default(std::shared_ptr<rclc
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> node)
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<Node> node)
 {
   return get_eigen_vector_parameter<EigenVector>(node,"xyz");
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<Node> node,
                                                   const std::string & param_namespace)
 {
   return get_eigen_vector_parameter<EigenVector>(
@@ -125,8 +125,8 @@ inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<rclcpp::Node> 
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_rpy_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_rpy_vector_parameter(std::shared_ptr<Node> node,
                                                const std::string & param_namespace)
 {
   declare_eigen_vector_parameter<EigenVector>(
@@ -134,16 +134,16 @@ inline void declare_eigen_rpy_vector_parameter(std::shared_ptr<rclcpp::Node> nod
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_rpy_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_rpy_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                             const EigenVector & default_values = EigenVector::Zero())
 {
   declare_eigen_vector_parameter_with_default<EigenVector>(node,"rpy",default_values);
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline void declare_eigen_rpy_vector_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline void declare_eigen_rpy_vector_parameter_with_default(std::shared_ptr<Node> node,
                                                             const std::string & param_namespace,
                                                             const EigenVector & default_values = EigenVector::Zero())
 {
@@ -152,15 +152,15 @@ inline void declare_eigen_rpy_vector_parameter_with_default(std::shared_ptr<rclc
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<rclcpp::Node> node)
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<Node> node)
 {
   return get_eigen_vector_parameter<EigenVector>(node,"rpy");
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenVector>
-inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenVector, typename Node>
+inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<Node> node,
                                                   const std::string & param_namespace)
 {
   return get_eigen_vector_parameter<EigenVector>(
@@ -169,8 +169,8 @@ inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<rclcpp::Node> 
 
 
 //-----------------------------------------------------------------------------
-template <typename EigenAffine>
-void declare_eigen_rigid_transformation_parameter(std::shared_ptr<rclcpp::Node> node)
+template <typename EigenAffine, typename Node>
+void declare_eigen_rigid_transformation_parameter(std::shared_ptr<Node> node)
 {
   using Scalar = typename EigenAffine::Scalar;
   using EigenVector = Eigen::Matrix<Scalar,3,1>;
@@ -180,8 +180,8 @@ void declare_eigen_rigid_transformation_parameter(std::shared_ptr<rclcpp::Node> 
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenAffine>
-void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenAffine, typename Node>
+void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<Node> node,
                                                                const EigenAffine & default_value = EigenAffine::Identity())
 {
   using Scalar = typename EigenAffine::Scalar;
@@ -194,8 +194,8 @@ void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<r
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenAffine>
-void declare_eigen_rigid_transformation_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenAffine, typename Node>
+void declare_eigen_rigid_transformation_parameter(std::shared_ptr<Node> node,
                                                   const std::string & param_namespace)
 {
   using Scalar = typename EigenAffine::Scalar;
@@ -206,8 +206,8 @@ void declare_eigen_rigid_transformation_parameter(std::shared_ptr<rclcpp::Node> 
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenAffine>
-void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenAffine, typename Node>
+void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<Node> node,
                                                                const std::string & param_namespace,
                                                                const EigenAffine & default_value = EigenAffine::Identity())
 {
@@ -221,8 +221,8 @@ void declare_eigen_rigid_transformation_parameter_with_default(std::shared_ptr<r
 }
 
 //-----------------------------------------------------------------------------
-template <typename EigenAffine>
-inline EigenAffine get_eigen_rigid_transformation_parameter(std::shared_ptr<rclcpp::Node> node,
+template <typename EigenAffine, typename Node>
+inline EigenAffine get_eigen_rigid_transformation_parameter(std::shared_ptr<Node> node,
                                                             const std::string & param_namespace)
 {
   using Scalar = typename EigenAffine::Scalar;

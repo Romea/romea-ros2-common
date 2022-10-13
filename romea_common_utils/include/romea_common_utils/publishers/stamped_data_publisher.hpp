@@ -1,63 +1,82 @@
 //ros
-#include <rclcpp/node.hpp>
-#include <rclcpp/publisher.hpp>
+#include "stamped_publisher.hpp"
 #include "../conversions/time_conversions.hpp"
 
 namespace romea {
 
-template <class DataType, class MessageType>
-class StampedMessagePublisher
+template <typename DataType, typename MsgType, typename NodeType>
+class StampedDataPublisher : public StampedPublisher<DataType,MsgType,NodeType>
 {
+private :
+
+  using Base = StampedPublisher<DataType,MsgType,NodeType>;
+  using Options = typename Base::Options;
 
 public :
 
-    StampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
-                            const std::string & topic_name,
-                            const std::string & frame_id,
-                            const rclcpp::QoS & qos);
+  StampedDataPublisher(std::shared_ptr<NodeType> node,
+                       const std::string & topic_name,
+                       const std::string & frame_id,
+                       const rclcpp::QoS & qos,
+                       const bool & activated);
 
-    void publish(const rclcpp::Time & stamp,
-                 const DataType & data);
+  void publish(const rclcpp::Time & stamp,
+               const DataType & data) override;
 
 
-    void publish(const romea::Duration & duration,
-                 const DataType & data);
+  void publish(const romea::Duration & duration,
+               const DataType & data) override;
 
-protected :
+private :
 
-    std::string frame_id_;
-    std::shared_ptr<rclcpp::Publisher<MessageType>> pub_;
+  std::string frame_id_;
+
 };
 
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-StampedMessagePublisher<DataType,MessageType>::StampedMessagePublisher(std::shared_ptr<rclcpp::Node> node,
-                                                                       const std::string & topic_name,
-                                                                       const std::string & frame_id,
-                                                                       const rclcpp::QoS & qos):
-    frame_id_(frame_id),
-    pub_(node->create_publisher<MessageType>(topic_name,qos))
+template <typename DataType, typename MsgType,typename NodeType>
+StampedDataPublisher<DataType,MsgType,NodeType>::
+StampedDataPublisher(std::shared_ptr<NodeType> node,
+                     const std::string & topic_name,
+                     const std::string & frame_id,
+                     const rclcpp::QoS & qos,
+                     const bool & activated):
+  Base(node,topic_name,qos,Options(),activated),
+  frame_id_(frame_id)
 {
   assert(!frame_id.empty());
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void StampedMessagePublisher<DataType,MessageType>::publish(const rclcpp::Time & stamp,
-                                                            const DataType &data)
+template <typename DataType, typename MsgType,typename NodeType>
+void StampedDataPublisher<DataType,MsgType,NodeType>::
+publish(const rclcpp::Time & stamp,const DataType &data)
 {
-    auto msg = std::make_unique<MessageType>();
-    to_ros_msg(stamp,frame_id_,data,*msg.get());
-    pub_->publish(std::move(msg));
+  auto msg = std::make_unique<MsgType>();
+  to_ros_msg(stamp,frame_id_,data,*msg.get());
+  this->publish_message_(std::move(msg));
 }
 
 //-----------------------------------------------------------------------------
-template <class DataType, class MessageType>
-void StampedMessagePublisher<DataType,MessageType>::publish(const romea::Duration & duration,
-                                                            const DataType & data)
+template <typename DataType, typename MsgType,typename NodeType>
+void StampedDataPublisher<DataType,MsgType,NodeType>::
+publish(const romea::Duration & duration,const DataType & data)
 {
-    publish(to_ros_time(duration),data);
+  publish(to_ros_time(duration),data);
+}
+
+//-----------------------------------------------------------------------------
+template <typename DataType, typename MsgType, typename NodeType>
+std::shared_ptr<StampedDataPublisher<DataType,MsgType,NodeType>>
+make_stamped_data_publisher(std::shared_ptr<NodeType> node,
+                            const std::string & topic_name,
+                            const std::string & frame_id,
+                            const rclcpp::QoS & qos,
+                            const bool & activated)
+{
+  using Publisher = StampedDataPublisher<DataType,MsgType,NodeType>;
+  return std::make_shared<Publisher>(node,topic_name,frame_id,qos,activated);
 }
 
 }

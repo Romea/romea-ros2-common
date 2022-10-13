@@ -10,6 +10,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
   <depend>romea_core_common</depend>
   <depend>romea_common_msgs</depend>
   <depend>diagnostic_msgs</depend>
