@@ -9,6 +9,7 @@
 #include "romea_common_utils/params/node_parameters.hpp"
 #include "romea_common_utils/params/geodesy_parameters.hpp"
 #include "romea_common_utils/params/eigen_parameters.hpp"
+#include "romea_common_utils/params/algorithm_parameters.hpp"
 
 
 class TestLifecycleNodeParameters : public ::testing::Test
@@ -33,7 +34,7 @@ protected:
      "--params-file",
      std::string(TEST_DIR)+"/test_node_parameters.yaml"});
 
-    node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_lifecyle_node_parameters", no);
+    node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_lifecyle_node_parameters","ns", no);
   }
 
 
@@ -120,6 +121,63 @@ TEST_F(TestLifecycleNodeParameters, loadUnsetEigenVector)
   EXPECT_NEAR(eigen_vector3d.x(),2,0.000001);
   EXPECT_NEAR(eigen_vector3d.y(),3,0.000001);
   EXPECT_NEAR(eigen_vector3d.z(),6,0.000001);
+}
+
+TEST_F(TestLifecycleNodeParameters, loadDebug)
+{
+  romea::declare_debug(node);
+  EXPECT_TRUE(romea::get_debug(node));
+}
+
+TEST_F(TestLifecycleNodeParameters, loadLogDirectory)
+{
+  romea::declare_log_directory(node);
+  EXPECT_STREQ(romea::get_log_directory(node).c_str(),"/foo");
+}
+
+TEST_F(TestLifecycleNodeParameters, loadLogFilename)
+{
+  romea::declare_debug(node);
+  romea::declare_log_directory(node);
+  EXPECT_STREQ(romea::get_log_filename(node,"bar").c_str(),"/foo/ns_test_lifecyle_node_parameters_bar_debug.csv");
+}
+
+TEST_F(TestLifecycleNodeParameters, loadBaseFootprintFrameId)
+{
+  romea::declare_base_footprint_frame_id(node);
+  EXPECT_STREQ(romea::get_base_footprint_frame_id(node).c_str(),"base_footprint1");
+  romea::declare_base_footprint_frame_id(node,"bar");
+  EXPECT_STREQ(romea::get_base_footprint_frame_id(node,"bar").c_str(),"base_footprint2");
+  romea::declare_base_footprint_frame_id(node,"foo");
+  EXPECT_STREQ(romea::get_base_footprint_frame_id(node,"foo").c_str(),"base_footprint");
+}
+
+TEST_F(TestLifecycleNodeParameters, loadOdomFrameId)
+{
+  romea::declare_odom_frame_id(node);
+  EXPECT_STREQ(romea::get_odom_frame_id(node).c_str(),"odom1");
+  romea::declare_odom_frame_id(node,"bar");
+  EXPECT_STREQ(romea::get_odom_frame_id(node,"bar").c_str(),"odom2");
+  romea::declare_odom_frame_id(node,"foo");
+  EXPECT_STREQ(romea::get_odom_frame_id(node,"foo").c_str(),"odom");
+}
+
+TEST_F(TestLifecycleNodeParameters, loadMapFrameId)
+{
+  romea::declare_map_frame_id(node);
+  EXPECT_STREQ(romea::get_map_frame_id(node).c_str(),"map1");
+  romea::declare_map_frame_id(node,"bar");
+  EXPECT_STREQ(romea::get_map_frame_id(node,"bar").c_str(),"map2");
+  romea::declare_map_frame_id(node,"foo");
+  EXPECT_STREQ(romea::get_map_frame_id(node,"foo").c_str(),"map");
+}
+
+TEST_F(TestLifecycleNodeParameters, loadPublishRate)
+{
+  romea::declare_publish_rate(node);
+  EXPECT_EQ(romea::get_publish_rate(node),10);
+  romea::declare_publish_rate(node,"bar");
+  EXPECT_EQ(romea::get_publish_rate(node,"bar"),20);
 }
 
 ////TEST_F(TestLifecycleNodeParameters, loadEigenVector3i) {

@@ -69,7 +69,7 @@ inline T get_parameter(std::shared_ptr<Node> node,
   if(!node->template get_parameter(param_name,value))
   {
     std::stringstream ss;
-    ss << "Failed to read";
+    ss << "Failed to read ";
     ss << param_name;
     ss << " from param server";
     throw(std::runtime_error(ss.str()));

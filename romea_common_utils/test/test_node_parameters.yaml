@@ -10,3 +10,15 @@
     one:
       two: 3.
     foo: bar
+    debug: true
+    log_directory: "/foo"
+    base_footprint_frame_id: "base_footprint1"
+    odom_frame_id: "odom1"
+    map_frame_id: "map1"
+    publish_rate: 10
+    bar:
+      base_footprint_frame_id: "base_footprint2"
+      odom_frame_id: "odom2"
+      map_frame_id: "map2"
+      publish_rate: 20
+
