@@ -1,11 +1,11 @@
-#ifndef _romea_GeometryConversions_hpp_
-#define _romea_GeometryConversions_hpp_
+#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_
 
-//ros
+// ros
 #include <geometry_msgs/msg/vector3.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 
-//eigen
+// eigen
 #include <Eigen/Geometry>
 
 
@@ -30,6 +30,6 @@ void to_romea(const geometry_msgs::msg::Quaternion & quaternion_msg,
 void to_ros_msg(const Eigen::Matrix3d & eigen_rotation_matrix,
               geometry_msgs::msg::Quaternion &quaternion_msg);
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_

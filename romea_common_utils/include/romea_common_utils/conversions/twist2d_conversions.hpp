@@ -1,10 +1,13 @@
-#ifndef _romea_Twist2DConversions_hpp_
-#define _romea_Twist2DConversions_hpp_
+#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_
 
-//romea
+// std
+#include <string>
+
+// romea
 #include <romea_core_common/geometry/Twist2D.hpp>
 
-//romea_ros_msg
+// romea_ros_msg
 #include <romea_common_msgs/msg/twist2_d_stamped.hpp>
 #include <romea_common_utils/conversions/time_conversions.hpp>
 
@@ -24,6 +27,6 @@ void to_romea(const romea_common_msgs::msg::Twist2D & ros_twist2d_msg,
 
 Twist2D to_romea(const romea_common_msgs::msg::Twist2D & ros_twist2d_msg);
 
-}// namespace
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_

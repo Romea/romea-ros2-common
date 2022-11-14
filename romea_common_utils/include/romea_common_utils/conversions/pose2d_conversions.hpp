@@ -1,18 +1,18 @@
-#ifndef _romea_Pose2DConversions_hpp_
-#define _romea_Pose2DConversions_hpp_
+#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_
 
-//std
+// std
 #include <string>
 
-//romea
+// romea
 #include <romea_core_common/time/Time.hpp>
 #include <romea_core_common/geometry/Pose2D.hpp>
 
-//romea_ros_msg
+// romea_ros_msg
 #include <romea_common_msgs/msg/pose2_d_stamped.hpp>
 #include <romea_common_utils/conversions/time_conversions.hpp>
 
-//ros
+// ros
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
 namespace romea
@@ -45,6 +45,6 @@ Pose2D to_romea(const romea_common_msgs::msg::Pose2D &msg);
 //             Pose2D::Stamped & romea_pose_2d_stamped,
 //             std::string & frame_id);
 
-}// namespace
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_

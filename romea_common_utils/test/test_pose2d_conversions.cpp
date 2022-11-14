@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "test_utils.hpp"
 
-//romea
+// romea
 #include "romea_common_utils/conversions/pose2d_conversions.hpp"
 
 //-----------------------------------------------------------------------------
@@ -18,13 +18,13 @@ public :
   {
   }
 
-  virtual void SetUp()override
+  void SetUp()override
   {
-    romea_pose2d.position.x()=1;
-    romea_pose2d.position.y()=2;
-    romea_pose2d.yaw=3;
+    romea_pose2d.position.x() = 1;
+    romea_pose2d.position.y() = 2;
+    romea_pose2d.yaw = 3;
     fillEigenCovariance(romea_pose2d.covariance);
-    romea::to_ros_msg(stamp,frame_id,romea_pose2d,ros_pose2d_msg);
+    romea::to_ros_msg(stamp, frame_id, romea_pose2d, ros_pose2d_msg);
   }
 
   rclcpp::Time stamp;
@@ -36,12 +36,12 @@ public :
 //-----------------------------------------------------------------------------
 TEST_F(TestPose2DConversion, fromRomeato_ros_msg)
 {
-  EXPECT_EQ(romea::extract_time(ros_pose2d_msg).nanoseconds(),stamp.nanoseconds());
-  EXPECT_STREQ(ros_pose2d_msg.header.frame_id.c_str(),frame_id.c_str());
-  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.x,romea_pose2d.position.x());
-  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.y,romea_pose2d.position.y());
-  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.yaw,romea_pose2d.yaw);
-  isSame(ros_pose2d_msg.pose.covariance,romea_pose2d.covariance);
+  EXPECT_EQ(romea::extract_time(ros_pose2d_msg).nanoseconds(), stamp.nanoseconds());
+  EXPECT_STREQ(ros_pose2d_msg.header.frame_id.c_str(), frame_id.c_str());
+  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.x, romea_pose2d.position.x());
+  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.y, romea_pose2d.position.y());
+  EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.yaw, romea_pose2d.yaw);
+  isSame(ros_pose2d_msg.pose.covariance, romea_pose2d.covariance);
 }
 
 //-----------------------------------------------------------------------------

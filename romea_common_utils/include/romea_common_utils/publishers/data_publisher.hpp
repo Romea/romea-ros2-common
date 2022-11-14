@@ -1,67 +1,68 @@
-#ifndef _romea_DataPublisher_hpp_
-#define _romea_DataPublisher_hpp_
+#ifndef ROMEA_COMMON_UTILS_PUBLISHERS_DATA_PUBLISHER_HPP_
+#define ROMEA_COMMON_UTILS_PUBLISHERS_DATA_PUBLISHER_HPP_
 
-//ros
-#include "publisher.hpp"
+// std
+#include <memory>
+#include <string>
+#include <utility>
+
+// ros
+#include "romea_common_utils/publishers/publisher.hpp"
 #include "../conversions/time_conversions.hpp"
 
 namespace romea {
 
 template <typename DataType, typename MsgType, typename NodeType>
-class DataPublisher : public Publisher<DataType,MsgType,NodeType>
+class DataPublisher : public Publisher<DataType, MsgType, NodeType>
 {
-
 private:
-
-  using Base = Publisher<DataType,MsgType,NodeType>;
+  using Base = Publisher<DataType, MsgType, NodeType>;
   using Options = typename Base::Options;
 
 public :
-
   DataPublisher(std::shared_ptr<NodeType> node,
                 const std::string & topic_name,
                 const rclcpp::QoS & qos,
                 const bool & activated);
 
-  virtual ~DataPublisher()=default;
+  virtual ~DataPublisher() = default;
 
   void publish(const DataType & data);
-
 };
 
 
 //-----------------------------------------------------------------------------
 template <typename DataType, typename MsgType, typename NodeType>
-DataPublisher<DataType,MsgType,NodeType>::
+DataPublisher<DataType, MsgType, NodeType>::
 DataPublisher(std::shared_ptr<NodeType> node,
               const std::string & topic_name,
               const rclcpp::QoS &qos,
               const bool &activated):
-  Base(node,topic_name,qos,Options(), activated)
+  Base(node, topic_name, qos, Options(), activated)
 {
 }
 
 //-----------------------------------------------------------------------------
 template <typename DataType, typename MsgType, typename NodeType>
-void DataPublisher<DataType,MsgType,NodeType>::publish(const DataType &data)
+void DataPublisher<DataType, MsgType, NodeType>::publish(const DataType &data)
 {
-  auto msg= std::make_unique<MsgType>();
-  to_ros_msg(data,*msg.get());
+  auto msg = std::make_unique<MsgType>();
+  to_ros_msg(data, *msg.get());
   this->publish_message_(std::move(msg));
 }
 
 //-----------------------------------------------------------------------------
 template <typename DataType, typename MsgType, typename NodeType>
-std::shared_ptr<DataPublisher<DataType,MsgType,NodeType>>
+std::shared_ptr<DataPublisher<DataType, MsgType, NodeType>>
 make_data_publisher(std::shared_ptr<NodeType> node,
                     const std::string & topic_name,
                     const rclcpp::QoS & qos,
                     const bool & activated)
 {
-  using Publisher = DataPublisher<DataType,MsgType,NodeType>;
-  return std::make_shared<Publisher>(node,topic_name,qos,activated);
+  using Publisher = DataPublisher<DataType, MsgType, NodeType>;
+  return std::make_shared<Publisher>(node, topic_name, qos, activated);
 }
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_PUBLISHERS_DATA_PUBLISHER_HPP_

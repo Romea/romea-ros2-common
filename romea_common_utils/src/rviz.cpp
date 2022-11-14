@@ -10,8 +10,7 @@ inline  Eigen::Isometry3d computeRobotPose(const romea::Pose2D & bodyPose2D,
   return Eigen::Translation3d(bodyPose2D.position.x(),
                               bodyPose2D.position.y(),
                               positionAlongZBodyAxis)*
-      Eigen::AngleAxisd(bodyPose2D.yaw,Eigen::Vector3d::UnitZ());
-
+      Eigen::AngleAxisd(bodyPose2D.yaw, Eigen::Vector3d::UnitZ());
 }
 
 //-----------------------------------------------------------------------------
@@ -24,7 +23,7 @@ inline  Eigen::Isometry3d computeEllipsePose(const romea::Ellipse & ellipse,
       Eigen::AngleAxisd(ellipse.getOrientation(), Eigen::Vector3d::UnitZ());
 }
 
-}
+}  // namespace
 
 namespace romea {
 
@@ -37,8 +36,7 @@ void publish(rviz_visual_tools::RvizVisualTools & rvizVisualTool,
              double scaleAlongZBodyAxis,
              double sigma)
 {
-
-  Ellipse ellipse= uncertaintyEllipse(bodyPose2D,sigma);
+  Ellipse ellipse = uncertaintyEllipse(bodyPose2D, sigma);
 
   geometry_msgs::msg::Vector3 scale;
   scale.x = ellipse.getMajorRadius();
@@ -46,15 +44,16 @@ void publish(rviz_visual_tools::RvizVisualTools & rvizVisualTool,
   scale.z = scaleAlongZBodyAxis;
 
   geometry_msgs::msg::Pose ellipse_pose_msg =
-      tf2::toMsg(computeEllipsePose(ellipse,positionAlongZBodyAxis));
+      tf2::toMsg(computeEllipsePose(ellipse, positionAlongZBodyAxis));
+
   rvizVisualTool.publishSphere(ellipse_pose_msg,
                                rvizVisualTool.getColor(color),
                                scale);
 
-  geometry_msgs::msg::Pose robot_pose_msg=
-      tf2::toMsg(computeRobotPose(bodyPose2D,positionAlongZBodyAxis));
-  rvizVisualTool.publishAxis(robot_pose_msg,1);
+  geometry_msgs::msg::Pose robot_pose_msg =
+      tf2::toMsg(computeRobotPose(bodyPose2D , positionAlongZBodyAxis));
 
+  rvizVisualTool.publishAxis(robot_pose_msg , 1);
 }
 
 //-----------------------------------------------------------------------------
@@ -65,22 +64,18 @@ void publish(rviz_visual_tools::RvizVisualTools & rvizVisualTool,
              double scaleAlongZBodyAxis,
              double sigma)
 {
-
-  Ellipse ellipse= uncertaintyEllipse(bodyPosition2D,sigma);
+  Ellipse ellipse = uncertaintyEllipse(bodyPosition2D, sigma);
 
   geometry_msgs::msg::Vector3 scale;
   scale.x = ellipse.getMajorRadius();
   scale.y = ellipse.getMinorRadius();
   scale.z = scaleAlongZBodyAxis;
 
-  geometry_msgs::msg::Pose ellipse_pose_msg=
-      tf2::toMsg(computeEllipsePose(ellipse,positionAlongZBodyAxis));
+  geometry_msgs::msg::Pose ellipse_pose_msg =
+      tf2::toMsg(computeEllipsePose(ellipse, positionAlongZBodyAxis));
+
   rvizVisualTool.publishSphere(ellipse_pose_msg,
-                               rvizVisualTool.getColor(color),scale);
-
+                               rvizVisualTool.getColor(color), scale);
 }
 
-
-
-
-}
+}  // namespace romea

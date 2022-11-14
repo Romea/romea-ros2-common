@@ -1,11 +1,11 @@
-//gtest
+// gtest
 #include <gtest/gtest.h>
 #include "test_helper.h"
 
-//ros
+// ros
 #include <rclcpp/rclcpp.hpp>
 
-//romea
+// romea
 #include "romea_common_utils/params/node_parameters.hpp"
 #include "romea_common_utils/params/geodesy_parameters.hpp"
 #include "romea_common_utils/params/eigen_parameters.hpp"
@@ -34,7 +34,7 @@ protected:
      "--params-file",
      std::string(TEST_DIR)+"/test_node_parameters.yaml"});
 
-    node = std::make_shared<rclcpp::Node>("test_node_parameters","ns", no);
+    node = std::make_shared<rclcpp::Node>("test_node_parameters", "ns", no);
   }
 
 
@@ -44,9 +44,9 @@ protected:
 
 
 TEST_F(TestNodeParameters, getParameter) {
-  romea::declare_parameter<std::string>(node,"foo");
-  std::string value = romea::get_parameter<std::string>(node,"foo");
-  EXPECT_STREQ(value.c_str(),"bar");
+  romea::declare_parameter<std::string>(node, "foo");
+  std::string value = romea::get_parameter<std::string>(node, "foo");
+  EXPECT_STREQ(value.c_str(), "bar");
 }
 
 TEST_F(TestNodeParameters, getParameterDeclareDefault) {
@@ -213,12 +213,9 @@ TEST_F(TestNodeParameters, loadPublishRate)
   EXPECT_EQ(romea::get_publish_rate(node,"bar"),20);
 }
 
-//int main(int argc, char** argv)
-//{
-//  testing::InitGoogleTest(&argc, argv);
-//  ros::init(argc, argv, "ros_param_test");
-
-//  int ret = RUN_ALL_TESTS();
-//  ros::shutdown();
-//  return ret;
-//}
+int main(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  int ret = RUN_ALL_TESTS();
+  return ret;
+}

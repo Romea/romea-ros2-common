@@ -29,10 +29,10 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(romea_core_common REQUIRED)
 find_package(romea_common_msgs REQUIRED)
-find_package(rviz_visual_tools REQUIRED)
+#find_package(rviz_visual_tools REQUIRED)
 
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
     src/conversions/diagnostic_conversions.cpp
     src/conversions/time_conversions.cpp
     src/conversions/geometry_conversions.cpp
@@ -45,7 +45,7 @@ add_library(${PROJECT_NAME}
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
     src/qos.cpp
-    src/rviz.cpp
+#    src/rviz.cpp
     )
 
 ament_target_dependencies(${PROJECT_NAME}
@@ -58,7 +58,7 @@ ament_target_dependencies(${PROJECT_NAME}
     nav_msgs
     tf2_ros
     tf2_eigen
-    rviz_visual_tools
+#    rviz_visual_tools
     )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -77,10 +77,11 @@ ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(nav_msgs)
 ament_export_dependencies(tf2_ros)
 ament_export_dependencies(tf2_eigen)
+#ament_export_dependencies(rviz_visual_tools)
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
-#ament_export_targets(${PROJECT_NAME})
+#ament_export_targets(export_${PROJECT_NAME})
 
 install(
   DIRECTORY include/

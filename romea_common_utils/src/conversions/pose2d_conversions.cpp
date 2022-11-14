@@ -1,4 +1,3 @@
-//romea
 #include "romea_common_utils/conversions/pose2d_conversions.hpp"
 #include <romea_common_utils/conversions/time_conversions.hpp>
 #include <romea_common_utils/conversions/transform_conversions.hpp>

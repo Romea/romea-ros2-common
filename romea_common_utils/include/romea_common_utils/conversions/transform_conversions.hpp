@@ -1,14 +1,19 @@
-#ifndef _romea_TransformConversions_hpp_
-#define _romea_TransformConversions_hpp_
+#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_
 
-//ros
+// std
+#include <memory>
+#include <string>
+
+// ros
 #include <rclcpp/node.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 
-//eigen
+// eigen
 #include <Eigen/Geometry>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_listener.h>
+
 namespace romea {
 
 
@@ -27,6 +32,6 @@ Eigen::Affine3d lookupTransformOnce(std::shared_ptr<rclcpp::Node> node,
                                     const rclcpp::Duration timeout);
 
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_

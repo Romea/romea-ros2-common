@@ -1,16 +1,16 @@
-#ifndef _romea_OdomConversions_hpp_
-#define _romea_OdomConversions_hpp_
+#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST3D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST3D_CONVERSIONS_HPP_
 
-//std
+// std
 #include <string>
 
-//romea
+// romea
 #include <romea_core_common/time/Time.hpp>
 #include <romea_core_common/geometry/PoseAndTwist3D.hpp>
-#include "pose3d_conversions.hpp"
-#include "twist3d_Conversions.hpp"
+#include "romea_common_utils/conversions/pose3d_conversions.hpp"
+#include "romea_common_utils/conversions/twist3d_Conversions.hpp"
 
-//romea_ros_msg
+// romea_ros_msg
 #include <nav_msgs/msg/odometry.hpp>
 
 namespace romea
@@ -23,6 +23,6 @@ void  to_ros_odom_msg(const rclcpp::Time & stamp,
                       nav_msgs::msg::Odometry & odom_msg);
 
 
-}// namespace
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST3D_CONVERSIONS_HPP_

@@ -137,9 +137,9 @@ TEST_F(TestLifecycleNodePublisher, testTransformPublisher)
   EXPECT_TRUE(tf_buffer.canTransform("bar","foo",t,rclcpp::Duration(1,0)));
 }
 
-//int main(int argc, char** argv)
-//{
-//  testing::InitGoogleTest(&argc, argv);
-//  int ret = RUN_ALL_TESTS();
-//  return ret;
-//}
+int main(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  int ret = RUN_ALL_TESTS();
+  return ret;
+}

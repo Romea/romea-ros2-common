@@ -1,6 +1,12 @@
-#ifndef _romea_Publisher_hpp_
-#define _romea_Publisher_hpp_
+#ifndef ROMEA_COMMON_UTILS_PUBLISHERS_PUBLISHER_HPP_
+#define ROMEA_COMMON_UTILS_PUBLISHERS_PUBLISHER_HPP_
 
+// std
+#include <string>
+#include <utility>
+#include <memory>
+
+// ros
 #include <rclcpp/node.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
@@ -11,76 +17,71 @@ namespace romea {
 template<typename DataType>
 class PublisherBase
 {
-
 public:
+  PublisherBase() {}
 
-  PublisherBase(){};
+  virtual ~PublisherBase() = default;
 
-  virtual ~PublisherBase()=default;
+  virtual std::string get_topic_name()const = 0;
 
-  virtual std::string get_topic_name()const=0;
+  virtual void activate() = 0;
 
-  virtual void activate() =0;
+  virtual void deactivate() = 0;
 
-  virtual void deactivate()=0;
+  virtual bool is_activated() = 0;
 
-  virtual bool is_activated()=0;
-
-  virtual void publish(const DataType & data)=0;
+  virtual void publish(const DataType & data) = 0;
 };
 
 
-template<typename DataType, typename MsgType,typename NodeType>
+template<typename DataType, typename MsgType, typename NodeType>
 class Publisher
 {
 };
 
-template<typename DataType,typename MsgType>
-class Publisher<DataType,MsgType,rclcpp::Node> : public PublisherBase<DataType>
+template<typename DataType, typename MsgType>
+class Publisher<DataType, MsgType, rclcpp::Node> : public PublisherBase<DataType>
 {
 public:
-
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
 
 public:
-
   Publisher(std::shared_ptr<rclcpp::Node> node,
             const std::string & topic_name,
             const rclcpp::QoS & qos,
             const Options & options,
             bool activated):
     is_activated_(activated),
-    pub_(node->create_publisher<MsgType>(topic_name,qos,options)),
+    pub_(node->create_publisher<MsgType>(topic_name, qos, options)),
     should_log_(true),
     logger_(rclcpp::get_logger("Publisher"))
   {
   }
 
-  virtual ~Publisher()=default;
+  virtual ~Publisher() = default;
 
 
-  virtual std::string get_topic_name()const override
+  std::string get_topic_name()const override
   {
     return pub_->get_topic_name();
   }
 
-  virtual void activate() override
+  void activate() override
   {
     is_activated_.store(true);
   }
 
-  virtual void deactivate() override
+  void deactivate() override
   {
     is_activated_.store(false);
   }
 
-  virtual bool is_activated() override
+  bool is_activated() override
   {
     return is_activated_.load();
   }
 
 protected:
-
   void publish_message_(std::unique_ptr<MsgType> message)
   {
     if (!this->is_activated()) {
@@ -127,30 +128,27 @@ protected :
 };
 
 
-template<typename DataType,typename MsgType>
-class Publisher<DataType,MsgType,rclcpp_lifecycle::LifecycleNode> : public PublisherBase<DataType>
+template<typename DataType, typename MsgType>
+class Publisher<DataType, MsgType, rclcpp_lifecycle::LifecycleNode> : public PublisherBase<DataType>
 {
-
 public:
-
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
 
 public:
-
   Publisher(std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node,
             const std::string & topic_name,
             const rclcpp::QoS & qos,
             const Options & options,
             bool activated):
-    pub_(node->create_publisher<MsgType>(topic_name,qos,options))
+    pub_(node->create_publisher<MsgType>(topic_name, qos, options))
   {
-    if(activated)
+    if (activated)
     {
-      activate();
+      pub_->on_activate();
     }
   }
 
-  virtual ~Publisher()=default;
+  virtual ~Publisher() = default;
 
 
   virtual std::string get_topic_name()const
@@ -158,23 +156,22 @@ public:
     return pub_->get_topic_name();
   }
 
-  virtual void activate()override
+  void activate()override
   {
     pub_->on_activate();
   }
 
-  virtual void deactivate()override
+  void deactivate()override
   {
     pub_->on_deactivate();
   }
 
-  virtual bool is_activated()override
+  bool is_activated()override
   {
     return pub_->is_activated();
   }
 
 protected:
-
   void publish_message_(std::unique_ptr<MsgType> message)
   {
     pub_->publish(std::move(message));
@@ -190,6 +187,6 @@ protected :
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;
 };
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_PUBLISHERS_PUBLISHER_HPP_
