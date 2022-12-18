@@ -15,10 +15,12 @@ install(
 
 ament_python_install_module(python/romea_common_bringup.py)
 
-# install(PROGRAMS
-#   scripts/urdf_description.py
-#   DESTINATION lib/${PROJECT_NAME}
-# )
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  configure_file(test/test_common_bringup.yaml test_common_bringup.yaml)
+  ament_add_pytest_test(test_common_bringup test/test_common_bringup.py)
+endif()
+
 
 
 ament_package()
