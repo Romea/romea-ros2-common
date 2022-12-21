@@ -6,6 +6,7 @@ from romea_common_bringup import (
     robot_prefix,
     device_prefix,
     robot_urdf_prefix,
+    device_link_name,
     MetaDescription,
 )
 
@@ -20,6 +21,10 @@ def test_device_prefix():
 def test_robot_urdf_prefix():
     assert robot_urdf_prefix("")==""
     assert robot_urdf_prefix("robot")=="robot_"
+
+def test_device_link_name():
+    assert device_link_name("","device")=="device_link"
+    assert device_link_name("robot","device")=="robot_device_link"
 
 @pytest.fixture(scope="module")
 def meta_description():

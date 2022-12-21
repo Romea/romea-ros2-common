@@ -17,13 +17,16 @@ def device_prefix(robot_namespace, device_name):
     else:
         return robot_prefix(robot_namespace) + device_name + "/"
 
-
 def robot_urdf_prefix(robot_namespace):
 
     if robot_namespace == "":
         return ""
     else:
         return robot_namespace + "_"
+
+def device_link_name(robot_namespace, device_name):
+    return robot_urdf_prefix(robot_namespace)+device_name+"_link"
+
 
 
 class MetaDescription:
@@ -60,7 +63,6 @@ class MetaDescription:
     def get(self, param, ns=None):
 
         value = self.get_or(param, ns)
-        print("value", value)
 
         if value is None:
             raise LookupError(
