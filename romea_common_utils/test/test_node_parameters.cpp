@@ -79,10 +79,10 @@ TEST_F(TestNodeParameters, loadVectorOfDouble) {
 
 
 TEST_F(TestNodeParameters, loadVectorOfInt) {
-  std::vector<int32_t> vector_of_int;
-  romea::declare_vector_parameter<int32_t>(node, "vector3i");
+  std::vector<long int> vector_of_int;
+  romea::declare_vector_parameter<long int>(node, "vector3i");
   EXPECT_NO_THROW({vector_of_int =
-    romea::get_vector_parameter<int32_t>(node, "vector3i");});
+    romea::get_vector_parameter<long int>(node, "vector3i");});
   EXPECT_EQ(vector_of_int[0], 2);
   EXPECT_EQ(vector_of_int[1], -5);
   EXPECT_EQ(vector_of_int[2], 9);
@@ -90,12 +90,12 @@ TEST_F(TestNodeParameters, loadVectorOfInt) {
 
 
 TEST_F(TestNodeParameters, loadVectorOfIntWithDefaultDeclaration) {
-  std::vector<int32_t> default_vector_of_int = {4, 6, -3};
-  std::vector<int32_t> vector_of_int;
-  romea::declare_vector_parameter_with_default<int32_t>(
+  std::vector<long int> default_vector_of_int = {4, 6, -3};
+  std::vector<long int> vector_of_int;
+  romea::declare_vector_parameter_with_default<long int>(
     node, "vector_unset", default_vector_of_int);
   EXPECT_NO_THROW({vector_of_int =
-    romea::get_vector_parameter<int32_t>(node, "vector_unset");});
+    romea::get_vector_parameter<long int>(node, "vector_unset");});
   EXPECT_EQ(vector_of_int[0], 4);
   EXPECT_EQ(vector_of_int[1], 6);
   EXPECT_EQ(vector_of_int[2], -3);
