@@ -16,14 +16,10 @@ before_script:
   # you will overwrite your user's SSH config.
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  - rm -rf ${CI_PROJECT_DIR}/workspace/src #>/dev/null 2>&1
+  - rm -rf ${CI_PROJECT_DIR}/workspace/src >/dev/null 2>&1
   - mkdir -p ${CI_PROJECT_DIR}/workspace/src
   - cd ${CI_PROJECT_DIR}/workspace
   - vcs import src < ${CI_PROJECT_DIR}/${CI_PROJECT_NAME}.repos
-  - echo $(pwd)
-  - echo $(ls)
-#  - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git
-#  - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
 
 # galatic
 galactic_focal_build:
@@ -31,6 +27,8 @@ galactic_focal_build:
   stage: build
   script:
     - colcon build 
+    - colcon test --packages-select romea_common 
+    - colcon test-result --test-result-base build/romea_common --verbose
     # - catkin run_tests --no-status --force-color
 
 # # melodic
