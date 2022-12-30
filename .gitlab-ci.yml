@@ -20,7 +20,8 @@ before_script:
   - mkdir -p ${CI_PROJECT_DIR}/workspace/src
   - cd ${CI_PROJECT_DIR}/workspace
   - vcs import src < ${CI_PROJECT_DIR}/${CI_PROJECT_NAME}.repos
-  - ls -l
+  - echo pwd
+  - echo ls -l
 #  - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git
 #  - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
 
