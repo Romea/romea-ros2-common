@@ -24,7 +24,7 @@ def test_robot_urdf_prefix():
 
 def test_device_link_name():
     assert device_link_name("","device")=="device_link"
-    assert device_link_name("robot","device")=="robot_device_link"
+    assert device_link_name ("robot","device")=="robot_device_link"
 
 @pytest.fixture(scope="module")
 def meta_description():
