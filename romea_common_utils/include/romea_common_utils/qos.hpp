@@ -3,7 +3,8 @@
 
 #include <rclcpp/qos.hpp>
 
-namespace  romea {
+namespace  romea
+{
 
 rclcpp::QoS sensor_data_qos();
 

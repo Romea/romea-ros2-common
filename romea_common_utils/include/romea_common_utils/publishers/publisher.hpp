@@ -12,7 +12,8 @@
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
 
-namespace romea {
+namespace romea
+{
 
 template<typename DataType>
 class PublisherBase
@@ -40,18 +41,19 @@ class Publisher
 };
 
 template<typename DataType, typename MsgType>
-class Publisher<DataType, MsgType, rclcpp::Node> : public PublisherBase<DataType>
+class Publisher<DataType, MsgType, rclcpp::Node>: public PublisherBase<DataType>
 {
 public:
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
 
 public:
-  Publisher(std::shared_ptr<rclcpp::Node> node,
-            const std::string & topic_name,
-            const rclcpp::QoS & qos,
-            const Options & options,
-            bool activated):
-    is_activated_(activated),
+  Publisher(
+    std::shared_ptr<rclcpp::Node> node,
+    const std::string & topic_name,
+    const rclcpp::QoS & qos,
+    const Options & options,
+    bool activated)
+  : is_activated_(activated),
     pub_(node->create_publisher<MsgType>(topic_name, qos, options)),
     should_log_(true),
     logger_(rclcpp::get_logger("Publisher"))
@@ -110,16 +112,15 @@ protected:
 
     // Log the message
     RCLCPP_WARN(
-          logger_,
-          "Trying to publish message on the topic '%s', but the publisher is not activated",
-          this->get_topic_name().c_str());
+      logger_,
+      "Trying to publish message on the topic '%s', but the publisher is not activated",
+      this->get_topic_name().c_str());
 
     // We stop logging until the flag gets enabled again
     should_log_ = false;
   }
 
-protected :
-
+protected:
   std::atomic<bool> is_activated_;
   std::shared_ptr<rclcpp::Publisher<MsgType>> pub_;
 
@@ -129,21 +130,21 @@ protected :
 
 
 template<typename DataType, typename MsgType>
-class Publisher<DataType, MsgType, rclcpp_lifecycle::LifecycleNode> : public PublisherBase<DataType>
+class Publisher<DataType, MsgType, rclcpp_lifecycle::LifecycleNode>: public PublisherBase<DataType>
 {
 public:
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
 
 public:
-  Publisher(std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node,
-            const std::string & topic_name,
-            const rclcpp::QoS & qos,
-            const Options & options,
-            bool activated):
-    pub_(node->create_publisher<MsgType>(topic_name, qos, options))
+  Publisher(
+    std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node,
+    const std::string & topic_name,
+    const rclcpp::QoS & qos,
+    const Options & options,
+    bool activated)
+  : pub_(node->create_publisher<MsgType>(topic_name, qos, options))
   {
-    if (activated)
-    {
+    if (activated) {
       pub_->on_activate();
     }
   }
@@ -182,8 +183,7 @@ protected:
     pub_->publish(message);
   }
 
-protected :
-
+protected:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;
 };
 

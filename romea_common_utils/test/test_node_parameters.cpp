@@ -30,9 +30,9 @@ protected:
     rclcpp::NodeOptions no;
 
     no.arguments(
-    {"--ros-args",
-     "--params-file",
-     std::string(TEST_DIR)+"/test_node_parameters.yaml"});
+      {"--ros-args",
+        "--params-file",
+        std::string(TEST_DIR) + "/test_node_parameters.yaml"});
 
     node = std::make_shared<rclcpp::Node>("test_node_parameters", "ns", no);
   }
@@ -70,8 +70,9 @@ TEST_F(TestNodeParameters, getParameterInSubNamespace) {
 TEST_F(TestNodeParameters, loadVectorOfDouble) {
   std::vector<double> vector_of_double;
   romea::declare_vector_parameter<double>(node, "vector3d");
-  EXPECT_NO_THROW({vector_of_double =
-    romea::get_vector_parameter<double>(node, "vector3d");});
+  EXPECT_NO_THROW(
+    {vector_of_double =
+      romea::get_vector_parameter<double>(node, "vector3d");});
   EXPECT_NEAR(vector_of_double[0], 2.3, 0.000001);
   EXPECT_NEAR(vector_of_double[1], 5.4, 0.000001);
   EXPECT_NEAR(vector_of_double[2], -8.9, 0.000001);
@@ -79,10 +80,11 @@ TEST_F(TestNodeParameters, loadVectorOfDouble) {
 
 
 TEST_F(TestNodeParameters, loadVectorOfInt) {
-  std::vector<long int> vector_of_int;
-  romea::declare_vector_parameter<long int>(node, "vector3i");
-  EXPECT_NO_THROW({vector_of_int =
-    romea::get_vector_parameter<long int>(node, "vector3i");});
+  std::vector<int64_t> vector_of_int;
+  romea::declare_vector_parameter<int64_t>(node, "vector3i");
+  EXPECT_NO_THROW(
+    {vector_of_int =
+      romea::get_vector_parameter<int64_t>(node, "vector3i");});
   EXPECT_EQ(vector_of_int[0], 2);
   EXPECT_EQ(vector_of_int[1], -5);
   EXPECT_EQ(vector_of_int[2], 9);
@@ -90,12 +92,13 @@ TEST_F(TestNodeParameters, loadVectorOfInt) {
 
 
 TEST_F(TestNodeParameters, loadVectorOfIntWithDefaultDeclaration) {
-  std::vector<long int> default_vector_of_int = {4, 6, -3};
-  std::vector<long int> vector_of_int;
-  romea::declare_vector_parameter_with_default<long int>(
+  std::vector<int64_t> default_vector_of_int = {4, 6, -3};
+  std::vector<int64_t> vector_of_int;
+  romea::declare_vector_parameter_with_default<int64_t>(
     node, "vector_unset", default_vector_of_int);
-  EXPECT_NO_THROW({vector_of_int =
-    romea::get_vector_parameter<long int>(node, "vector_unset");});
+  EXPECT_NO_THROW(
+    {vector_of_int =
+      romea::get_vector_parameter<int64_t>(node, "vector_unset");});
   EXPECT_EQ(vector_of_int[0], 4);
   EXPECT_EQ(vector_of_int[1], 6);
   EXPECT_EQ(vector_of_int[2], -3);
@@ -104,8 +107,9 @@ TEST_F(TestNodeParameters, loadVectorOfIntWithDefaultDeclaration) {
 TEST_F(TestNodeParameters, loadEigenVector3d) {
   Eigen::Vector3d eigen_vector3d;
   romea::declare_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");
-  EXPECT_NO_THROW({eigen_vector3d =
-                   romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");});
+  EXPECT_NO_THROW(
+    {eigen_vector3d =
+      romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");});
   EXPECT_NEAR(eigen_vector3d.x(), 2.3, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 5.4, 0.000001);
   EXPECT_NEAR(eigen_vector3d.z(), -8.9, 0.000001);
@@ -116,14 +120,15 @@ TEST_F(TestNodeParameters, loadUnsetEigenVector3d) {
   Eigen::Vector3d eigen_vector3d;
   romea::declare_eigen_vector_parameter_with_default<Eigen::Vector3d>(
     node, "unset_vector", default_eigen_vector3d);
-  EXPECT_NO_THROW({eigen_vector3d =
-    romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");});
+  EXPECT_NO_THROW(
+    {eigen_vector3d =
+      romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");});
   EXPECT_NEAR(eigen_vector3d.x(), 2, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 3, 0.000001);
   EXPECT_NEAR(eigen_vector3d.z(), 6, 0.000001);
 }
 
-//TEST_F(TestNodeParameters, loadEigenVector3i) {
+// TEST_F(TestNodeParameters, loadEigenVector3i) {
 
 //    Eigen::Vector3i eigen_vector3i;
 //    EXPECT_NO_THROW({eigen_vector3i=romea::loadEigenVector<Eigen::Vector3i>(*node,"vector3i");});
@@ -136,10 +141,11 @@ TEST_F(TestNodeParameters, loadGeodeticCoordinates)
 {
   romea::GeodeticCoordinates geodetic_coordinates;
   romea::declare_geodetic_coordinates_parameter(node, "geodetic");
-  EXPECT_NO_THROW({geodetic_coordinates =
-    romea::get_geodetic_coordinates_parameter(node, "geodetic");});
-  EXPECT_NEAR(geodetic_coordinates.latitude, 45.85207/180.*M_PI, 0.000001);
-  EXPECT_NEAR(geodetic_coordinates.longitude, 3.16482/180.*M_PI, 0.000001);
+  EXPECT_NO_THROW(
+    {geodetic_coordinates =
+      romea::get_geodetic_coordinates_parameter(node, "geodetic");});
+  EXPECT_NEAR(geodetic_coordinates.latitude, 45.85207 / 180. * M_PI, 0.000001);
+  EXPECT_NEAR(geodetic_coordinates.longitude, 3.16482 / 180. * M_PI, 0.000001);
   EXPECT_NEAR(geodetic_coordinates.altitude, 300.0, 0.000001);
 }
 
@@ -173,8 +179,9 @@ TEST_F(TestNodeParameters, loadLogFilename)
 {
   romea::declare_debug(node);
   romea::declare_log_directory(node);
-  EXPECT_STREQ(romea::get_log_filename(node, "bar").c_str(),
-               "/foo/ns_test_node_parameters_bar_debug.csv");
+  EXPECT_STREQ(
+    romea::get_log_filename(node, "bar").c_str(),
+    "/foo/ns_test_node_parameters_bar_debug.csv");
 }
 
 TEST_F(TestNodeParameters, loadBaseFootprintFrameId)
@@ -215,7 +222,7 @@ TEST_F(TestNodeParameters, loadPublishRate)
   EXPECT_EQ(romea::get_publish_rate(node, "bar"), 20);
 }
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   int ret = RUN_ALL_TESTS();

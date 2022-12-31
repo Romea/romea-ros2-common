@@ -15,47 +15,48 @@
 #include "../conversions/time_conversions.hpp"
 #include "../conversions/transform_conversions.hpp"
 
-namespace romea {
+namespace romea
+{
 
-template <typename DataType, typename NodeType>
+template<typename DataType, typename NodeType>
 class TransformPublisher : public StampedPublisher<DataType, tf2_msgs::msg::TFMessage, NodeType>
 {
-private :
-
+private:
   using Base = StampedPublisher<DataType, tf2_msgs::msg::TFMessage, NodeType>;
-  using Options =  typename Base::Options;
+  using Options = typename Base::Options;
 
-public :
-
-  TransformPublisher(std::shared_ptr<NodeType> node,
-                     const std::string & frame_id,
-                     const std::string & child_frame_id,
-                     const bool & activated);
+public:
+  TransformPublisher(
+    std::shared_ptr<NodeType> node,
+    const std::string & frame_id,
+    const std::string & child_frame_id,
+    const bool & activated);
 
   virtual ~TransformPublisher() = default;
 
-  virtual void publish(const rclcpp::Time & stamp,
-                       const DataType & data);
+  virtual void publish(
+    const rclcpp::Time & stamp,
+    const DataType & data);
 
-  virtual void publish(const Duration & duration,
-                       const DataType & data);
+  virtual void publish(
+    const Duration & duration,
+    const DataType & data);
 
-private :
-
+private:
   static Options make_options();
 
-private :
-
+private:
   tf2_msgs::msg::TFMessage message_;
 };
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename NodeType>
-TransformPublisher<DataType, NodeType>::TransformPublisher(std::shared_ptr<NodeType> node,
-                                                          const std::string & frame_id,
-                                                          const std::string & child_frame_id,
-                                                          const bool & activated):
-  Base(node, "/tf", tf2_ros::DynamicBroadcasterQoS(), make_options(), activated),
+template<typename DataType, typename NodeType>
+TransformPublisher<DataType, NodeType>::TransformPublisher(
+  std::shared_ptr<NodeType> node,
+  const std::string & frame_id,
+  const std::string & child_frame_id,
+  const bool & activated)
+: Base(node, "/tf", tf2_ros::DynamicBroadcasterQoS(), make_options(), activated),
   message_()
 {
   assert(!frame_id.empty());
@@ -75,23 +76,24 @@ TransformPublisher<DataType, NodeType>::TransformPublisher(std::shared_ptr<NodeT
 }
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename NodeType>
+template<typename DataType, typename NodeType>
 typename TransformPublisher<DataType, NodeType>::Options
 TransformPublisher<DataType, NodeType>::make_options()
 {
   Options options;
   options.qos_overriding_options = rclcpp::QosOverridingOptions{
-      rclcpp::QosPolicyKind::Depth,
-      rclcpp::QosPolicyKind::Durability,
-      rclcpp::QosPolicyKind::History,
-      rclcpp::QosPolicyKind::Reliability};
+    rclcpp::QosPolicyKind::Depth,
+    rclcpp::QosPolicyKind::Durability,
+    rclcpp::QosPolicyKind::History,
+    rclcpp::QosPolicyKind::Reliability};
   return options;
 }
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename NodeType>
-void TransformPublisher<DataType, NodeType>::publish(const rclcpp::Time & stamp,
-                                                    const DataType &data)
+template<typename DataType, typename NodeType>
+void TransformPublisher<DataType, NodeType>::publish(
+  const rclcpp::Time & stamp,
+  const DataType & data)
 {
   message_.transforms[0].header.stamp = stamp;
   to_ros_transform_msg(data, message_.transforms[0].transform);
@@ -99,26 +101,29 @@ void TransformPublisher<DataType, NodeType>::publish(const rclcpp::Time & stamp,
 }
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename NodeType>
-void TransformPublisher<DataType, NodeType>::publish(const romea::Duration & duration,
-                                                     const DataType & data)
+template<typename DataType, typename NodeType>
+void TransformPublisher<DataType, NodeType>::publish(
+  const romea::Duration & duration,
+  const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename NodeType>
+template<typename DataType, typename NodeType>
 std::shared_ptr<TransformPublisher<DataType, NodeType>>
-make_transform_publisher(std::shared_ptr<NodeType> node,
-                         const std::string & frame_id,
-                         const std::string & child_frame_id,
-                         const bool & activated)
+make_transform_publisher(
+  std::shared_ptr<NodeType> node,
+  const std::string & frame_id,
+  const std::string & child_frame_id,
+  const bool & activated)
 {
   using Publisher = TransformPublisher<DataType, NodeType>;
-  return std::make_shared<Publisher>(node,
-                                     frame_id,
-                                     child_frame_id,
-                                     activated);
+  return std::make_shared<Publisher>(
+    node,
+    frame_id,
+    child_frame_id,
+    activated);
 }
 
 }  // namespace romea

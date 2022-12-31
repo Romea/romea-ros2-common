@@ -5,9 +5,11 @@
 #include <memory>
 #include <string>
 
+// romea
 #include "romea_common_utils/params/node_parameters.hpp"
 
-namespace romea {
+namespace romea
+{
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>

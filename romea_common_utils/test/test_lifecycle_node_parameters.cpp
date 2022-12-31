@@ -30,9 +30,9 @@ protected:
     rclcpp::NodeOptions no;
 
     no.arguments(
-    {"--ros-args",
-     "--params-file",
-     std::string(TEST_DIR)+"/test_node_parameters.yaml"});
+      {"--ros-args",
+        "--params-file",
+        std::string(TEST_DIR) + "/test_node_parameters.yaml"});
 
     node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
       "test_lifecyle_node_parameters", "ns", no);
@@ -78,26 +78,28 @@ TEST_F(TestLifecycleNodeParameters, loadVectorOfDouble) {
 }
 
 TEST_F(TestLifecycleNodeParameters, loadVectorOfInt) {
-  romea::declare_vector_parameter<long int>(node, "vector3i");
+  romea::declare_vector_parameter<int64_t>(node, "vector3i");
 
-  std::vector<long int> vector_of_int;
-  EXPECT_NO_THROW({vector_of_int =
-                   romea::get_vector_parameter<long int>(node, "vector3i");});
+  std::vector<int64_t> vector_of_int;
+  EXPECT_NO_THROW(
+    {vector_of_int =
+      romea::get_vector_parameter<int64_t>(node, "vector3i");});
 
-  EXPECT_EQ(vector_of_int[0] , 2);
-  EXPECT_EQ(vector_of_int[1] , -5);
-  EXPECT_EQ(vector_of_int[2] , 9);
+  EXPECT_EQ(vector_of_int[0], 2);
+  EXPECT_EQ(vector_of_int[1], -5);
+  EXPECT_EQ(vector_of_int[2], 9);
 }
 
 
 TEST_F(TestLifecycleNodeParameters, loadVectorWithDefaultDeclaration) {
-  std::vector<long int> default_vector_of_int={4, 6, -3};
-  romea::declare_vector_parameter_with_default<long int>(
+  std::vector<int64_t> default_vector_of_int = {4, 6, -3};
+  romea::declare_vector_parameter_with_default<int64_t>(
     node, "vector_unset", default_vector_of_int);
 
-  std::vector<long int> vector_of_int;
-  EXPECT_NO_THROW({vector_of_int =
-                  romea::get_vector_parameter<long int>(node, "vector_unset");});
+  std::vector<int64_t> vector_of_int;
+  EXPECT_NO_THROW(
+    {vector_of_int =
+      romea::get_vector_parameter<int64_t>(node, "vector_unset");});
 
   EXPECT_EQ(vector_of_int[0], 4);
   EXPECT_EQ(vector_of_int[1], 6);
@@ -109,8 +111,9 @@ TEST_F(TestLifecycleNodeParameters, loadEigenVector) {
   romea::declare_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");
 
   Eigen::Vector3d eigen_vector3d;
-  EXPECT_NO_THROW({eigen_vector3d =
-                  romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");});
+  EXPECT_NO_THROW(
+    {eigen_vector3d =
+      romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");});
 
   EXPECT_NEAR(eigen_vector3d.x(), 2.3, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 5.4, 0.000001);
@@ -124,8 +127,9 @@ TEST_F(TestLifecycleNodeParameters, loadUnsetEigenVector)
     node, "unset_vector", default_eigen_vector3d);
 
   Eigen::Vector3d eigen_vector3d;
-  EXPECT_NO_THROW({eigen_vector3d =
-                   romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");});
+  EXPECT_NO_THROW(
+    {eigen_vector3d =
+      romea::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");});
 
   EXPECT_NEAR(eigen_vector3d.x(), 2, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 3, 0.000001);
@@ -148,8 +152,9 @@ TEST_F(TestLifecycleNodeParameters, loadLogFilename)
 {
   romea::declare_debug(node);
   romea::declare_log_directory(node);
-  EXPECT_STREQ(romea::get_log_filename(node, "bar").c_str(),
-               "/foo/ns_test_lifecyle_node_parameters_bar_debug.csv");
+  EXPECT_STREQ(
+    romea::get_log_filename(node, "bar").c_str(),
+    "/foo/ns_test_lifecyle_node_parameters_bar_debug.csv");
 }
 
 TEST_F(TestLifecycleNodeParameters, loadBaseFootprintFrameId)
@@ -190,16 +195,16 @@ TEST_F(TestLifecycleNodeParameters, loadPublishRate)
   EXPECT_EQ(romea::get_publish_rate(node, "bar"), 20);
 }
 
-////TEST_F(TestLifecycleNodeParameters, loadEigenVector3i) {
+// TEST_F(TestLifecycleNodeParameters, loadEigenVector3i) {
 
-////    Eigen::Vector3i eigen_vector3i;
-////    EXPECT_NO_THROW({eigen_vector3i=romea::loadEigenVector<Eigen::Vector3i>(*node,"vector3i");});
-////    EXPECT_NEAR(eigen_vector3i.x(),2.3,0.000001);
-////    EXPECT_NEAR(eigen_vector3i.y(),5.4,0.000001);
-////    EXPECT_NEAR(eigen_vector3i.z(),-8.9,0.000001);
-////}
+//    Eigen::Vector3i eigen_vector3i;
+//    EXPECT_NO_THROW({eigen_vector3i=romea::loadEigenVector<Eigen::Vector3i>(*node,"vector3i");});
+//    EXPECT_NEAR(eigen_vector3i.x(),2.3,0.000001);
+//    EXPECT_NEAR(eigen_vector3i.y(),5.4,0.000001);
+//    EXPECT_NEAR(eigen_vector3i.z(),-8.9,0.000001);
+//}
 
-//TEST_F(TestLifecycleNodeParameters, loadGeodeticCoordinates)
+// TEST_F(TestLifecycleNodeParameters, loadGeodeticCoordinates)
 //{
 //  romea::GeodeticCoordinates geodetic_coordinates;
 //  romea::declare_geodetic_coordinates_parameter(node,"geodetic");
@@ -210,7 +215,7 @@ TEST_F(TestLifecycleNodeParameters, loadPublishRate)
 //}
 
 
-//TEST_F(TestLifecycleNodeParameters, loadMapFloat)
+// TEST_F(TestLifecycleNodeParameters, loadMapFloat)
 //{
 //  std::map<std::string,double> map;
 //  romea::declare_parameter<double>(node,"map.foo");
@@ -223,7 +228,7 @@ TEST_F(TestLifecycleNodeParameters, loadPublishRate)
 //}
 
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   int ret = RUN_ALL_TESTS();

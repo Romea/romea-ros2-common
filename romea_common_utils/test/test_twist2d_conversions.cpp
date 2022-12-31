@@ -1,5 +1,7 @@
 // gtest
 #include <gtest/gtest.h>
+
+// local
 #include "test_utils.hpp"
 
 // romea
@@ -8,10 +10,9 @@
 //-----------------------------------------------------------------------------
 class TestTwist2DConversion : public ::testing::Test
 {
-public :
-
-  TestTwist2DConversion():
-    stamp(1000),
+public:
+  TestTwist2DConversion()
+  : stamp(1000),
     frame_id("foo"),
     romea_twist2d(),
     ros_twist2d_msg()
@@ -56,7 +57,8 @@ TEST_F(TestTwist2DConversion, fromRosMsgto_romea)
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char **argv){
+int main(int argc, char ** argv)
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

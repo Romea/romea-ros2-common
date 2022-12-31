@@ -8,7 +8,7 @@
 
 using GeometryMsgVector3 = geometry_msgs::msg::Vector3;
 using GeometryMsgQuaternion = geometry_msgs::msg::Quaternion;
-using GeometryMsgTransform =  geometry_msgs::msg::Transform;
+using GeometryMsgTransform = geometry_msgs::msg::Transform;
 using DiagnosticMsgDiagnosticStatus = diagnostic_msgs::msg::DiagnosticStatus;
 
 
@@ -48,9 +48,9 @@ TEST(TestRosConversions, testQuaternionConversion)
   double yaw = -2.5;
 
   Eigen::Quaterniond quaternion =
-      Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
-      Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
-      Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
+    Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
+    Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
 
   GeometryMsgQuaternion quaternion_msg;
   romea::to_ros_msg(quaternion, quaternion_msg);
@@ -77,14 +77,14 @@ TEST(TestRosConversions, testTransformConversion)
   double yaw = 3.2;
 
   Eigen::Quaterniond quaternion =
-      Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
-      Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
-      Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
+    Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
+    Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
 
   Eigen::Matrix3d rotation = quaternion.toRotationMatrix();
 
   Eigen::Affine3d transform;
-  transform.linear()= rotation;
+  transform.linear() = rotation;
   transform.translation() = Eigen::Vector3d(x, y, z);
 
   GeometryMsgTransform transform_msg;
@@ -101,8 +101,8 @@ TEST(TestRosConversions, testTransformConversion)
   EXPECT_DOUBLE_EQ(transform.translation().x(), x);
   EXPECT_DOUBLE_EQ(transform.translation().y(), y);
   EXPECT_DOUBLE_EQ(transform.translation().z(), z);
-  for (int i = 0; i < 3; i++){
-    for (int j = 0; j < 3; j++){
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
       EXPECT_NEAR(transform.linear()(i, j), rotation(i, j), 0.00001);
     }
   }
@@ -132,7 +132,8 @@ TEST(TestRosConversions, testDiagnosticConversion)
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char **argv){
+int main(int argc, char ** argv)
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

@@ -1,51 +1,53 @@
-#ifndef _romea_DataListener_hpp_
-#define _romea_DataListener_hpp_
+#ifndef ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 
+#define ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 
 
-//ros
+// std
+#include <string>
+#include <mutex>
+#include <memory>
+
+// ros
 #include <rclcpp/rclcpp.hpp>
 
-//romea
+// romea
 #include <romea_core_common/concurrency/SharedVariable.hpp>
 
-namespace romea {
+namespace romea
+{
 
 template<typename DataType>
 class DataListenerBase
 {
-
 public:
+  DataListenerBase() {}
 
-  DataListenerBase(){};
-
-  virtual ~DataListenerBase()=default;
+  virtual ~DataListenerBase() = default;
 
   DataType get_data()const
   {
-
     std::lock_guard<std::mutex> lock(mutex_);
     return data_;
   }
 
-  virtual std::string get_topic_name()const =0;
+  virtual std::string get_topic_name()const = 0;
 
 protected:
-
   mutable std::mutex mutex_;
   DataType data_;
 };
 
 
-template <typename DataType,typename MsgType, typename NodeType>
+template<typename DataType, typename MsgType, typename NodeType>
 class DataListener : public DataListenerBase<DataType>
 {
 public:
-
-  DataListener(std::shared_ptr<NodeType> node,
-               const std::string & topic_name,
-               const rclcpp::QoS & qos)
+  DataListener(
+    std::shared_ptr<NodeType> node,
+    const std::string & topic_name,
+    const rclcpp::QoS & qos)
   {
-    auto callback = std::bind(&DataListener::callback_,this,std::placeholders::_1);
-    data_sub_ = node->template create_subscription<MsgType>(topic_name,qos,callback);
+    auto callback = std::bind(&DataListener::callback_, this, std::placeholders::_1);
+    data_sub_ = node->template create_subscription<MsgType>(topic_name, qos, callback);
   }
 
   virtual std::string get_topic_name()const
@@ -56,27 +58,27 @@ public:
   virtual ~DataListener() = default;
 
 private:
-
   void callback_(typename MsgType::ConstSharedPtr msg)
   {
     std::lock_guard<std::mutex> lock(this->mutex_);
-    to_romea(*msg,this->data_);
+    to_romea(*msg, this->data_);
   }
 
   std::shared_ptr<rclcpp::Subscription<MsgType>> data_sub_;
 };
 
 //-----------------------------------------------------------------------------
-template <typename DataType, typename MsgType, typename NodeType>
-std::shared_ptr<DataListener<DataType,MsgType,NodeType>>
-make_data_listener(std::shared_ptr<NodeType> node,
-                  const std::string & topic_name,
-                  const rclcpp::QoS & qos)
+template<typename DataType, typename MsgType, typename NodeType>
+std::shared_ptr<DataListener<DataType, MsgType, NodeType>>
+make_data_listener(
+  std::shared_ptr<NodeType> node,
+  const std::string & topic_name,
+  const rclcpp::QoS & qos)
 {
-  using Listener = DataListener<DataType,MsgType,NodeType>;
-  return std::make_shared<Listener>(node,topic_name,qos);
+  using Listener = DataListener<DataType, MsgType, NodeType>;
+  return std::make_shared<Listener>(node, topic_name, qos);
 }
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 

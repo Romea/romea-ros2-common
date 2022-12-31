@@ -1,18 +1,19 @@
 // gtest
 #include <gtest/gtest.h>
+
+// local
 #include "test_utils.hpp"
 
-//romea
+// romea
 #include <romea_core_common/math/EulerAngles.hpp>
 #include "romea_common_utils/conversions/pose3d_conversions.hpp"
 
 //-----------------------------------------------------------------------------
 class TestPose3DConversion : public ::testing::Test
 {
-public :
-
-  TestPose3DConversion():
-    stamp(1000),
+public:
+  TestPose3DConversion()
+  : stamp(1000),
     frame_id("foo"),
     child_frame_id("bar"),
     romea_pose3d(),
@@ -91,7 +92,8 @@ TEST_F(TestPose3DConversion, fromRomeato_ros_transform_msg)
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char **argv){
+int main(int argc, char ** argv)
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

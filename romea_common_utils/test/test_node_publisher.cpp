@@ -15,28 +15,28 @@
 class TestNodePublisher : public ::testing::Test
 {
 protected:
-    static void SetUpTestCase()
-    {
-        rclcpp::init(0, nullptr);
-    }
+  static void SetUpTestCase()
+  {
+    rclcpp::init(0, nullptr);
+  }
 
-    static void TearDownTestCase()
-    {
-        rclcpp::shutdown();
-    }
+  static void TearDownTestCase()
+  {
+    rclcpp::shutdown();
+  }
 
-    void SetUp() override
-    {
-        node = std::make_shared<rclcpp::Node>("test_ros_publishers");
-    }
+  void SetUp() override
+  {
+    node = std::make_shared<rclcpp::Node>("test_ros_publishers");
+  }
 
-    void SleedpAndSpinSome()
-    {
-        rclcpp::sleep_for(std::chrono::milliseconds(10));
-        rclcpp::spin_some(node);
-    }
+  void SleedpAndSpinSome()
+  {
+    rclcpp::sleep_for(std::chrono::milliseconds(10));
+    rclcpp::spin_some(node);
+  }
 
-    std::shared_ptr<rclcpp::Node> node;
+  std::shared_ptr<rclcpp::Node> node;
 };
 
 
@@ -73,12 +73,12 @@ TEST_F(TestNodePublisher, testStampedDataPublisher)
 
 TEST_F(TestNodePublisher, testOdomPublisher)
 {
-  auto pub = romea::make_odom_publisher<nav_msgs::msg::Odometry>
-             (node, "odom", "foo", "bar", 1, true);
+  auto pub =
+    romea::make_odom_publisher<nav_msgs::msg::Odometry>(node, "odom", "foo", "bar", 1, true);
   Subscription<nav_msgs::msg::Odometry> sub(node, "odom");
 
   rclcpp::Time t = node->get_clock()->now();
-  pub->publish(t , nav_msgs::msg::Odometry());
+  pub->publish(t, nav_msgs::msg::Odometry());
   SleedpAndSpinSome();
 
   EXPECT_EQ(sub.get_publisher_count(), 1U);
@@ -94,7 +94,7 @@ TEST_F(TestNodePublisher, testDiagnosticPublisher)
 
   romea::DiagnosticReport report;
   report.diagnostics.push_back(romea::Diagnostic(romea::DiagnosticStatus::ERROR, "bar"));
-  report.info["bar"]="error";
+  report.info["bar"] = "error";
 
   rclcpp::Time t = node->get_clock()->now();
   pub->publish(t, report);
@@ -116,15 +116,15 @@ TEST_F(TestNodePublisher, testTransformPublisher)
 
 
   rclcpp::Time t = node->get_clock()->now();
-  pub->publish(t-rclcpp::Duration(std::chrono::milliseconds(100)), Eigen::Affine3d::Identity());
+  pub->publish(t - rclcpp::Duration(std::chrono::milliseconds(100)), Eigen::Affine3d::Identity());
   SleedpAndSpinSome();
-  pub->publish(t+rclcpp::Duration(std::chrono::milliseconds(100)), Eigen::Affine3d::Identity());
+  pub->publish(t + rclcpp::Duration(std::chrono::milliseconds(100)), Eigen::Affine3d::Identity());
   SleedpAndSpinSome();
 
   EXPECT_TRUE(tf_buffer.canTransform("bar", "foo", t, rclcpp::Duration(1, 0)));
 }
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   int ret = RUN_ALL_TESTS();

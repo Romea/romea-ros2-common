@@ -1,10 +1,12 @@
 #include "romea_common_utils/conversions/time_conversions.hpp"
 
-namespace romea {
+namespace romea
+{
 
 //-----------------------------------------------------------------------------
-rclcpp::Time to_ros_time(const Duration & duration,
-                         rcl_clock_type_t clock_type)
+rclcpp::Time to_ros_time(
+  const Duration & duration,
+  rcl_clock_type_t clock_type)
 {
   return rclcpp::Time(durationToNanoSecond(duration), clock_type);
 }

@@ -1,14 +1,14 @@
-//romea
+// romea
 #include "romea_common_utils/conversions/twist3d_Conversions.hpp"
 
 namespace romea
 {
 
 //-----------------------------------------------------------------------------
-void to_ros_msg(const Twist3D & romea_twist3d,
-              geometry_msgs::msg::TwistWithCovariance &ros_twist_msg)
+void to_ros_msg(
+  const Twist3D & romea_twist3d,
+  geometry_msgs::msg::TwistWithCovariance & ros_twist_msg)
 {
-
   const auto & linearSpeeds = romea_twist3d.linearSpeeds;
   const auto & angularSpeeds = romea_twist3d.angularSpeeds;
   const auto & covariance = romea_twist3d.covariance;
@@ -21,17 +21,17 @@ void to_ros_msg(const Twist3D & romea_twist3d,
   ros_twist_msg.twist.angular.y = angularSpeeds.y();
   ros_twist_msg.twist.angular.z = angularSpeeds.z();
 
-  for (size_t n = 0;n < 36; ++n)
-  {
+  for (size_t n = 0; n < 36; ++n) {
     ros_twist_msg.covariance[n] = covariance(n);
   }
 }
 
 //-----------------------------------------------------------------------------
-void to_ros_msg(const rclcpp::Time & stamp,
-                const std::string & frame_id,
-                const Twist3D & romea_twist_3d,
-                geometry_msgs::msg::TwistWithCovarianceStamped & ros_twist3d_msg)
+void to_ros_msg(
+  const rclcpp::Time & stamp,
+  const std::string & frame_id,
+  const Twist3D & romea_twist_3d,
+  geometry_msgs::msg::TwistWithCovarianceStamped & ros_twist3d_msg)
 {
   ros_twist3d_msg.header.stamp = stamp;
   ros_twist3d_msg.header.frame_id = frame_id;
@@ -39,8 +39,9 @@ void to_ros_msg(const rclcpp::Time & stamp,
 }
 
 //-----------------------------------------------------------------------------
-void to_romea(const geometry_msgs::msg::TwistWithCovariance &ros_twist_msg,
-             Twist3D & romea_twist3d)
+void to_romea(
+  const geometry_msgs::msg::TwistWithCovariance & ros_twist_msg,
+  Twist3D & romea_twist3d)
 {
   romea_twist3d.linearSpeeds.x() = ros_twist_msg.twist.linear.x;
   romea_twist3d.linearSpeeds.y() = ros_twist_msg.twist.linear.y;
@@ -60,4 +61,3 @@ Twist3D to_romea(const geometry_msgs::msg::TwistWithCovariance & ros_twist_msg)
 }
 
 }  // namespace romea
-

@@ -1,5 +1,7 @@
 // gtest
 #include <gtest/gtest.h>
+
+// local
 #include "test_utils.hpp"
 
 // romea
@@ -8,10 +10,9 @@
 //-----------------------------------------------------------------------------
 class TestPose2DConversion : public ::testing::Test
 {
-public :
-
-  TestPose2DConversion():
-    stamp(1000),
+public:
+  TestPose2DConversion()
+  : stamp(1000),
     frame_id("foo"),
     romea_pose2d(),
     ros_pose2d_msg()
@@ -45,7 +46,8 @@ TEST_F(TestPose2DConversion, fromRomeato_ros_msg)
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char **argv){
+int main(int argc, char ** argv)
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

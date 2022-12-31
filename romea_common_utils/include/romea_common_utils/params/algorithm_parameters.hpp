@@ -8,7 +8,8 @@
 // romea
 #include "romea_common_utils/params/node_parameters.hpp"
 
-namespace romea {
+namespace romea
+{
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
@@ -29,7 +30,7 @@ template<typename NodeType>
 inline void declare_log_directory(std::shared_ptr<NodeType> node)
 {
   declare_parameter_with_default<std::string>(
-        node, "log_directory", rclcpp::get_logging_directory().string());
+    node, "log_directory", rclcpp::get_logging_directory().string());
 }
 
 //-----------------------------------------------------------------------------
@@ -41,40 +42,41 @@ inline std::string get_log_directory(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline std::string get_log_filename(std::shared_ptr<NodeType> node,
-                                    const std::string & log_name ="")
+inline std::string get_log_filename(
+  std::shared_ptr<NodeType> node,
+  const std::string & log_name = "")
 {
   std::string filename;
-  if (get_debug(node))
-  {
+  if (get_debug(node)) {
     std::string ns = std::string(node->get_namespace());
     std::string node_name = std::string(node->get_name());
 
-    filename = ns == "/" ?  ns+node_name : ns+"/"+node_name;
+    filename = ns == "/" ? ns + node_name : ns + "/" + node_name;
 
-    if (!log_name.empty())
-    {
-      filename +="/"+log_name;
+    if (!log_name.empty()) {
+      filename += "/" + log_name;
     }
 
-    filename+="/debug.csv";
+    filename += "/debug.csv";
 
-    std::replace_copy(std::begin(filename)+1,
-                      std::end(filename),
-                      std::begin(filename)+1, '/', '_');
+    std::replace_copy(
+      std::begin(filename) + 1,
+      std::end(filename),
+      std::begin(filename) + 1, '/', '_');
 
-    filename = get_log_directory(node)+filename;
+    filename = get_log_directory(node) + filename;
   }
   return filename;
 }
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline void declare_base_footprint_frame_id(std::shared_ptr<NodeType> node,
-                                            const std::string & ns)
+inline void declare_base_footprint_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   declare_parameter_with_default<std::string>(
-        node, ns, "base_footprint_frame_id", "base_footprint");
+    node, ns, "base_footprint_frame_id", "base_footprint");
 }
 
 //-----------------------------------------------------------------------------
@@ -87,8 +89,9 @@ inline void declare_base_footprint_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline std::string get_base_footprint_frame_id(std::shared_ptr<NodeType> node,
-                                               const std::string & ns)
+inline std::string get_base_footprint_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   return get_parameter<std::string>(node, ns, "base_footprint_frame_id");
 }
@@ -102,11 +105,12 @@ inline std::string get_base_footprint_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline void declare_odom_frame_id(std::shared_ptr<NodeType> node,
-                                  const std::string & ns)
+inline void declare_odom_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   declare_parameter_with_default<std::string>(
-        node, ns, "odom_frame_id", "odom");
+    node, ns, "odom_frame_id", "odom");
 }
 
 //-----------------------------------------------------------------------------
@@ -119,8 +123,9 @@ inline void declare_odom_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline std::string get_odom_frame_id(std::shared_ptr<NodeType> node,
-                                     const std::string & ns)
+inline std::string get_odom_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   return get_parameter<std::string>(node, ns, "odom_frame_id");
 }
@@ -134,11 +139,12 @@ inline std::string get_odom_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline void declare_map_frame_id(std::shared_ptr<NodeType> node,
-                                 const std::string & ns)
+inline void declare_map_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   declare_parameter_with_default<std::string>(
-        node, ns, "map_frame_id", "map");
+    node, ns, "map_frame_id", "map");
 }
 
 //-----------------------------------------------------------------------------
@@ -151,8 +157,9 @@ inline void declare_map_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline std::string get_map_frame_id(std::shared_ptr<NodeType> node,
-                                    const std::string & ns)
+inline std::string get_map_frame_id(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   return get_parameter<std::string>(node, ns, "map_frame_id");
 }
@@ -166,8 +173,9 @@ inline std::string get_map_frame_id(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline void declare_publish_rate(std::shared_ptr<NodeType> node,
-                                 const std::string & ns)
+inline void declare_publish_rate(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   declare_parameter<int>(node, ns, "publish_rate");
 }
@@ -182,8 +190,9 @@ inline void declare_publish_rate(std::shared_ptr<NodeType> node)
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
-inline int get_publish_rate(std::shared_ptr<NodeType> node,
-                            const std::string & ns)
+inline int get_publish_rate(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns)
 {
   return get_parameter<int>(node, ns, "publish_rate");
 }
@@ -199,4 +208,3 @@ inline int get_publish_rate(std::shared_ptr<NodeType> node)
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS_PARAMS_ALGORITHM_PARAMETERS_HPP_
-
