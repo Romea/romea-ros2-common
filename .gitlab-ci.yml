@@ -27,10 +27,8 @@ galactic_focal_build:
   stage: build
   script:
     - colcon build 
-    - colcon test --packages-select romea_common_utils 
-    - colcon test-result --test-result-base build/romea_common_utils --verbose
-    - colcon test --packages-select romea_common_bringup 
-    - colcon test-result --test-result-base build/romea_common_bringup --verbose
+    - colcon test --packages-select romea_common_bringup romea_common_utils 
+    - colcon test-result --verbose
 
     # - catkin run_tests --no-status --force-color
 
