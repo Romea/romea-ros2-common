@@ -49,9 +49,9 @@ class MetaDescription:
         if ns is not None:
             try:
                 return self.data[ns].get(param, default)
-            except:
+            except Exception:
                 raise LookupError(
-                    "Cannot get param"
+                    "Cannot get param "
                     + self.param_name_(param, ns)
                     + " from "
                     + self.type
@@ -67,7 +67,7 @@ class MetaDescription:
 
         if value is None:
             raise LookupError(
-                "Cannot get param"
+                "Cannot get param "
                 + self.param_name_(param, ns)
                 + " from "
                 + self.type

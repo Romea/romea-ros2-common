@@ -75,12 +75,15 @@ def test_get_or_foo_baz(meta_description):
 def test_get_or_foo_thud(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("foo", "thud")
-    print(str(excinfo.value))
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param thud.foo" in str(excinfo.value)
 
 
 def test_get_or_baz_foo(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("baz", "foo")
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param foo.baz" in str(excinfo.value)
 
 
 def test_get_foo(meta_description):
@@ -94,18 +97,26 @@ def test_get_qux_baz(meta_description):
 def test_get_bar(meta_description):
     with pytest.raises(LookupError) as excinfo:
         assert meta_description.get("bar")
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param bar" in str(excinfo.value)
 
 
 def test_get_foo_baz(meta_description):
     with pytest.raises(LookupError) as excinfo:
         assert meta_description.get("foo", "baz")
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param baz.foo" in str(excinfo.value)
 
 
 def test_get_foo_thud(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("foo", "thud")
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param thud.foo" in str(excinfo.value)
 
 
 def test_get_baz_foo(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get("baz", "foo")
+    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "Cannot get param foo.baz" in str(excinfo.value)
