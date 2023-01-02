@@ -1,5 +1,8 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_
-#define ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_
 
 // ros
 #include <geometry_msgs/msg/vector3.hpp>
@@ -38,4 +41,4 @@ void to_ros_msg(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_GEOMETRY_CONVERSIONS_HPP_
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_

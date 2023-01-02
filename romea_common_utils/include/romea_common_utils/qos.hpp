@@ -1,5 +1,9 @@
-#ifndef ROMEA_COMMON_UTILS_QOS_HPP_
-#define ROMEA_COMMON_UTILS_QOS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+
+#ifndef ROMEA_COMMON_UTILS__QOS_HPP_
+#define ROMEA_COMMON_UTILS__QOS_HPP_
 
 #include <rclcpp/qos.hpp>
 
@@ -18,4 +22,4 @@ rclcpp::QoS reliable(const size_t & history_size, const rclcpp::Duration & timeo
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_QOS_HPP_
+#endif  // ROMEA_COMMON_UTILS__QOS_HPP_

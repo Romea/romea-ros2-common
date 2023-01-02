@@ -1,6 +1,13 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+// std
+#include <string>
+
+// local
 #include "romea_common_utils/conversions/pose2d_conversions.hpp"
-#include <romea_common_utils/conversions/time_conversions.hpp>
-#include <romea_common_utils/conversions/transform_conversions.hpp>
+#include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 
 namespace romea
 {
@@ -17,7 +24,6 @@ void to_ros_msg(
   for (size_t n = 0; n < 9; ++n) {
     ros_pose2d_msg.covariance[n] = romea_pose2d.covariance(n);
   }
-
 }
 
 //-----------------------------------------------------------------------------

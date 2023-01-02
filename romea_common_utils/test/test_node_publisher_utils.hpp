@@ -1,19 +1,23 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef TEST_NODE_PUBLISHER_UTILS_HPP_
+#define TEST_NODE_PUBLISHER_UTILS_HPP_
+
 // eigen
 #include <Eigen/Core>
 
-// ros C
-#include <tf2_ros/transform_listener.h>
-
-// std
-#include <memory>
-#include <string>
-
 // ros
+#include <tf2_ros/transform_listener.h>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/point_stamped.hpp>
+
+// std
+#include <memory>
+#include <string>
 
 inline void to_ros_msg(
   const std::string & data,
@@ -84,3 +88,5 @@ private:
   MsgType data_;
   std::shared_ptr<rclcpp::Subscription<MsgType>> sub_;
 };
+
+#endif  // TEST_NODE_PUBLISHER_UTILS_HPP_

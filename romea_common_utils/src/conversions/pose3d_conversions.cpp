@@ -1,6 +1,15 @@
-#include "romea_common_utils/conversions/pose3d_conversions.hpp"
-#include <romea_common_utils/conversions/time_conversions.hpp>
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+// romea core
 #include <romea_core_common/math/EulerAngles.hpp>
+
+// std
+#include <string>
+
+// local
+#include "romea_common_utils/conversions/pose3d_conversions.hpp"
+#include "romea_common_utils/conversions/time_conversions.hpp"
 
 namespace romea
 {

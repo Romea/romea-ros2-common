@@ -1,19 +1,23 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_
-#define ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
 
-// std
-#include <string>
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE2D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__POSE2D_CONVERSIONS_HPP_
+
 
 // romea
 #include <romea_core_common/time/Time.hpp>
 #include <romea_core_common/geometry/Pose2D.hpp>
 
-// romea_ros_msg
+// romea ros
 #include <romea_common_msgs/msg/pose2_d_stamped.hpp>
 #include <romea_common_utils/conversions/time_conversions.hpp>
 
 // ros
 #include <geometry_msgs/msg/transform_stamped.hpp>
+
+// std
+#include <string>
 
 namespace romea
 {
@@ -51,4 +55,4 @@ Pose2D to_romea(const romea_common_msgs::msg::Pose2D & msg);
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_POSE2D_CONVERSIONS_HPP_
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSE2D_CONVERSIONS_HPP_

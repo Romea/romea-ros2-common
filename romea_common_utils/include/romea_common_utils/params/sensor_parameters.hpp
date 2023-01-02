@@ -1,5 +1,8 @@
-#ifndef ROMEA_COMMON_UTILS_PARAMS_SENSOR_PARAMETERS_HPP_
-#define ROMEA_COMMON_UTILS_PARAMS_SENSOR_PARAMETERS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_
+#define ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_
 
 // std
 #include <memory>
@@ -96,4 +99,4 @@ inline std::string get_frame_id(std::shared_ptr<NodeType> node)
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PARAMS_SENSOR_PARAMETERS_HPP_
+#endif  // ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_

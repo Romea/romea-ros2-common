@@ -1,5 +1,8 @@
-#ifndef _romea_RealtimeStampedMessagePublisher_hpp_
-#define _romea_RealtimeStampedMessagePublisher_hpp_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
+#define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 
 // ros
 #include <realtime_tools/realtime_publisher.h>
@@ -8,8 +11,8 @@
 #include <memory>
 #include <string>
 
-// romea
-#include "../conversions/time_conversions.hpp"
+// local
+#include "romea_common_utils/conversions/time_conversions.hpp"
 
 namespace romea
 {
@@ -80,4 +83,4 @@ void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
 
 }  // namespace romea
 
-#endif  // _romea_RealtimeStampedMessagePublisher_hpp_
+#endif  // ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_

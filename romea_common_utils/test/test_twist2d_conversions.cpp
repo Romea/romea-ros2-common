@@ -1,10 +1,14 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
 // gtest
 #include <gtest/gtest.h>
 
+// std
+#include <string>
+
 // local
 #include "test_utils.hpp"
-
-// romea
 #include "romea_common_utils/conversions/twist2d_conversions.hpp"
 
 //-----------------------------------------------------------------------------

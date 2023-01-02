@@ -44,9 +44,8 @@ add_library(${PROJECT_NAME} SHARED
     src/conversions/position2d_conversions.cpp
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
-    src/qos.cpp
+    src/qos.cpp)
 #    src/rviz.cpp
-    )
 
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
@@ -57,9 +56,9 @@ ament_target_dependencies(${PROJECT_NAME}
     geometry_msgs
     nav_msgs
     tf2_ros
-    tf2_eigen
+    tf2_eigen)
 #    rviz_visual_tools
-    )
+
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -102,6 +101,7 @@ install(
 if(BUILD_TESTING)
 
     find_package(ament_lint_auto REQUIRED)
+    list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
     ament_lint_auto_find_test_dependencies()
     add_subdirectory(test)
 

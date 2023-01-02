@@ -1,7 +1,10 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
 // gtest
 #include <gtest/gtest.h>
 
-// romea
+// local
 #include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/geometry_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
@@ -128,7 +131,6 @@ TEST(TestRosConversions, testDiagnosticConversion)
   EXPECT_STREQ(status.values[0].value.c_str(), "empty");
   EXPECT_STREQ(status.values[1].key.c_str(), "foo");
   EXPECT_STREQ(status.values[1].value.c_str(), "valid");
-
 }
 
 //-----------------------------------------------------------------------------

@@ -1,15 +1,18 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_
-#define ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__TWIST2D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__TWIST2D_CONVERSIONS_HPP_
+
+// romea core
+#include <romea_core_common/geometry/Twist2D.hpp>
+
+// ros
+#include <romea_common_msgs/msg/twist2_d_stamped.hpp>
+#include <romea_common_utils/conversions/time_conversions.hpp>
 
 // std
 #include <string>
-
-// romea
-#include <romea_core_common/geometry/Twist2D.hpp>
-
-// romea_ros_msg
-#include <romea_common_msgs/msg/twist2_d_stamped.hpp>
-#include <romea_common_utils/conversions/time_conversions.hpp>
 
 namespace romea
 {
@@ -32,4 +35,4 @@ Twist2D to_romea(const romea_common_msgs::msg::Twist2D & ros_twist2d_msg);
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_TWIST2D_CONVERSIONS_HPP_
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__TWIST2D_CONVERSIONS_HPP_

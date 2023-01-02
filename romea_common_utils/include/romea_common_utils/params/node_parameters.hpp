@@ -1,5 +1,11 @@
-#ifndef ROMEA_COMMON_UTILS_PARAMS_NODE_PARAMETERS_HPP_
-#define ROMEA_COMMON_UTILS_PARAMS_NODE_PARAMETERS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
+#define ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
+
+// ros
+#include <rclcpp/rclcpp.hpp>
 
 // std
 #include <exception>
@@ -8,8 +14,6 @@
 #include <string>
 #include <vector>
 
-// ros
-#include <rclcpp/rclcpp.hpp>
 
 namespace romea
 {
@@ -203,4 +207,4 @@ inline std::map<std::string, T> get_parameters(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PARAMS_NODE_PARAMETERS_HPP_
+#endif  // ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_

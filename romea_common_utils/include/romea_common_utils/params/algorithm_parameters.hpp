@@ -1,11 +1,14 @@
-#ifndef ROMEA_COMMON_UTILS_PARAMS_ALGORITHM_PARAMETERS_HPP_
-#define ROMEA_COMMON_UTILS_PARAMS_ALGORITHM_PARAMETERS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PARAMS__ALGORITHM_PARAMETERS_HPP_
+#define ROMEA_COMMON_UTILS__PARAMS__ALGORITHM_PARAMETERS_HPP_
 
 // std
 #include <string>
 #include <memory>
 
-// romea
+// local
 #include "romea_common_utils/params/node_parameters.hpp"
 
 namespace romea
@@ -86,7 +89,6 @@ inline void declare_base_footprint_frame_id(std::shared_ptr<NodeType> node)
   declare_base_footprint_frame_id(node, "");
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename NodeType>
 inline std::string get_base_footprint_frame_id(
@@ -119,7 +121,6 @@ inline void declare_odom_frame_id(std::shared_ptr<NodeType> node)
 {
   declare_odom_frame_id(node, "");
 }
-
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
@@ -207,4 +208,4 @@ inline int get_publish_rate(std::shared_ptr<NodeType> node)
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PARAMS_ALGORITHM_PARAMETERS_HPP_
+#endif  // ROMEA_COMMON_UTILS__PARAMS__ALGORITHM_PARAMETERS_HPP_

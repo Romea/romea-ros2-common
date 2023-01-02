@@ -1,3 +1,6 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
 #include "romea_common_utils/rviz.hpp"
 #include <tf2_eigen/tf2_eigen.h>
 

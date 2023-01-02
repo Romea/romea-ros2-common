@@ -1,5 +1,8 @@
-#ifndef ROMEA_COMMON_UTILS_TEST_TEST_UTILS_HPP_
-#define ROMEA_COMMON_UTILS_TEST_TEST_UTILS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef TEST_UTILS_HPP_
+#define TEST_UTILS_HPP_
 
 //-----------------------------------------------------------------------------
 template<typename MsgCovType>
@@ -50,4 +53,4 @@ void isSame(
   }
 }
 
-#endif  // ROMEA_COMMON_UTILS_TEST_TEST_UTILS_HPP_
+#endif  // TEST_UTILS_HPP_

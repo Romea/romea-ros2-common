@@ -1,18 +1,22 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_POSE3D_CONVERSIONS_HPP_
-#define ROMEA_COMMON_UTILS_CONVERSIONS_POSE3D_CONVERSIONS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
 
-// std
-#include <string>
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_
 
-// romea
+// romea core
 #include <romea_core_common/time/Time.hpp>
 #include <romea_core_common/geometry/Pose3D.hpp>
-#include <romea_common_utils/conversions/time_conversions.hpp>
-
 
 // ros
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+
+// romea ros
+#include <romea_common_utils/conversions/time_conversions.hpp>
+
+// std
+#include <string>
 
 namespace romea
 {
@@ -48,4 +52,4 @@ Pose3D to_romea(const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_POSE3D_CONVERSIONS_HPP_
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_

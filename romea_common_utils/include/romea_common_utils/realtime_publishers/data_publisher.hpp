@@ -1,5 +1,8 @@
-#ifndef ROMEA_COMMON_UTILS_REALTIME_PUBLISHERS_DATA_PUBLISHER_HPP_
-#define ROMEA_COMMON_UTILS_REALTIME_PUBLISHERS_DATA_PUBLISHER_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
+#define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
 
 // ros
 #include <realtime_tools/realtime_publisher.h>
@@ -7,7 +10,6 @@
 // std
 #include <string>
 #include <memory>
-
 
 namespace romea
 {
@@ -65,4 +67,4 @@ void RealtimeMessagePublisher<DataType, MessageType>::publish(const DataType & d
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_REALTIME_PUBLISHERS_DATA_PUBLISHER_HPP_
+#endif  // ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_

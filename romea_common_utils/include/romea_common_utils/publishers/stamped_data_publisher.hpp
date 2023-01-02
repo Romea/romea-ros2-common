@@ -1,14 +1,17 @@
-#ifndef ROMEA_COMMON_UTILS_PUBLISHERS_STAMPED_DATA_PUBLISHER_HPP_
-#define ROMEA_COMMON_UTILS_PUBLISHERS_STAMPED_DATA_PUBLISHER_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
+#define ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 
 // std
 #include <memory>
 #include <string>
 #include <utility>
 
-// romea
+// local
 #include "romea_common_utils/publishers/stamped_publisher.hpp"
-#include "../conversions/time_conversions.hpp"
+#include "romea_common_utils/conversions/time_conversions.hpp"
 
 namespace romea
 {
@@ -91,4 +94,4 @@ make_stamped_data_publisher(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PUBLISHERS_STAMPED_DATA_PUBLISHER_HPP_
+#endif  // ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_

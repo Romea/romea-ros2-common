@@ -1,17 +1,23 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST2D_CONVERSIONS_HPP
-#define ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST2D_CONVERSIONS_HPP
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST2D_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST2D_CONVERSIONS_HPP_
+
+
+// romea ros
+#include <romea_common_msgs/msg/pose_and_twist2_d.hpp>
+#include <romea_common_msgs/msg/pose_and_twist2_d_stamped.hpp>
+
+// romea core
+#include <romea_core_common/geometry/PoseAndTwist2D.hpp>
 
 // std
 #include <string>
 
-// romea
-#include <romea_core_common/geometry/PoseAndTwist2D.hpp>
+// local
 #include "romea_common_utils/conversions/pose2d_conversions.hpp"
 #include "romea_common_utils/conversions/twist2d_conversions.hpp"
-
-// romea_ros_msg
-#include <romea_common_msgs/msg/pose_and_twist2_d.hpp>
-#include <romea_common_msgs/msg/pose_and_twist2_d_stamped.hpp>
 
 namespace romea
 {
@@ -34,4 +40,4 @@ void to_romea(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_POSE_AND_TWIST2D_CONVERSIONS_HPP
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST2D_CONVERSIONS_HPP_

@@ -22,14 +22,14 @@ target_link_libraries(${PROJECT_NAME}_test_lifecycle_node_publisher ${PROJECT_NA
 ament_add_gtest(${PROJECT_NAME}_test_ros_transform test_ros_transform.cpp)
 target_link_libraries(${PROJECT_NAME}_test_ros_transform ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_pose2d_conversions test_pose2d_conversions.cpp )
+ament_add_gtest(${PROJECT_NAME}_test_pose2d_conversions test_pose2d_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_pose2d_conversions ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_pose3d_conversions test_pose3d_conversions.cpp )
+ament_add_gtest(${PROJECT_NAME}_test_pose3d_conversions test_pose3d_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_pose3d_conversions ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_twist2d_conversions test_twist2d_conversions.cpp )
+ament_add_gtest(${PROJECT_NAME}_test_twist2d_conversions test_twist2d_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_twist2d_conversions ${PROJECT_NAME})
 
-ament_add_gtest(${PROJECT_NAME}_test_twist3d_conversions test_twist3d_conversions.cpp )
+ament_add_gtest(${PROJECT_NAME}_test_twist3d_conversions test_twist3d_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_twist3d_conversions ${PROJECT_NAME})

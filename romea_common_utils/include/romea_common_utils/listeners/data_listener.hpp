@@ -1,16 +1,19 @@
-#ifndef ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 
-#define ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_
+#define ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_
+
+// ros
+#include <rclcpp/rclcpp.hpp>
+
+// romea ros
+#include <romea_core_common/concurrency/SharedVariable.hpp>
 
 // std
 #include <string>
 #include <mutex>
 #include <memory>
-
-// ros
-#include <rclcpp/rclcpp.hpp>
-
-// romea
-#include <romea_core_common/concurrency/SharedVariable.hpp>
 
 namespace romea
 {
@@ -81,4 +84,4 @@ make_data_listener(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_LISTENERS_DATA_LISTENER_HPP_ 
+#endif  // ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_

@@ -1,18 +1,21 @@
-#ifndef ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_
-#define ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_
+#define ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_
 
 // eigen
 #include <Eigen/Geometry>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_listener.h>
 
-// std
-#include <memory>
-#include <string>
-
 // ros
 #include <rclcpp/node.hpp>
 #include <geometry_msgs/msg/transform.hpp>
+
+// std
+#include <memory>
+#include <string>
 
 namespace romea
 {
@@ -36,4 +39,4 @@ Eigen::Affine3d lookupTransformOnce(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_CONVERSIONS_TRANSFORM_CONVERSIONS_HPP_
+#endif  // ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_

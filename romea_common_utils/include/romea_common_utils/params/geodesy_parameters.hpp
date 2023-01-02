@@ -1,5 +1,11 @@
-#ifndef ROMEA_COMMON_UTILS_PARAMS_GEODESY_PARAMETERS_HPP_
-#define ROMEA_COMMON_UTILS_PARAMS_GEODESY_PARAMETERS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_
+#define ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_
+
+// romea core
+#include <romea_core_common/geodesy/GeodeticCoordinates.hpp>
 
 // std
 #include <exception>
@@ -7,8 +13,7 @@
 #include <vector>
 #include <memory>
 
-// romea
-#include <romea_core_common/geodesy/GeodeticCoordinates.hpp>
+// local
 #include "romea_common_utils/params/node_parameters.hpp"
 
 namespace romea
@@ -81,4 +86,4 @@ WGS84Coordinates get_wgs84_coordinates_parameter(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PARAMS_GEODESY_PARAMETERS_HPP_
+#endif  // ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_

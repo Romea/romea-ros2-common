@@ -1,14 +1,19 @@
-#ifndef ROMEA_COMMON_UTILS_LISTENERS_STAMPED_DATA_LISTENER_HPP_
-#define ROMEA_COMMON_UTILS_LISTENERS_STAMPED_DATA_LISTENER_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__LISTENERS__STAMPED_DATA_LISTENER_HPP_
+#define ROMEA_COMMON_UTILS__LISTENERS__STAMPED_DATA_LISTENER_HPP_
+
+
+// ros
+#include <rclcpp/rclcpp.hpp>
 
 // std
 #include <string>
 #include <memory>
 
-// ros
-#include <rclcpp/rclcpp.hpp>
-
-namespace romea {
+namespace romea
+{
 
 template<typename DataType>
 class DataListenerBase
@@ -53,4 +58,4 @@ private:
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_LISTENERS_STAMPED_DATA_LISTENER_HPP_
+#endif  // ROMEA_COMMON_UTILS__LISTENERS__STAMPED_DATA_LISTENER_HPP_

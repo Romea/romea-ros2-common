@@ -1,15 +1,24 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
 // gtest
 #include <gtest/gtest.h>
-#include "test_helper.h"
 
 // ros
 #include <rclcpp/rclcpp.hpp>
 
-// romea
+// std
+#include <memory>
+#include <string>
+#include <vector>
+#include <map>
+
+// local
 #include "romea_common_utils/params/node_parameters.hpp"
 #include "romea_common_utils/params/geodesy_parameters.hpp"
 #include "romea_common_utils/params/eigen_parameters.hpp"
 #include "romea_common_utils/params/algorithm_parameters.hpp"
+#include "../test/test_helper.h"
 
 
 class TestNodeParameters : public ::testing::Test

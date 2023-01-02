@@ -1,19 +1,24 @@
-#ifndef ROMEA_COMMON_UTILS_PARAMS_EIGEN_PARAMETERS_HPP_
-#define ROMEA_COMMON_UTILS_PARAMS_EIGEN_PARAMETERS_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_
+#define ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_
+
+// eigen
+#include <Eigen/Core>
+
+// romea core
+#include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
+#include <romea_core_common/math/EulerAngles.hpp>
+#include <romea_core_common/math/Transformation.hpp>
 
 // std
 #include <vector>
 #include <memory>
 #include <string>
 
-// eigen
-#include <Eigen/Core>
-
-// romea
+// local
 #include "romea_common_utils/params/node_parameters.hpp"
-#include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
-#include <romea_core_common/math/EulerAngles.hpp>
-#include <romea_core_common/math/Transformation.hpp>
 
 namespace romea
 {
@@ -284,4 +289,4 @@ inline EigenAffine get_eigen_rigid_transformation_parameter(
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS_PARAMS_EIGEN_PARAMETERS_HPP_
+#endif  // ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_
