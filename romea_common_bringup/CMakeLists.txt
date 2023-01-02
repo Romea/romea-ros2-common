@@ -17,6 +17,8 @@ ament_python_install_module(python/romea_common_bringup.py)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+  list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
   configure_file(test/test_common_bringup.yaml test_common_bringup.yaml)
   ament_add_pytest_test(test_common_bringup test/test_common_bringup.py)
 endif()
