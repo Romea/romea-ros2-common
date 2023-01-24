@@ -5,11 +5,11 @@
 #define ROMEA_COMMON_UTILS__RVIZ_HPP_
 
 // ros
-#include <rviz_visual_tools/rviz_visual_tools.hpp>
+#include "rviz_visual_tools/rviz_visual_tools.hpp"
 
 // romea
-#include <romea_core_common/geometry/Pose2D.hpp>
-#include <romea_core_common/geometry/Position2D.hpp>
+#include "romea_core_common/geometry/Pose2D.hpp"
+#include "romea_core_common/geometry/Position2D.hpp"
 
 namespace romea
 {

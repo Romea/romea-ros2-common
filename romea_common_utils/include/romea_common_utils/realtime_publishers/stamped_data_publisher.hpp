@@ -4,12 +4,13 @@
 #ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 
-// ros
-#include <realtime_tools/realtime_publisher.h>
 
 // std
 #include <memory>
 #include <string>
+
+// ros
+#include "realtime_tools/realtime_publisher.h"
 
 // local
 #include "romea_common_utils/conversions/time_conversions.hpp"

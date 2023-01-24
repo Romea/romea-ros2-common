@@ -4,9 +4,6 @@
 #ifndef ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
 
-// ros
-#include <rclcpp/rclcpp.hpp>
-
 // std
 #include <exception>
 #include <map>
@@ -14,6 +11,8 @@
 #include <string>
 #include <vector>
 
+// ros
+#include "rclcpp/rclcpp.hpp"
 
 namespace romea
 {

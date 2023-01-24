@@ -4,12 +4,13 @@
 #ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
 
-// ros
-#include <realtime_tools/realtime_publisher.h>
 
 // std
 #include <string>
 #include <memory>
+
+// ros
+#include "realtime_tools/realtime_publisher.h"
 
 namespace romea
 {

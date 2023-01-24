@@ -4,12 +4,12 @@
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_
 
-// ros
-#include <geometry_msgs/msg/vector3.hpp>
-#include <geometry_msgs/msg/quaternion.hpp>
-
 // eigen
 #include <Eigen/Geometry>
+
+// ros
+#include "geometry_msgs/msg/vector3.hpp"
+#include "geometry_msgs/msg/quaternion.hpp"
 
 
 namespace romea

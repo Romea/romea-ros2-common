@@ -2,16 +2,16 @@
 // Add license
 
 
-// gtest
-#include <gtest/gtest.h>
-
-// ros
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-
 // std
 #include <memory>
 #include <string>
 #include <vector>
+
+// gtest
+#include "gtest/gtest.h"
+
+// ros
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 // local
 #include "../test/test_helper.h"

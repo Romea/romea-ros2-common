@@ -1,12 +1,13 @@
 // Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
 // Add license
 
-// gtest
-#include <gtest/gtest.h>
 
 // std
 #include <memory>
 #include <string>
+
+// gtest
+#include "gtest/gtest.h"
 
 // romea
 #include "test_node_publisher_utils.hpp"

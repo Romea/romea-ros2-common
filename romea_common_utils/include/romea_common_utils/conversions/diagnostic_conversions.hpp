@@ -4,14 +4,15 @@
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__DIAGNOSTIC_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__DIAGNOSTIC_CONVERSIONS_HPP_
 
-// romea core
-#include <romea_core_common/diagnostic/DiagnosticReport.hpp>
-
-// ros
-#include <diagnostic_msgs/msg/diagnostic_array.hpp>
 
 // std
 #include <string>
+
+// ros
+#include "diagnostic_msgs/msg/diagnostic_array.hpp"
+
+// romea core
+#include "romea_core_common/diagnostic/DiagnosticReport.hpp"
 
 
 namespace romea

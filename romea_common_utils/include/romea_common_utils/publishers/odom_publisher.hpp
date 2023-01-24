@@ -5,13 +5,13 @@
 #define ROMEA_COMMON_UTILS__PUBLISHERS__ODOM_PUBLISHER_HPP_
 
 
-// ros
-#include <nav_msgs/msg/odometry.hpp>
-
 // std
 #include <string>
 #include <memory>
 #include <utility>
+
+// ros
+#include "nav_msgs/msg/odometry.hpp"
 
 // romea
 #include "romea_common_utils/publishers/stamped_publisher.hpp"

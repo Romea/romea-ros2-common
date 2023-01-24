@@ -4,14 +4,15 @@
 #ifndef ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_
 
-// romea core
-#include <romea_core_common/geodesy/GeodeticCoordinates.hpp>
 
 // std
 #include <exception>
 #include <string>
 #include <vector>
 #include <memory>
+
+// romea core
+#include "romea_core_common/geodesy/GeodeticCoordinates.hpp"
 
 // local
 #include "romea_common_utils/params/node_parameters.hpp"

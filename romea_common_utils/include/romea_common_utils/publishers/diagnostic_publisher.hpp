@@ -4,13 +4,14 @@
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__DIAGNOSTIC_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__DIAGNOSTIC_PUBLISHER_HPP_
 
-// ros
-#include <diagnostic_msgs/msg/diagnostic_array.hpp>
 
 // std
-#include <string>
 #include <memory>
+#include <string>
 #include <utility>
+
+// ros
+#include "diagnostic_msgs/msg/diagnostic_array.hpp"
 
 // local
 #include "romea_common_utils/publishers/stamped_publisher.hpp"

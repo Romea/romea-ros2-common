@@ -1,14 +1,15 @@
 // Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
 // Add license
 
-// gtest
-#include <gtest/gtest.h>
-
-// romea core
-#include <romea_core_common/math/EulerAngles.hpp>
 
 // std
 #include <string>
+
+// gtest
+#include "gtest/gtest.h"
+
+// romea core
+#include "romea_core_common/math/EulerAngles.hpp"
 
 // local
 #include "test_utils.hpp"

@@ -2,7 +2,7 @@
 // Add license
 
 // gtest
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 // local
 #include "romea_common_utils/conversions/transform_conversions.hpp"
@@ -126,6 +126,7 @@ TEST(TestRosConversions, testDiagnosticConversion)
   EXPECT_STREQ(status.name.c_str(), "baz");
   EXPECT_STREQ(status.hardware_id.c_str(), "qux");
   EXPECT_EQ(status.level, DiagnosticMsgDiagnosticStatus::ERROR);
+  std::cout << " status.message.c_str() " << ("#" + status.message + "#").c_str() << std::endl;
   EXPECT_STREQ(status.message.c_str(), "bar");
   EXPECT_STREQ(status.values[0].key.c_str(), "bar");
   EXPECT_STREQ(status.values[0].value.c_str(), "empty");
