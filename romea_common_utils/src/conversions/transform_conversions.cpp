@@ -7,8 +7,14 @@
 #include <string>
 
 // ros
+#if ROS_DISTRO == ROS_GALACTIC
 #include "tf2_eigen/tf2_eigen.h"
 #include "tf2_ros/transform_listener.h"
+#else
+#include "tf2_eigen/tf2_eigen.hpp"
+#include "tf2_ros/transform_listener.hpp"
+#endif
+
 
 // local
 #include "romea_common_utils/conversions/transform_conversions.hpp"
