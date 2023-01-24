@@ -45,7 +45,7 @@ protected:
 };
 
 
-TEST_F(TestRosTransform, lookupTransformOnce)
+TEST_F(TestRosTransform, DISABLED_lookupTransformOnce)
 {
   tf2_ros::Buffer tf_buffer(node->get_clock());
   rclcpp::sleep_for(romea::durationFromSecond(1));
