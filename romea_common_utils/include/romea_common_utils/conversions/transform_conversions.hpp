@@ -11,18 +11,10 @@
 #include <memory>
 #include <string>
 
-// local
-#include "romea_common_utils/ros_versions.hpp"
-
 // ros
 #include "geometry_msgs/msg/transform.hpp"
 #include "rclcpp/node.hpp"
-#if ROS_DISTRO == ROS_GALACTIC
 #include "tf2_ros/buffer.h"
-#else
-#include "tf2_ros/buffer.hpp"
-#endif
-
 
 namespace romea
 {
