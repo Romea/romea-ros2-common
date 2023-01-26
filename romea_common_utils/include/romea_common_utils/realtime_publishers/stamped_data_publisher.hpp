@@ -18,7 +18,7 @@
 namespace romea
 {
 
-template<class DataType, class MessageType>
+template<typename DataType, typename MessageType>
 class RealtimeStampedMessagePublisher
 {
 private:
@@ -26,8 +26,9 @@ private:
   using RTPublisher = typename realtime_tools::RealtimePublisher<MessageType>;
 
 public:
+  template<typename NodeType>
   RealtimeStampedMessagePublisher(
-    std::shared_ptr<rclcpp::Node> node,
+    std::shared_ptr<NodeType> node,
     const std::string & topic_name,
     const std::string & frame_id,
     const rclcpp::QoS & qos);
@@ -48,21 +49,22 @@ protected:
 
 
 //-----------------------------------------------------------------------------
-template<class DataType, class MessageType>
+template<typename DataType, typename MessageType>
+template<typename NodeType>
 RealtimeStampedMessagePublisher<DataType, MessageType>::RealtimeStampedMessagePublisher(
-  std::shared_ptr<rclcpp::Node> node,
+  std::shared_ptr<NodeType> node,
   const std::string & topic_name,
   const std::string & frame_id,
   const rclcpp::QoS & qos)
 : frame_id_(frame_id),
-  pub_(node->create_publisher<MessageType>(topic_name, qos)),
+  pub_(node->template create_publisher<MessageType>(topic_name, qos)),
   rt_pub_(std::make_shared<RTPublisher>(pub_))
 {
   assert(!frame_id.empty());
 }
 
 //-----------------------------------------------------------------------------
-template<class DataType, class MessageType>
+template<typename DataType, typename MessageType>
 void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
   const rclcpp::Time & stamp,
   const DataType & data)
@@ -74,7 +76,7 @@ void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
 }
 
 //-----------------------------------------------------------------------------
-template<class DataType, class MessageType>
+template<typename DataType, typename MessageType>
 void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
   const romea::Duration & duration,
   const DataType & data)
