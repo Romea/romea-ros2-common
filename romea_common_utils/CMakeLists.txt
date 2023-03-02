@@ -21,6 +21,7 @@ set(ROS_DISTRO "ROS_${ROS_DISTRO}")
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -53,6 +54,7 @@ add_library(${PROJECT_NAME} SHARED
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
     rclcpp_lifecycle
+    rclcpp_action
     romea_core_common
     romea_common_msgs
     diagnostic_msgs
@@ -72,6 +74,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC ROS_DISTRO=${ROS_DISTRO})
 ament_export_dependencies(eigen3_cmake_module)
 ament_export_dependencies(Eigen3)
 ament_export_dependencies(rclcpp)
+ament_export_dependencies(rclcpp_action)
 ament_export_dependencies(rclcpp_lifecycle)
 ament_export_dependencies(romea_core_common)
 ament_export_dependencies(romea_common_msgs)
