@@ -6,11 +6,19 @@ import pytest
 
 from romea_common_bringup import (
     robot_prefix,
+    robot_namespace,
     device_prefix,
+    device_namespace,
     robot_urdf_prefix,
+    device_urdf_prefix,
     device_link_name,
     MetaDescription,
 )
+
+
+def test_robot_namespace():
+    assert robot_namespace("") == "/"
+    assert robot_namespace("robot") == "/robot"
 
 
 def test_robot_prefix():
@@ -18,14 +26,25 @@ def test_robot_prefix():
     assert robot_prefix("robot") == "/robot/"
 
 
+def test_device_namespace():
+    assert device_namespace("robot", None, "device") == "/robot/device"
+    assert device_namespace("robot", "ns", "device") == "/robot/ns/device"
+
+
 def test_device_prefix():
-    assert device_prefix("robot", "") == "/robot/"
-    assert device_prefix("robot", "device") == "/robot/device/"
+    assert device_prefix("robot", None, "device") == "/robot/device/"
+    assert device_prefix("robot", "ns", "device") == "/robot/ns/device/"
 
 
 def test_robot_urdf_prefix():
     assert robot_urdf_prefix("") == ""
     assert robot_urdf_prefix("robot") == "robot_"
+
+
+def test_device_urdf_prefix():
+    assert device_urdf_prefix("", "") == ""
+    assert device_urdf_prefix("robot", "") == "robot_"
+    assert device_urdf_prefix("robot", "device") == "robot_device_"
 
 
 def test_device_link_name():

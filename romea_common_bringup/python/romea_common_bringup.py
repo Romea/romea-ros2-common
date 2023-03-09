@@ -5,20 +5,34 @@
 import yaml
 
 
-def robot_prefix(robot_namespace):
+def robot_namespace(robot_name):
 
-    if robot_namespace == "":
+    if robot_name == "":
         return "/"
     else:
-        return "/" + robot_namespace + "/"
+        return "/" + robot_name
 
 
-def device_prefix(robot_namespace, device_name):
+def robot_prefix(robot_name):
 
-    if device_name == "":
-        return robot_prefix(robot_namespace)
+    if robot_name == "":
+        return "/"
     else:
-        return robot_prefix(robot_namespace) + device_name + "/"
+        return "/" + robot_name + "/"
+
+
+def device_namespace(robot_name, ros_namespace, device_name):
+    if ros_namespace is not None:
+        return robot_prefix(robot_name) + ros_namespace + "/" + device_name
+    else:
+        return robot_prefix(robot_name) + device_name
+
+
+def device_prefix(robot_name, ros_namespace, device_name):
+    if ros_namespace is not None:
+        return robot_prefix(robot_name) + ros_namespace + "/" + device_name + "/"
+    else:
+        return robot_prefix(robot_name) + device_name + "/"
 
 
 def robot_urdf_prefix(robot_namespace):
@@ -27,6 +41,13 @@ def robot_urdf_prefix(robot_namespace):
         return ""
     else:
         return robot_namespace + "_"
+
+
+def device_urdf_prefix(robot_namespace, device_name):
+    if device_name == "":
+        return robot_urdf_prefix(robot_namespace)
+    else:
+        return robot_urdf_prefix(robot_namespace)+device_name+"_"
 
 
 def device_link_name(robot_namespace, device_name):
