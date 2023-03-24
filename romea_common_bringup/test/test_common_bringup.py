@@ -54,8 +54,8 @@ def test_device_link_name():
 
 @pytest.fixture(scope="module")
 def meta_description():
-    meta_description_filename = os.path.join(os.getcwd(), "test_common_bringup.yaml")
-    return MetaDescription("common", meta_description_filename)
+    meta_description_file_path = os.path.join(os.getcwd(), "test_common_bringup.yaml")
+    return MetaDescription("common", meta_description_file_path)
 
 
 def test_foo_exists(meta_description):

@@ -55,11 +55,11 @@ def device_link_name(robot_namespace, device_name):
 
 
 class MetaDescription:
-    def __init__(self, description_type, meta_description_filename):
+    def __init__(self, description_type, meta_description_file_path):
 
         self.type = description_type
-        self.filename = meta_description_filename
-        with open(meta_description_filename) as f:
+        self.filename = meta_description_file_path
+        with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
 
     def exists(self, param, ns=None):
