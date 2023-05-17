@@ -15,6 +15,7 @@
 
 import os
 import pytest
+from ament_index_python import get_package_share_directory
 
 from romea_common_bringup import (
     robot_prefix,
@@ -24,6 +25,7 @@ from romea_common_bringup import (
     robot_urdf_prefix,
     device_urdf_prefix,
     device_link_name,
+    get_file_path,
     MetaDescription,
 )
 
@@ -154,3 +156,8 @@ def test_get_baz_foo(meta_description):
         meta_description.get("baz", "foo")
     assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param foo.baz" in str(excinfo.value)
+
+
+def test_get_file(meta_description):
+    file_path = get_file_path(meta_description.get("file"))
+    assert file_path == get_package_share_directory("romea_common_bringup")+"/config/foo.yaml"

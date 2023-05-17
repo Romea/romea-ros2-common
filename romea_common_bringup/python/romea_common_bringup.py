@@ -14,6 +14,7 @@
 
 
 # !/usr/bin/env python3
+from ament_index_python import get_package_share_directory
 import yaml
 
 
@@ -64,6 +65,12 @@ def device_urdf_prefix(robot_namespace, device_name):
 
 def device_link_name(robot_namespace, device_name):
     return robot_urdf_prefix(robot_namespace) + device_name + "_link"
+
+
+def get_file_path(file_configuration):
+    pkg = file_configuration["pkg"]
+    file = file_configuration["file"]
+    return get_package_share_directory(pkg) + "/" + file
 
 
 class MetaDescription:
