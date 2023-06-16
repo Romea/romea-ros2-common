@@ -4,9 +4,11 @@
 
   <name>romea_common_utils</name>
   <version>0.0.0</version>
-  <description>Package romea_common_utils description</description>
+  <description>Package containing common utilities</description>
+
   <maintainer email="jean.laneurit@inrae.fr">Jean Laneurit</maintainer>
-  <license>TODO: License declaration</license>
+
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
