@@ -20,6 +20,7 @@
 #include <Eigen/Core>
 
 // std
+#include <map>
 #include <vector>
 #include <memory>
 #include <string>
@@ -273,31 +274,71 @@ inline EigenAffine get_eigen_rigid_transformation_parameter(
 }
 
 
-////-----------------------------------------------------------------------------
-// template <typename EigenVector>
-// inline EigenVector loadEigenVector(NodeParameters & node_parameters,
-//                                   const std::string & paramName)
-//{
+//-----------------------------------------------------------------------------
+template<typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameters(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names)
+{
+  using StdVector = std::vector<typename EigenVector::Scalar>;
+  declare_parameters<StdVector>(node, params_namespace, params_names);
+}
 
-//  return EigenVector(node_parameters.loadVector<typename EigenVector::Scalar>(paramName).data());
-//}
+//-----------------------------------------------------------------------------
+template<typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameters_with_default(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names,
+  const EigenVector & default_values = EigenVector::Zero())
+{
+  using StdVector = std::vector<typename EigenVector::Scalar>;
+  StdVector default_vector(default_values.data(), default_values.data() + default_values.size());
+  declare_parameters_with_default<StdVector>(node, params_namespace, params_names, default_vector);
+}
 
+//-----------------------------------------------------------------------------
+template<typename EigenVector, typename Node>
+inline void declare_eigen_vector_parameters_with_default(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names,
+  const std::vector<EigenVector, Eigen::aligned_allocator<EigenVector>> & default_values)
+{
+  assert(params_names.size() == default_values.size());
+  using StdVector = std::vector<typename EigenVector::Scalar>;
 
-////-----------------------------------------------------------------------------
-// template <typename V>
-// inline VectorOfEigenVector<V> loadVectorOfEigenVector(ros::NodeHandle &nodeHandle,
-//                                                      const std::string &paramName)
-//{
+  for (size_t i = 0; i < params_names.size(); ++i) {
+    StdVector default_vector(default_values[i].data(),
+      default_values[i].data() + default_values[i].size());
 
-//  VectorOfEigenVector<V> vector;
-//  std::string errorMessage;
-//  if(!loadVectorOfEigenVector(nodeHandle,paramName,vector,errorMessage))
-//  {
-//    ROS_ERROR("%s",errorMessage.c_str());
-//  }
-//  return vector;
-//}
+    declare_parameter_with_default<StdVector>(
+      node, params_namespace, params_names[i],
+      default_values[i]);
+  }
+}
 
+//-----------------------------------------------------------------------------
+template<typename EigenVector, typename Node>
+inline std::vector<EigenVector, Eigen::aligned_allocator<EigenVector>> get_eigen_vector_parameters(
+  std::shared_ptr<Node> node,
+  const std::string & param_namespace,
+  const std::vector<std::string> & param_names)
+{
+  using VectorOfEigenVector = std::vector<EigenVector, Eigen::aligned_allocator<EigenVector>>;
+  using StdVector = std::vector<typename EigenVector::Scalar>;
+  using VectorOfStdVector = std::vector<StdVector>;
+
+  VectorOfEigenVector eigen_parameters(param_names.size());
+  VectorOfStdVector std_parameters = get_parameters<StdVector>(node, param_namespace, param_names);
+
+  for (size_t i = 0; i < std_parameters.size(); ++i) {
+    eigen_parameters[i] = EigenVector(std_parameters[i].data());
+  }
+
+  return eigen_parameters;
+}
 
 }  // namespace romea
 
