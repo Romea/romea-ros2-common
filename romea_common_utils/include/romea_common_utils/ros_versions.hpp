@@ -18,5 +18,6 @@
 
 #define ROS_GALACTIC 0
 #define ROS_HUMBLE 1
+#define ROS_IRON 2
 
 #endif  // ROMEA_COMMON_UTILS__ROS_VERSIONS_HPP_
