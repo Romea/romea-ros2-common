@@ -15,6 +15,7 @@
 
 # !/usr/bin/env python3
 from ament_index_python import get_package_share_directory
+import importlib
 import yaml
 
 
@@ -48,23 +49,30 @@ def device_prefix(robot_name, ros_namespace, device_name):
         return robot_prefix(robot_name) + device_name + "/"
 
 
-def robot_urdf_prefix(robot_namespace):
+def robot_urdf_prefix(robot_name):
 
-    if robot_namespace == "":
+    if robot_name == "":
         return ""
     else:
-        return robot_namespace + "_"
+        return robot_name + "_"
 
 
-def device_urdf_prefix(robot_namespace, device_name):
+def device_urdf_prefix(robot_name, device_name):
     if device_name == "":
-        return robot_urdf_prefix(robot_namespace)
+        return robot_urdf_prefix(robot_name)
     else:
-        return robot_urdf_prefix(robot_namespace)+device_name+"_"
+        return robot_urdf_prefix(robot_name) + device_name + "_"
 
 
-def device_link_name(robot_namespace, device_name):
-    return robot_urdf_prefix(robot_namespace) + device_name + "_link"
+def device_link_name(robot_name, device_name):
+    return robot_urdf_prefix(robot_name) + device_name + "_link"
+
+
+# def temporary_file_path(robot_name, filename):
+#     if robot_name == "":
+#         return "/tmp/" + filename
+#     else:
+#         return "/tmp/" + robot_name + "_" + filename
 
 
 def get_file_path(file_configuration):
@@ -73,10 +81,44 @@ def get_file_path(file_configuration):
     return get_package_share_directory(pkg) + "/" + file
 
 
+def load_configuration(configuration_file_path):
+    with open(configuration_file_path) as f:
+        return yaml.safe_load(f)
+
+
+def meta_description_type(meta_description_file_path):
+    return meta_description_file_path.split(".")[1]
+
+
+def load_meta_description(meta_description_file_path):
+    type = meta_description_type(meta_description_file_path)
+    bringup = importlib.import_module("romea_" + type + "bringup")
+    bringup.load_meta_description(meta_description_file_path)
+
+
+def load_meta_descriptions(meta_description_file_paths):
+    return [
+        load_meta_description(meta_description_file_path)
+        for meta_description_file_path in meta_description_file_paths
+    ]
+
+
+def find_meta_description(meta_descriptions, device_name):
+    return next(
+        (
+            meta_description
+            for meta_description in meta_descriptions
+            if meta_description.get_name() == device_name
+        ),
+        None,
+    )
+
+
 class MetaDescription:
     def __init__(self, description_type, meta_description_file_path):
 
         self.type = description_type
+        # TODO assert description type when base metadescription will be called like this base_config_filename.mobile_base.yaml
         self.filename = meta_description_file_path
         with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
