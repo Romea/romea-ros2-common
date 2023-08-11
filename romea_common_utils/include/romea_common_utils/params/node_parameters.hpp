@@ -83,6 +83,58 @@ inline void declare_parameter_with_default(
     default_value);
 }
 
+// //-----------------------------------------------------------------------------
+// template<typename T, typename Node>
+// inline void declare_parameter_with_default(
+//   std::shared_ptr<Node> node,
+//   const std::string & param_namespace,
+//   const std::string & param_name,
+//   const T & default_value)
+// {
+//   declare_parameter_with_default<T>(
+//     node, full_param_name(param_namespace, param_name),
+//     default_value);
+// }
+
+//-----------------------------------------------------------------------------
+template<typename T, typename Node>
+inline void declare_parameters(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names)
+{
+  for (const auto & param_name : params_names) {
+    declare_parameter<T>(node, params_namespace, param_name);
+  }
+}
+
+//-----------------------------------------------------------------------------
+template<typename T, typename Node>
+inline void declare_parameters_with_default(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names,
+  const T & default_value)
+{
+  for (const auto & param_name : params_names) {
+    declare_parameter_with_default<T>(node, params_namespace, params_names, default_value);
+  }
+}
+
+//-----------------------------------------------------------------------------
+template<typename T, typename Node>
+inline void declare_parameters_with_default(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names,
+  const std::vector<T> & default_values)
+{
+  assert(params_names.size() == default_values.size());
+  for (size_t i = 0; i < params_names.size(); ++i) {
+    declare_parameter_with_default<T>(node, params_namespace, params_names[i], default_values[i]);
+  }
+}
+
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline T get_parameter(
@@ -168,19 +220,6 @@ inline void declare_vector_parameter(
 }
 
 //-----------------------------------------------------------------------------
-template<typename T>
-inline void declare_vector_parameter_with_default(
-  std::shared_ptr<rclcpp::Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name,
-  const std::vector<T> & default_values)
-{
-  declare_vector_parameter_with_default<T>(
-    node, full_param_name(param_namespace, param_name), default_values);
-}
-
-
-//-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline std::vector<T> get_vector_parameter(
   std::shared_ptr<Node> node,
@@ -197,6 +236,22 @@ inline std::vector<T> get_vector_parameter(
   const std::string & param_name)
 {
   return get_vector_parameter<T>(node, full_param_name(param_namespace, param_name));
+}
+
+
+//-----------------------------------------------------------------------------
+template<typename T, typename Node>
+inline std::vector<T> get_parameters(
+  std::shared_ptr<Node> node,
+  const std::string & params_namespace,
+  const std::vector<std::string> & params_names)
+{
+  std::vector<T> parameters;
+  parameters.reserve(params_names.size());
+  for (const auto & param_name : params_names) {
+    parameters.push_back(get_parameter<T>(node, params_namespace, param_name));
+  }
+  return parameters;
 }
 
 //-----------------------------------------------------------------------------
