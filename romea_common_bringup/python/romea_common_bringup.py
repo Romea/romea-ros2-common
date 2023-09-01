@@ -92,8 +92,8 @@ def meta_description_type(meta_description_file_path):
 
 def load_meta_description(meta_description_file_path):
     type = meta_description_type(meta_description_file_path)
-    bringup = importlib.import_module("romea_" + type + "bringup")
-    bringup.load_meta_description(meta_description_file_path)
+    bringup = importlib.import_module("romea_" + type + "_bringup")
+    return bringup.load_meta_description(meta_description_file_path)
 
 
 def load_meta_descriptions(meta_description_file_paths):
@@ -112,6 +112,13 @@ def find_meta_description(meta_descriptions, device_name):
         ),
         None,
     )
+
+
+def find_meta_descriptions(meta_descriptions, devices_names):
+    return [
+        find_meta_description(meta_descriptions, device_name)
+        for device_name in devices_names
+    ]
 
 
 class MetaDescription:
