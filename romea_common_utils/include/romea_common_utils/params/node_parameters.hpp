@@ -83,19 +83,6 @@ inline void declare_parameter_with_default(
     default_value);
 }
 
-// //-----------------------------------------------------------------------------
-// template<typename T, typename Node>
-// inline void declare_parameter_with_default(
-//   std::shared_ptr<Node> node,
-//   const std::string & param_namespace,
-//   const std::string & param_name,
-//   const T & default_value)
-// {
-//   declare_parameter_with_default<T>(
-//     node, full_param_name(param_namespace, param_name),
-//     default_value);
-// }
-
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline void declare_parameters(
