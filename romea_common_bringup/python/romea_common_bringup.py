@@ -125,7 +125,7 @@ class MetaDescription:
     def __init__(self, description_type, meta_description_file_path):
 
         self.type = description_type
-        # TODO assert description type when base metadescription 
+        # TODO assert description type when base metadescription
         # will be called like this base_config_filename.mobile_base.yaml
         self.filename = meta_description_file_path
         with open(meta_description_file_path) as f:
