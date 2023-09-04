@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_COMMON_UTILS__DEFFERED_CALL_HPP_
+#ifndef ROMEA_COMMON_UTILS__DEFERRED_CALL_HPP_
 #define ROMEA_COMMON_UTILS__DEFFERED_CALL_HPP_
 
+// std
+#include <utility>
+
+// rclcpp
 #include "rclcpp/timer.hpp"
 
 namespace romea
@@ -23,12 +27,12 @@ namespace romea
 class DeferredCall
 {
 public:
-  template <typename Node, typename CallbackT>
+  template<typename Node, typename CallbackT>
   DeferredCall(Node & node, CallbackT && callback)
   : timer_(node.create_wall_timer({}, [this, cb = std::forward<CallbackT>(callback)] {
-      timer_->cancel();
-      cb();
-    }))
+        timer_->cancel();
+        cb();
+      }))
   {
   }
 
@@ -36,19 +40,19 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
-template <typename Node, typename CallbackT>
+template<typename Node, typename CallbackT>
 auto deferred_call(Node & node, CallbackT && callback)
 {
   return std::make_unique<DeferredCall>(node, std::forward<CallbackT>(callback));
 }
 
-template <typename Node, typename CallbackT>
+template<typename Node, typename CallbackT>
 auto deferred_call(Node * node, CallbackT && callback)
 {
   return std::make_unique<DeferredCall>(*node, std::forward<CallbackT>(callback));
 }
 
-template <typename Node, typename CallbackT>
+template<typename Node, typename CallbackT>
 auto deferred_call(std::shared_ptr<Node> node, CallbackT && callback)
 {
   return std::make_unique<DeferredCall>(*node, std::forward<CallbackT>(callback));
@@ -56,4 +60,4 @@ auto deferred_call(std::shared_ptr<Node> node, CallbackT && callback)
 
 }  // namespace romea
 
-#endif  // ROMEA_COMMON_UTILS__QOS_HPP_
+#endif  // ROMEA_COMMON_UTILS__DEFERRED_CALL_HPP_
