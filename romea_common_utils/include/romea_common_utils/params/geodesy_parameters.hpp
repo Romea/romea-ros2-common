@@ -34,44 +34,12 @@ namespace romea
 
 //-----------------------------------------------------------------------------
 template<typename Node>
-void declare_geodetic_coordinates_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
-{
-  declare_vector_parameter<double>(node, param_name);
-}
-
-//-----------------------------------------------------------------------------
-template<typename Node>
-void declare_geodetic_coordinates_parameter_with_default(
-  std::shared_ptr<Node> node,
-  const std::string & param_name,
-  const GeodeticCoordinates & default_coordinates)
-{
-  std::vector<double> default_vector = {default_coordinates.latitude,
-    default_coordinates.longitude,
-    default_coordinates.altitude};
-
-  declare_vector_parameter_with_default<double>(node, param_name, default_vector);
-}
-
-//-----------------------------------------------------------------------------
-template<typename Node>
-GeodeticCoordinates get_geodetic_coordinates_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
-{
-  std::vector<double> vector = get_vector_parameter<double>(node, param_name);
-  return makeGeodeticCoordinates(vector[0] / 180. * M_PI, vector[1] / 180. * M_PI, vector[2]);
-}
-
-//-----------------------------------------------------------------------------
-template<typename Node>
 void declare_wgs84_coordinates_parameter(
   std::shared_ptr<Node> node,
   const std::string & param_name)
 {
-  declare_vector_parameter<double>(node, param_name);
+  declare_parameter<double>(node, param_name, "latitude");
+  declare_parameter<double>(node, param_name, "longitude");
 }
 
 //-----------------------------------------------------------------------------
@@ -81,10 +49,38 @@ void declare_wgs84_coordinates_parameter_with_default(
   const std::string & param_name,
   const WGS84Coordinates & default_coordinates)
 {
-  std::vector<double> default_vector = {default_coordinates.latitude,
-    default_coordinates.longitude};
+  declare_parameter_with_default<double>(
+    node, param_name, "latitude",
+    default_coordinates.latitude * 180 / M_PI);
+  declare_parameter_with_default<double>(
+    node, param_name, "longitude",
+    default_coordinates.longitude * 180 / M_PI);
+}
 
-  declare_vector_parameter_with_default<double>(node, param_name, default_vector);
+
+//-----------------------------------------------------------------------------
+template<typename Node>
+void declare_geodetic_coordinates_parameter(
+  std::shared_ptr<Node> node,
+  const std::string & param_name)
+{
+  declare_wgs84_coordinates_parameter(node, param_name),
+  declare_parameter<double>(node, param_name, "altitude");
+}
+
+//-----------------------------------------------------------------------------
+template<typename Node>
+void declare_geodetic_coordinates_parameter_with_default(
+  std::shared_ptr<Node> node,
+  const std::string & param_name,
+  const GeodeticCoordinates & default_coordinates)
+{
+  declare_wgs84_coordinates_parameter_with_default(
+    node, param_name, default_coordinates);
+
+  declare_parameter_with_default<double>(
+    node, param_name, "altitude",
+    default_coordinates.altitude);
 }
 
 //-----------------------------------------------------------------------------
@@ -93,8 +89,21 @@ WGS84Coordinates get_wgs84_coordinates_parameter(
   std::shared_ptr<Node> node,
   const std::string & param_name)
 {
-  std::vector<double> vector = get_vector_parameter<double>(node, param_name);
-  return makeWGS84Coordinates(vector[0] / 180. * M_PI, vector[1] / 180. * M_PI);
+  return makeWGS84Coordinates(
+    get_parameter<double>(node, param_name, "latitude") / 180 * M_PI,
+    get_parameter<double>(node, param_name, "longitude") / 180 * M_PI);
+}
+
+
+//-----------------------------------------------------------------------------
+template<typename Node>
+GeodeticCoordinates get_geodetic_coordinates_parameter(
+  std::shared_ptr<Node> node,
+  const std::string & param_name)
+{
+  return makeGeodeticCoordinates(
+    get_wgs84_coordinates_parameter(node, param_name),
+    get_parameter<double>(node, param_name, "altitude"));
 }
 
 }  // namespace romea

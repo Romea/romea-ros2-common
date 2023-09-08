@@ -2,7 +2,10 @@
   ros__parameters:
     vector3d: [2.3, 5.4, -8.9]
     vector3i: [2, -5, 9]
-    geodetic: [45.85207, 3.16482, 300.0]
+    geodetic: 
+      latitude: 45.85207
+      longitude: 3.16482 
+      altitude: 300.0
     map:
       foo: 0.34
       bar: -2.7
