@@ -104,7 +104,7 @@ def load_meta_descriptions(meta_description_file_paths):
 
 
 def find_meta_description(meta_descriptions, device_name):
-    return next(
+    meta_description = next(
         (
             meta_description
             for meta_description in meta_descriptions
@@ -112,6 +112,15 @@ def find_meta_description(meta_descriptions, device_name):
         ),
         None,
     )
+
+    if meta_description is None:
+
+        raise LookupError(
+            "Cannot find meta description for device called"
+            + device_name
+            + "into the provided meta descriptions list")
+
+    return meta_description
 
 
 def find_meta_descriptions(meta_descriptions, devices_names):
