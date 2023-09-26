@@ -20,7 +20,6 @@ import yaml
 
 
 def robot_namespace(robot_name):
-
     if robot_name == "":
         return "/"
     else:
@@ -82,8 +81,13 @@ def get_file_path(file_configuration):
 
 
 def load_configuration(configuration_file_path):
-    with open(configuration_file_path) as f:
+    with open(configuration_file_path, 'r') as f:
         return yaml.safe_load(f)
+
+
+def save_configuration(configuration, configuration_file_path):
+    with open(configuration_file_path, 'w') as f:
+        yaml.dump(configuration, f)
 
 
 def meta_description_type(meta_description_file_path):
