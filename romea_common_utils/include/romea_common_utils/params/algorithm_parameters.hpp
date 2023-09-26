@@ -195,9 +195,26 @@ inline void declare_publish_rate(
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
+inline void declare_publish_rate(
+  std::shared_ptr<NodeType> node,
+  const std::string & ns,
+  const int & default_value)
+{
+  declare_parameter_with_default<int>(node, ns, "publish_rate", default_value);
+}
+
+//-----------------------------------------------------------------------------
+template<typename NodeType>
 inline void declare_publish_rate(std::shared_ptr<NodeType> node)
 {
   declare_publish_rate(node, "");
+}
+
+//-----------------------------------------------------------------------------
+template<typename NodeType>
+inline void declare_publish_rate(std::shared_ptr<NodeType> node, const int & default_value)
+{
+  declare_publish_rate(node, "", default_value);
 }
 
 
