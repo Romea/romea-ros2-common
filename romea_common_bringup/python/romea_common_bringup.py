@@ -94,9 +94,10 @@ def meta_description_type(meta_description_file_path):
     return meta_description_file_path.split(".")[1]
 
 
-def load_meta_description(meta_description_file_path):
-    type = meta_description_type(meta_description_file_path)
-    bringup = importlib.import_module("romea_" + type + "_bringup")
+def load_meta_description(meta_description_file_path, device_type=None):
+    if device_type is None:
+        device_type = meta_description_type(meta_description_file_path)
+    bringup = importlib.import_module("romea_" + device_type + "_bringup")
     return bringup.load_meta_description(meta_description_file_path)
 
 
