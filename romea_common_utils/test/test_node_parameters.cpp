@@ -29,6 +29,7 @@
 #include "romea_common_utils/params/geodesy_parameters.hpp"
 #include "romea_common_utils/params/eigen_parameters.hpp"
 #include "romea_common_utils/params/algorithm_parameters.hpp"
+#include "romea_common_utils/params/control_parameters.hpp"
 #include "../test/test_helper.h"
 
 
@@ -240,6 +241,17 @@ TEST_F(TestNodeParameters, loadPublishRate)
   EXPECT_EQ(romea::get_publish_rate(node), 10);
   romea::declare_publish_rate(node, "bar");
   EXPECT_EQ(romea::get_publish_rate(node, "bar"), 20);
+}
+
+TEST_F(TestNodeParameters, loadPIDParameters)
+{
+  romea::declare_pid_parameters(node, "pid");
+  auto pid_parameters = romea::get_pid_parameters(node, "pid");
+  EXPECT_EQ(pid_parameters.kp, 1.0);
+  EXPECT_EQ(pid_parameters.ki, 2.0);
+  EXPECT_EQ(pid_parameters.kd, 3.0);
+  EXPECT_EQ(pid_parameters.imin, 4.0);
+  EXPECT_EQ(pid_parameters.imax, 5.0);
 }
 
 int main(int argc, char ** argv)

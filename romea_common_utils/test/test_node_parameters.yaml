@@ -24,4 +24,10 @@
       odom_frame_id: "odom2"
       map_frame_id: "map2"
       publish_rate: 20
+    pid:
+      kp: 1.0  
+      ki: 2.0  
+      kd: 3.0  
+      imin: 4.0  
+      imax: 5.0  
 
