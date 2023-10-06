@@ -16,6 +16,9 @@
 #ifndef ROMEA_COMMON_UTILS__PARAMS__CONTROL_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__CONTROL_PARAMETERS_HPP_
 
+// std
+#include <memory>
+
 // romea core
 #include "romea_core_common/control/PID.hpp"
 
