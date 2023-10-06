@@ -18,6 +18,7 @@
 
 // std
 #include <memory>
+#include <string>
 
 // romea core
 #include "romea_core_common/control/PID.hpp"
