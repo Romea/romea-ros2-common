@@ -40,6 +40,8 @@ inline void declare_pid_parameters(
   declare_parameter<double>(node, ns, "kd");
   declare_parameter<double>(node, ns, "imin");
   declare_parameter<double>(node, ns, "imax");
+  declare_parameter<double>(node, ns, "error_epsilon");
+
 }
 
 
@@ -54,7 +56,9 @@ inline PID::Parameters get_pid_parameters(
     get_parameter<double>(node, ns, "ki"),
     get_parameter<double>(node, ns, "kd"),
     get_parameter<double>(node, ns, "imin"),
-    get_parameter<double>(node, ns, "imax")};
+    get_parameter<double>(node, ns, "imax"),
+    get_parameter<double>(node, ns, "error_epsilon")
+  };
 }
 
 
