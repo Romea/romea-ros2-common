@@ -30,4 +30,5 @@
       kd: 3.0  
       imin: 4.0  
       imax: 5.0  
+      error_epsilon: 6.0  
 
