@@ -41,7 +41,6 @@ inline void declare_pid_parameters(
   declare_parameter<double>(node, ns, "imin");
   declare_parameter<double>(node, ns, "imax");
   declare_parameter<double>(node, ns, "error_epsilon");
-
 }
 
 
