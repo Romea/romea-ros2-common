@@ -1,0 +1,7 @@
+foo: bar
+baz:
+  default: qux 
+  list: [quux, corge, grault]
+garply:
+  default: waldo 
+  range: [fred, plugh]
