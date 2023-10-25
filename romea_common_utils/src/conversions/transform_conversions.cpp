@@ -60,28 +60,25 @@ void to_ros_transform_msg(
   to_ros_msg(eigen_transform.linear(), tranform_msg.rotation);
 }
 
-//-----------------------------------------------------------------------------
-Eigen::Affine3d lookupTransformOnce(
-  std::shared_ptr<rclcpp::Node> node,
-  tf2_ros::Buffer & tf_buffer,
-  const std::string & target_frame,
-  const std::string & source_frame,
-  const rclcpp::Time & time,
-  const rclcpp::Duration timeout)
-{
-//  tf2_ros::Buffer tf_buffer(node->get_clock());
-  tf2_ros::TransformListener tf_listener(tf_buffer);
+// //-----------------------------------------------------------------------------
+// Eigen::Affine3d lookupTransformOnce(
+//   std::shared_ptr<rclcpp::Node> node,
+//   tf2_ros::Buffer & tf_buffer,
+//   const std::string & target_frame,
+//   const std::string & source_frame,
+//   const rclcpp::Time & time,
+//   const rclcpp::Duration timeout)
+// {
+// //  tf2_ros::Buffer tf_buffer(node->get_clock());
+//   tf2_ros::TransformListener tf_listener(tf_buffer);
 
-  std::cout << " coucou " << std::endl;
-  std::cout << "cache" << tf_buffer.getCacheLength().count() << std::endl;
-  auto tranform_msg = tf_buffer.lookupTransform(
-    target_frame,
-    source_frame,
-    time,
-    timeout);
+//   auto tranform_msg = tf_buffer.lookupTransform(
+//     target_frame,
+//     source_frame,
+//     time,
+//     timeout);
 
-  std::cout << " coucou " << std::endl;
-  return tf2::transformToEigen(tranform_msg);
-}
+//   return tf2::transformToEigen(tranform_msg);
+// }
 
 }  // namespace romea

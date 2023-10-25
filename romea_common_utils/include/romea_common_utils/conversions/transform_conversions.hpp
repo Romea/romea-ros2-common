@@ -39,13 +39,13 @@ void to_ros_transform_msg(
   const Eigen::Affine3d & eigen_transform,
   geometry_msgs::msg::Transform & tranform_msg);
 
-Eigen::Affine3d lookupTransformOnce(
-  std::shared_ptr<rclcpp::Node> node,
-  tf2_ros::Buffer & tf_buffer,
-  const std::string & target_frame,
-  const std::string & source_frame,
-  const rclcpp::Time & time,
-  const rclcpp::Duration timeout);
+// Eigen::Affine3d lookupTransformOnce(
+//   std::shared_ptr<rclcpp::Node> node,
+//   tf2_ros::Buffer & tf_buffer,
+//   const std::string & target_frame,
+//   const std::string & source_frame,
+//   const rclcpp::Time & time,
+//   const rclcpp::Duration timeout);
 
 
 }  // namespace romea
