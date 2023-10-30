@@ -12,7 +12,7 @@ find_package(ament_cmake REQUIRED)
 ament_python_install_module(python/romea_common_description.py)
 
 install(
-  DIRECTORY config
+  DIRECTORY urdf
   DESTINATION share/${PROJECT_NAME}
 )
 

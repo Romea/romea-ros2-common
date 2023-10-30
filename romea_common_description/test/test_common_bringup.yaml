@@ -1,6 +1,0 @@
-foo: bar
-baz:
-  qux: thud
-file:
-  pkg: romea_common_bringup
-  file: config/foo.yaml

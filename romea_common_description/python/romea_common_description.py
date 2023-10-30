@@ -18,8 +18,16 @@ import yaml
 from ament_index_python.packages import get_package_share_directory
 
 
+def full_device_model_name(device_type, device_model):
+    return device_type + " " + device_model
+
+
+def full_device_category_name(device_category, device_type, device_model):
+    return full_device_model_name(device_type, device_model) + " " + device_category
+
+
 def raised_device_configuration_file_not_found(
-    device_category, file, configuration_file_type, device_type, device_model
+    device_category, device_type, device_model, file, configuration_file_type
 ):
     raise LookupError(
         "No "
@@ -29,12 +37,10 @@ def raised_device_configuration_file_not_found(
         + " found in romea_"
         + device_category
         + "_description package for "
-        + device_type
-        + " "
-        + device_model
-        + " "
+        + full_device_category_name(device_category, device_type, device_model)
+        + ". Please check you have selected good "
         + device_category
-        + ". Please check you have selected good device type and/or model. Or add "
+        + " type and/or model. Or add "
         + configuration_file_type
         + " file for this "
         + device_category
@@ -42,7 +48,7 @@ def raised_device_configuration_file_not_found(
     )
 
 
-def get_device_configuration_file_path(device_category, configuration_file_type, device_type, device_model):
+def get_device_configuration_file_path(device_category, device_type, device_model, configuration_file_type):
 
     file_path = (
         get_package_share_directory("romea_" + device_category + "_description")
@@ -55,22 +61,20 @@ def get_device_configuration_file_path(device_category, configuration_file_type,
         + ".yaml"
     )
 
-    print(file_path)
-
     if not os.path.exists(file_path):
         raised_device_configuration_file_not_found(
-            device_category, file_path, configuration_file_type, device_type, device_model
+            device_category, device_type, device_model, file_path, configuration_file_type
         )
 
     return file_path
 
 
 def get_device_specifications_file_path(device_category, device_type, device_model):
-    return get_device_configuration_file_path(device_category, "specifications", device_type, device_model)
+    return get_device_configuration_file_path(device_category, device_type, device_model, "specifications")
 
 
 def get_device_geometry_file_path(device_category, device_type, device_model):
-    return get_device_configuration_file_path(device_category, "geometry", device_type, device_model)
+    return get_device_configuration_file_path(device_category, device_type, device_model, "geometry")
 
 
 def get_device_specifications(device_category, device_type, device_model):
@@ -83,8 +87,8 @@ def get_device_geometry(device_category, device_type, device_model):
         return yaml.safe_load(f)
 
 
-def save_device_configuration_file(configuration_file_type, prefix, lidar_name, configuration):
-    configuration_file_path = "/tmp/" + prefix + lidar_name + "_" + configuration_file_type + ".yaml"
+def save_device_configuration_file(prefix, device_name, configuration, configuration_file_type):
+    configuration_file_path = "/tmp/" + prefix + device_name + "_" + configuration_file_type + ".yaml"
 
     with open(configuration_file_path, "w") as f:
         yaml.dump(configuration, f)
@@ -92,113 +96,165 @@ def save_device_configuration_file(configuration_file_type, prefix, lidar_name, 
     return configuration_file_path
 
 
-def save_device_specifications_file(prefix, lidar_name, configuration):
-    save_device_configuration_file("specifications", prefix, lidar_name, configuration)
+def save_device_specifications_file(prefix, device_name, specifications):
+    return save_device_configuration_file(prefix, device_name, specifications, "specifications")
 
 
-def save_device_geometry_file(prefix, lidar_name, configuration):
-    save_device_geometry_file("geometry", prefix, lidar_name, configuration)
+def save_device_geometry_file(prefix, device_name, geometry):
+    return save_device_geometry_file(prefix, device_name, geometry, "geometry")
 
 
-def is_parameter_can_be_evaluated(device_category, specifications, user_configuration, parameter_name):
+def get_user_configuration_parameter(
+    device_category, device_type, device_model, user_device_configuration, parameter_name
+):
 
-    if parameter_name not in user_configuration:
+    if parameter_name not in user_device_configuration:
         raise LookupError(
-            parameter_name.capitalize()
-            + " does not exist in user "
-            + device_category
-            + " configuration. Parameters provided are : "
-            + str(user_configuration)
+            parameter_name
+            + " parameter does not exist in user configuration of "
+            + full_device_category_name(device_category, device_type, device_model)
+            + ". Parameters provided are : "
+            + str(user_device_configuration)
             + "."
         )
 
-    if parameter_name not in specifications:
+    return user_device_configuration[parameter_name]
+
+
+def get_specification_parameter(
+    device_category, device_type, device_model, device_specifications, parameter_name, key_value
+):
+
+    if parameter_name not in device_specifications:
         raise LookupError(
-            parameter_name.capitalize()
-            + " does not exist in"
-            + user_configuration["device_type"]
-            + " "
-            + user_configuration["devide_model"]
-            + " "
-            + device_category
+            parameter_name
+            + " parameter does not exist in "
+            + full_device_category_name(device_category, device_type, device_model)
             + " specifications. Parameter provided are :"
-            + str(specifications)
+            + str(device_specifications)
             + "."
         )
 
-    return True
+    if key_value is None:
+        return device_specifications[parameter_name]
+
+    if key_value not in device_specifications[parameter_name]:
+
+        raise LookupError(
+            parameter_name
+            + "["
+            + key_value
+            + "]"
+            + " parameter does not exist in "
+            + full_device_category_name(device_category, device_type, device_model)
+            + " specifications. Parameter provided are :"
+            + str(device_specifications)
+            + "."
+        )
+
+    return device_specifications[parameter_name][key_value]
 
 
-def evaluate_parameter(device_category, specifications, user_configuration, parameter_name):
+def evaluate_parameter(
+    device_category,
+    device_type,
+    device_model,
+    device_specifications,
+    user_device_configuration,
+    parameter_name,
+    key_value=None,
+):
+    user_parameter = get_user_configuration_parameter(
+        device_category, device_type, device_model, user_device_configuration, parameter_name
+    )
 
-    is_parameter_can_be_evaluated(device_category, specifications, user_configuration, parameter_name)
+    specification_parameter = get_specification_parameter(
+        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+    )
 
-    user_value = user_configuration[parameter_name]
-    if user_value is None or specifications[parameter_name] == user_value:
-        return specifications[parameter_name]
+    if user_parameter is None or specification_parameter == user_parameter:
+        return specification_parameter
     else:
         raise ValueError(
-            parameter_name.capitalize()
-            + " "
-            + user_value
+            parameter_name
+            + " parameter equal to "
+            + str(user_parameter)
             + " is not available for "
-            + user_configuration["device_type"]
-            + " "
-            + user_configuration["devide_model"]
-            + " "
-            + device_category
+            + full_device_category_name(device_category, device_type, device_model)
             + ". It must be equal to "
-            + specifications[parameter_name]
+            + str(specification_parameter)
             + "."
         )
 
 
-def evaluate_parameter_from_list(device_category, specifications, user_configuration, parameter_name):
-    user_value = user_configuration[parameter_name]
-    if user_value is None:
-        return specifications[parameter_name]["default"]
-    elif user_value in specifications[parameter_name]["list"]:
-        return user_value
+def evaluate_parameter_from_list(
+    device_category,
+    device_type,
+    device_model,
+    device_specifications,
+    user_device_configuration,
+    parameter_name,
+    key_value=None,
+):
+
+    user_parameter = get_user_configuration_parameter(
+        device_category, device_type, device_model, user_device_configuration, parameter_name
+    )
+
+    specification_parameter = get_specification_parameter(
+        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+    )
+
+    if user_parameter is None:
+        return specification_parameter["default"]
+    elif user_parameter in specification_parameter["list"]:
+        return user_parameter
     else:
         raise ValueError(
-            parameter_name.capitalize()
-            + " "
-            + user_value
+            parameter_name
+            + " parameter equal to"
+            + str(user_parameter)
             + " is not available for "
-            + user_configuration["device_type"]
-            + " "
-            + user_configuration["device_model"]
-            + " "
-            + device_category
+            + full_device_category_name(device_category, device_type, device_model)
             + ". It must be one of these values "
-            + specifications[parameter_name]["list"]
+            + str(specification_parameter["list"])
             + "."
         )
 
 
-def evaluate_parameter_from_range(device_type, specifications, user_configuration, parameter_name):
-    user_value = user_configuration[parameter_name]
-    if user_value is None:
-        return specifications[parameter_name]["default"]
+def evaluate_parameter_from_range(
+    device_category,
+    device_type,
+    device_model,
+    device_specifications,
+    user_device_configuration,
+    parameter_name,
+    key_value=None,
+):
+    user_parameter = get_user_configuration_parameter(
+        device_category, device_type, device_model, user_device_configuration, parameter_name
+    )
+
+    specification_parameter = get_specification_parameter(
+        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+    )
+
+    if user_parameter is None:
+        return specification_parameter["default"]
     elif (
-        user_value >= specifications[parameter_name]["range"][0]
-        and user_value <= specifications[parameter_name]["range"][1]
+        user_parameter >= specification_parameter["range"][0] and user_parameter <= specification_parameter["range"][1]
     ):
-        return user_value
+        return user_parameter
     else:
         raise ValueError(
-            parameter_name.capitalize()
-            + " "
-            + user_value
+            parameter_name
+            + " parameter equal to "
+            + str(user_parameter)
             + " is not available for "
-            + user_configuration["device_type"]
-            + " "
-            + user_configuration["devide_model"]
-            + " "
-            + device_type
+            + full_device_category_name(device_category, device_type, device_model)
             + " It must be inside ["
-            + specifications[parameter_name]["range"][0]
+            + str(specification_parameter["range"][0])
             + ","
-            + specifications[parameter_name]["range"][1]
+            + str(specification_parameter["range"][1])
             + "]."
         )
