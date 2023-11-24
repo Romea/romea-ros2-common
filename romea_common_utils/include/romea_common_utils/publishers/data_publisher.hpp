@@ -27,6 +27,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename MsgType, typename NodeType>
 class DataPublisher : public Publisher<DataType, MsgType, NodeType>
@@ -81,6 +83,7 @@ make_data_publisher(
   return std::make_shared<Publisher>(node, topic_name, qos, activated);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__DATA_PUBLISHER_HPP_

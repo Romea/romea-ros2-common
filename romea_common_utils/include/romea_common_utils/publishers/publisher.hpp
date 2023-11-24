@@ -31,6 +31,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType>
 class PublisherBase
@@ -204,6 +206,7 @@ protected:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__PUBLISHER_HPP_

@@ -33,15 +33,17 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void  to_ros_odom_msg(
   const rclcpp::Time & stamp,
-  const PoseAndTwist3D & poseAndBodyTwist3D,
+  const core::PoseAndTwist3D & poseAndBodyTwist3D,
   const std::string & frame_id,
   const std::string & child_frame_id,
   nav_msgs::msg::Odometry & odom_msg);
 
-
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST3D_CONVERSIONS_HPP_

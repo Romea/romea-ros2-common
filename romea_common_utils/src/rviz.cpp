@@ -50,6 +50,8 @@ inline Eigen::Isometry3d computeEllipsePose(
 
 namespace romea
 {
+namespace ros2
+{
 
 
 //-----------------------------------------------------------------------------
@@ -106,4 +108,5 @@ void publish(
     rvizVisualTool.getColor(color), scale);
 }
 
+}  // namespace ros2
 }  // namespace romea

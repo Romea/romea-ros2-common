@@ -40,19 +40,19 @@ public:
     romea_pose2d.position.y() = 2;
     romea_pose2d.yaw = 3;
     fillEigenCovariance(romea_pose2d.covariance);
-    romea::to_ros_msg(stamp, frame_id, romea_pose2d, ros_pose2d_msg);
+    romea::ros2::to_ros_msg(stamp, frame_id, romea_pose2d, ros_pose2d_msg);
   }
 
   rclcpp::Time stamp;
   std::string frame_id;
-  romea::Pose2D romea_pose2d;
+  romea::core::Pose2D romea_pose2d;
   romea_common_msgs::msg::Pose2DStamped ros_pose2d_msg;
 };
 
 //-----------------------------------------------------------------------------
 TEST_F(TestPose2DConversion, fromRomeato_ros_msg)
 {
-  EXPECT_EQ(romea::extract_time(ros_pose2d_msg).nanoseconds(), stamp.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_time(ros_pose2d_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(ros_pose2d_msg.header.frame_id.c_str(), frame_id.c_str());
   EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.x, romea_pose2d.position.x());
   EXPECT_DOUBLE_EQ(ros_pose2d_msg.pose.position.y, romea_pose2d.position.y());

@@ -29,6 +29,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename MessageType>
 class RealtimeStampedMessagePublisher
@@ -50,7 +52,7 @@ public:
     const DataType & data);
 
   void publish(
-    const romea::Duration & duration,
+    const core::Duration & duration,
     const DataType & data);
 
 protected:
@@ -90,12 +92,13 @@ void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MessageType>
 void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
-  const romea::Duration & duration,
+  const core::Duration & duration,
   const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_

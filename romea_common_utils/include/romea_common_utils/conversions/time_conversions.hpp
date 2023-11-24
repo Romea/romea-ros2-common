@@ -25,12 +25,14 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 rclcpp::Time to_ros_time(
-  const romea::Duration & duration,
+  const core::Duration & duration,
   rcl_clock_type_t clock_type = RCL_SYSTEM_TIME);
 
-romea::Duration to_romea_duration(const rclcpp::Time & time);
+core::Duration to_romea_duration(const rclcpp::Time & time);
 
 template<typename Msg>
 rclcpp::Time extract_time(const Msg & msg)
@@ -39,11 +41,12 @@ rclcpp::Time extract_time(const Msg & msg)
 }
 
 template<typename Msg>
-Duration extract_duration(const Msg & msg)
+core::Duration extract_duration(const Msg & msg)
 {
   return to_romea_duration(extract_time(msg));
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__TIME_CONVERSIONS_HPP_

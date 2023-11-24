@@ -35,6 +35,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
@@ -270,7 +272,7 @@ inline EigenAffine get_eigen_rigid_transformation_parameter(
 
   auto rotation = get_eigen_rpy_vector_parameter<EigenVector>(node, param_namespace);
   auto translation = get_eigen_xyz_vector_parameter<EigenVector>(node, param_namespace);
-  return rigid_transformation3<Scalar>(translation, rotation);
+  return core::rigid_transformation3<Scalar>(translation, rotation);
 }
 
 
@@ -340,6 +342,7 @@ inline std::vector<EigenVector, Eigen::aligned_allocator<EigenVector>> get_eigen
   return eigen_parameters;
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_

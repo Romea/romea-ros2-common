@@ -25,6 +25,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
@@ -234,7 +236,7 @@ inline int get_publish_rate(std::shared_ptr<NodeType> node)
   return get_publish_rate(node, "");
 }
 
-
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__ALGORITHM_PARAMETERS_HPP_

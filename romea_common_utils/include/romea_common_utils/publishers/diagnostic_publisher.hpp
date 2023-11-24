@@ -32,6 +32,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename NodeType>
 class DiagnosticPublisher : public StampedPublisher<DataType, diagnostic_msgs::msg::DiagnosticArray,
@@ -52,7 +54,7 @@ public:
     const bool & activated);
 
   void publish(
-    const Duration & duration,
+    const core::Duration & duration,
     const DataType & data);
 
   void publish(
@@ -86,14 +88,14 @@ DiagnosticPublisher<DataType, NodeType>::DiagnosticPublisher(
   diagnostic_name_(diagnostic_name),
   hardware_id_(hardware_id),
   next_time_(node->get_clock()->now()),
-  diagnostic_period_(rclcpp::Duration(romea::durationFromSecond(diagnostic_period)))
+  diagnostic_period_(rclcpp::Duration(romea::core::durationFromSecond(diagnostic_period)))
 {
 }
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void DiagnosticPublisher<DataType, NodeType>::publish(
-  const Duration & duration,
+  const core::Duration & duration,
   const DataType & data)
 {
   publish(to_ros_time(duration), data);
@@ -147,6 +149,7 @@ make_diagnostic_publisher(
     activated);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 

@@ -17,6 +17,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 rclcpp::QoS sensor_data_qos()
@@ -50,4 +52,5 @@ rclcpp::QoS reliable(const size_t & history_size, const rclcpp::Duration & timeo
   return reliable(history_size).deadline(timeout);
 }
 
+}  // namespace ros2
 }  // namespace romea

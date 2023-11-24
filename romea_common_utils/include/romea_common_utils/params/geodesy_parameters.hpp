@@ -31,6 +31,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 template<typename Node>
@@ -47,7 +49,7 @@ template<typename Node>
 void declare_wgs84_coordinates_parameter_with_default(
   std::shared_ptr<Node> node,
   const std::string & param_name,
-  const WGS84Coordinates & default_coordinates)
+  const core::WGS84Coordinates & default_coordinates)
 {
   declare_parameter_with_default<double>(
     node, param_name, "latitude",
@@ -73,7 +75,7 @@ template<typename Node>
 void declare_geodetic_coordinates_parameter_with_default(
   std::shared_ptr<Node> node,
   const std::string & param_name,
-  const GeodeticCoordinates & default_coordinates)
+  const core::GeodeticCoordinates & default_coordinates)
 {
   declare_wgs84_coordinates_parameter_with_default(
     node, param_name, default_coordinates);
@@ -85,11 +87,11 @@ void declare_geodetic_coordinates_parameter_with_default(
 
 //-----------------------------------------------------------------------------
 template<typename Node>
-WGS84Coordinates get_wgs84_coordinates_parameter(
+core::WGS84Coordinates get_wgs84_coordinates_parameter(
   std::shared_ptr<Node> node,
   const std::string & param_name)
 {
-  return makeWGS84Coordinates(
+  return core::makeWGS84Coordinates(
     get_parameter<double>(node, param_name, "latitude") / 180 * M_PI,
     get_parameter<double>(node, param_name, "longitude") / 180 * M_PI);
 }
@@ -97,15 +99,16 @@ WGS84Coordinates get_wgs84_coordinates_parameter(
 
 //-----------------------------------------------------------------------------
 template<typename Node>
-GeodeticCoordinates get_geodetic_coordinates_parameter(
+core::GeodeticCoordinates get_geodetic_coordinates_parameter(
   std::shared_ptr<Node> node,
   const std::string & param_name)
 {
-  return makeGeodeticCoordinates(
+  return core::makeGeodeticCoordinates(
     get_wgs84_coordinates_parameter(node, param_name),
     get_parameter<double>(node, param_name, "altitude"));
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__GEODESY_PARAMETERS_HPP_

@@ -27,6 +27,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename MsgType, typename NodeType>
 class StampedDataPublisher : public StampedPublisher<DataType, MsgType, NodeType>
@@ -49,7 +51,7 @@ public:
 
 
   void publish(
-    const romea::Duration & duration,
+    const core::Duration & duration,
     const DataType & data) override;
 
 private:
@@ -84,7 +86,7 @@ void StampedDataPublisher<DataType, MsgType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
 void StampedDataPublisher<DataType, MsgType, NodeType>::publish(
-  const romea::Duration & duration,
+  const core::Duration & duration,
   const DataType & data)
 {
   publish(to_ros_time(duration), data);
@@ -104,6 +106,7 @@ make_stamped_data_publisher(
   return std::make_shared<Publisher>(node, topic_name, frame_id, qos, activated);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_

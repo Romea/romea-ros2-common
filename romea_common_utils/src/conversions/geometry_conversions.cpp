@@ -17,6 +17,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 void to_romea(
@@ -79,4 +81,5 @@ void to_ros_msg(
   to_ros_msg(quaternion, quaternion_msg);
 }
 
+}  // namespace ros2
 }  // namespace romea

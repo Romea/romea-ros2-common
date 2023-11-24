@@ -23,10 +23,12 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const Pose2D & romea_pose2d,
+  const core::Pose2D & romea_pose2d,
   romea_common_msgs::msg::Pose2D & ros_pose2d_msg)
 {
   ros_pose2d_msg.position.x = romea_pose2d.position.x();
@@ -42,7 +44,7 @@ void to_ros_msg(
 void to_ros_msg(
   const rclcpp::Time & stamp,
   const std::string & frame_id,
-  const Pose2D & romea_pose2d,
+  const core::Pose2D & romea_pose2d,
   romea_common_msgs::msg::Pose2DStamped & ros_pose2d_stamped_msg)
 {
   ros_pose2d_stamped_msg.header.frame_id = frame_id;
@@ -52,7 +54,7 @@ void to_ros_msg(
 
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
-  const Pose2D & romea_pose_2d,
+  const core::Pose2D & romea_pose_2d,
   geometry_msgs::msg::Transform & ros_transform_msg)
 {
   ros_transform_msg.translation.x = romea_pose_2d.position.x();
@@ -70,7 +72,7 @@ void to_ros_transform_msg(
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
   const rclcpp::Time & stamp,
-  const Pose2D & romea_pose_2d,
+  const core::Pose2D & romea_pose_2d,
   const std::string & frame_id,
   const std::string & child_frame_id,
   geometry_msgs::msg::TransformStamped & ros_transform_msg)
@@ -85,7 +87,7 @@ void to_ros_transform_msg(
 //-----------------------------------------------------------------------------
 void to_romea(
   const romea_common_msgs::msg::Pose2D & msg,
-  Pose2D & romea_pose_2d)
+  core::Pose2D & romea_pose_2d)
 {
   romea_pose_2d.position.x() = msg.position.x;
   romea_pose_2d.position.y() = msg.position.y;
@@ -94,9 +96,9 @@ void to_romea(
 }
 
 //-----------------------------------------------------------------------------
-Pose2D to_romea(const romea_common_msgs::msg::Pose2D & msg)
+core::Pose2D to_romea(const romea_common_msgs::msg::Pose2D & msg)
 {
-  Pose2D romea_pose_2d;
+  core::Pose2D romea_pose_2d;
   to_romea(msg, romea_pose_2d);
   return romea_pose_2d;
 }
@@ -111,4 +113,5 @@ Pose2D to_romea(const romea_common_msgs::msg::Pose2D & msg)
 //  romea_pose_2d_stamped.stamp=to_romeaDuration(msg.header.stamp);
 //}
 
+}  // namespace ros2
 }  // namespace romea

@@ -19,6 +19,8 @@
 
 namespace  romea
 {
+namespace  ros2
+{
 
 rclcpp::QoS sensor_data_qos();
 
@@ -30,6 +32,7 @@ rclcpp::QoS best_effort(const size_t & history_size, const rclcpp::Duration & ti
 
 rclcpp::QoS reliable(const size_t & history_size, const rclcpp::Duration & timeout);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__QOS_HPP_

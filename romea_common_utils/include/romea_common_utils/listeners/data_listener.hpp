@@ -30,6 +30,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType>
 class DataListenerBase
@@ -95,6 +97,7 @@ make_data_listener(
   return std::make_shared<Listener>(node, topic_name, qos);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_

@@ -26,6 +26,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void to_romea(
   const geometry_msgs::msg::Vector3 & position_msg,
@@ -51,6 +53,7 @@ void to_ros_msg(
   const Eigen::Matrix3d & eigen_rotation_matrix,
   geometry_msgs::msg::Quaternion & quaternion_msg);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__GEOMETRY_CONVERSIONS_HPP_

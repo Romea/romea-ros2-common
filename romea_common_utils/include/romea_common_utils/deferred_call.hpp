@@ -24,6 +24,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 class DeferredCall
 {
@@ -60,6 +62,7 @@ auto deferred_call(std::shared_ptr<Node> node, CallbackT && callback)
   return std::make_unique<DeferredCall>(*node, std::forward<CallbackT>(callback));
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__DEFERRED_CALL_HPP_

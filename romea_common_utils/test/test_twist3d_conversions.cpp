@@ -44,19 +44,19 @@ public:
     romea_twist3d.angularSpeeds.x() = 5;
     romea_twist3d.angularSpeeds.z() = 6;
     fillEigenCovariance(romea_twist3d.covariance);
-    romea::to_ros_msg(stamp, frame_id, romea_twist3d, ros_twist3d_msg);
+    romea::ros2::to_ros_msg(stamp, frame_id, romea_twist3d, ros_twist3d_msg);
   }
 
   rclcpp::Time stamp;
   std::string frame_id;
-  romea::Twist3D romea_twist3d;
+  romea::core::Twist3D romea_twist3d;
   geometry_msgs::msg::TwistWithCovarianceStamped ros_twist3d_msg;
 };
 
 //-----------------------------------------------------------------------------
 TEST_F(TestTwist3DConversion, fromRomeato_ros_msg)
 {
-  EXPECT_EQ(romea::extract_time(ros_twist3d_msg).nanoseconds(), stamp.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_time(ros_twist3d_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(ros_twist3d_msg.header.frame_id.c_str(), frame_id.c_str());
   EXPECT_DOUBLE_EQ(ros_twist3d_msg.twist.twist.linear.x, romea_twist3d.linearSpeeds.x());
   EXPECT_DOUBLE_EQ(ros_twist3d_msg.twist.twist.linear.y, romea_twist3d.linearSpeeds.y());
@@ -70,7 +70,7 @@ TEST_F(TestTwist3DConversion, fromRomeato_ros_msg)
 //-----------------------------------------------------------------------------
 TEST_F(TestTwist3DConversion, fromRosMsgto_romea)
 {
-  romea::Twist3D romea_tsist3d_bis = romea::to_romea(ros_twist3d_msg.twist);
+  romea::core::Twist3D romea_tsist3d_bis = romea::ros2::to_romea(ros_twist3d_msg.twist);
   EXPECT_DOUBLE_EQ(romea_tsist3d_bis.linearSpeeds.x(), romea_twist3d.linearSpeeds.x());
   EXPECT_DOUBLE_EQ(romea_tsist3d_bis.linearSpeeds.y(), romea_twist3d.linearSpeeds.y());
   EXPECT_DOUBLE_EQ(romea_tsist3d_bis.linearSpeeds.z(), romea_twist3d.linearSpeeds.z());

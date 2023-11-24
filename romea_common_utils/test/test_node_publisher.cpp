@@ -60,7 +60,8 @@ protected:
 
 TEST_F(TestNodePublisher, testDataPublisher)
 {
-  auto pub = romea::make_data_publisher<std::string, std_msgs::msg::String>(node, "foo", 1, true);
+  auto pub = romea::ros2::make_data_publisher<std::string, std_msgs::msg::String>(
+    node, "foo", 1, true);
   Subscription<std_msgs::msg::String> sub(node, "foo");
 
   pub->publish("bar");
@@ -72,7 +73,7 @@ TEST_F(TestNodePublisher, testDataPublisher)
 
 TEST_F(TestNodePublisher, testStampedDataPublisher)
 {
-  auto pub = romea::make_stamped_data_publisher<Eigen::Vector3d,
+  auto pub = romea::ros2::make_stamped_data_publisher<Eigen::Vector3d,
       geometry_msgs::msg::PointStamped>(node, "foo", "bar", 1, true);
 
   Subscription<geometry_msgs::msg::PointStamped> sub(node, "foo");
@@ -82,7 +83,7 @@ TEST_F(TestNodePublisher, testStampedDataPublisher)
   SleedpAndSpinSome();
 
   EXPECT_EQ(sub.get_publisher_count(), 1U);
-  EXPECT_EQ(romea::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
   EXPECT_STREQ(sub.get_received_data().header.frame_id.c_str(), "bar");
   EXPECT_DOUBLE_EQ(sub.get_received_data().point.x, 1);
   EXPECT_DOUBLE_EQ(sub.get_received_data().point.y, 2);
@@ -92,7 +93,7 @@ TEST_F(TestNodePublisher, testStampedDataPublisher)
 TEST_F(TestNodePublisher, testOdomPublisher)
 {
   auto pub =
-    romea::make_odom_publisher<nav_msgs::msg::Odometry>(node, "odom", "foo", "bar", 1, true);
+    romea::ros2::make_odom_publisher<nav_msgs::msg::Odometry>(node, "odom", "foo", "bar", 1, true);
   Subscription<nav_msgs::msg::Odometry> sub(node, "odom");
 
   rclcpp::Time t = node->get_clock()->now();
@@ -100,18 +101,20 @@ TEST_F(TestNodePublisher, testOdomPublisher)
   SleedpAndSpinSome();
 
   EXPECT_EQ(sub.get_publisher_count(), 1U);
-  EXPECT_EQ(romea::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
   EXPECT_STREQ(sub.get_received_data().header.frame_id.c_str(), "foo");
   EXPECT_STREQ(sub.get_received_data().child_frame_id.c_str(), "bar");
 }
 
 TEST_F(TestNodePublisher, testDiagnosticPublisher)
 {
-  auto pub = romea::make_diagnostic_publisher<romea::DiagnosticReport>(node, "foo", 1.0);
+  auto pub =
+    romea::ros2::make_diagnostic_publisher<romea::core::DiagnosticReport>(node, "foo", 1.0);
   Subscription<diagnostic_msgs::msg::DiagnosticArray> sub(node, "/diagnostics");
 
-  romea::DiagnosticReport report;
-  report.diagnostics.push_back(romea::Diagnostic(romea::DiagnosticStatus::ERROR, "bar"));
+  romea::core::DiagnosticReport report;
+  report.diagnostics.push_back(
+    romea::core::Diagnostic(romea::core::DiagnosticStatus::ERROR, "bar"));
   report.info["bar"] = "error";
 
   rclcpp::Time t = node->get_clock()->now();
@@ -119,7 +122,7 @@ TEST_F(TestNodePublisher, testDiagnosticPublisher)
   SleedpAndSpinSome();
 
   EXPECT_EQ(sub.get_publisher_count(), 1U);
-  EXPECT_EQ(romea::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
   EXPECT_STREQ(sub.get_received_data().status[0].name.c_str(), "foo");
   EXPECT_EQ(sub.get_received_data().status[0].level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
   EXPECT_STREQ(sub.get_received_data().status[0].values[0].key.c_str(), "bar");
@@ -130,7 +133,7 @@ TEST_F(TestNodePublisher, testTransformPublisher)
 {
   tf2_ros::Buffer tf_buffer(node->get_clock());
   tf2_ros::TransformListener tf_listener(tf_buffer);
-  auto pub = romea::make_transform_publisher<Eigen::Affine3d>(node, "foo", "bar", true);
+  auto pub = romea::ros2::make_transform_publisher<Eigen::Affine3d>(node, "foo", "bar", true);
 
 
   rclcpp::Time t = node->get_clock()->now();

@@ -33,6 +33,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename NodeType>
 class TransformPublisher : public StampedPublisher<DataType, tf2_msgs::msg::TFMessage, NodeType>
@@ -55,7 +57,7 @@ public:
     const DataType & data);
 
   virtual void publish(
-    const Duration & duration,
+    const core::Duration & duration,
     const DataType & data);
 
 private:
@@ -119,7 +121,7 @@ void TransformPublisher<DataType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void TransformPublisher<DataType, NodeType>::publish(
-  const romea::Duration & duration,
+  const core::Duration & duration,
   const DataType & data)
 {
   publish(to_ros_time(duration), data);
@@ -142,6 +144,7 @@ make_transform_publisher(
     activated);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__TRANSFORM_PUBLISHER_HPP_

@@ -30,6 +30,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void to_romea(
   const geometry_msgs::msg::Transform & tranform_msg,
@@ -48,6 +50,7 @@ void to_ros_transform_msg(
 //   const rclcpp::Duration timeout);
 
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_

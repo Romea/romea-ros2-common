@@ -30,12 +30,16 @@
 namespace romea
 {
 
+namespace ros2
+{
+
 void to_ros_diagnostic_msg(
   const std::string & diagnostic_name,
   const std::string & hardware_id,
-  const DiagnosticReport & report,
+  const core::DiagnosticReport & report,
   diagnostic_msgs::msg::DiagnosticStatus & msg);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__DIAGNOSTIC_CONVERSIONS_HPP_

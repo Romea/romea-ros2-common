@@ -32,6 +32,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 void to_romea(
@@ -81,4 +83,5 @@ void to_ros_transform_msg(
 //   return tf2::transformToEigen(tranform_msg);
 // }
 
+}  // namespace ros2
 }  // namespace romea

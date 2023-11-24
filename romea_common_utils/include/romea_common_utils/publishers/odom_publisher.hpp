@@ -31,6 +31,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType, typename NodeType>
 class OdomPublisher : public StampedPublisher<DataType, nav_msgs::msg::Odometry, NodeType>
@@ -49,7 +51,7 @@ public:
     const bool & activated);
 
   void publish(
-    const Duration & duration,
+    const core::Duration & duration,
     const DataType & data);
 
   void publish(
@@ -82,7 +84,7 @@ OdomPublisher<DataType, NodeType>::OdomPublisher(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void OdomPublisher<DataType, NodeType>::publish(
-  const Duration & duration,
+  const core::Duration & duration,
   const DataType & data)
 {
   publish(to_ros_time(duration), data);
@@ -120,6 +122,7 @@ make_odom_publisher(
     activated);
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 

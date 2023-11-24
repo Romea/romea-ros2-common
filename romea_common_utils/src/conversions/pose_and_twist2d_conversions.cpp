@@ -22,10 +22,12 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const PoseAndTwist2D & romea_pose_and_twist2d,
+  const core::PoseAndTwist2D & romea_pose_and_twist2d,
   romea_common_msgs::msg::PoseAndTwist2D & ros_pose_and_twist2d_msg)
 {
   to_ros_msg(romea_pose_and_twist2d.pose, ros_pose_and_twist2d_msg.pose);
@@ -36,7 +38,7 @@ void to_ros_msg(
 void to_ros_msg(
   const rclcpp::Time & stamp,
   const std::string & frame_id,
-  const PoseAndTwist2D & romea_pose_and_twist2d,
+  const core::PoseAndTwist2D & romea_pose_and_twist2d,
   romea_common_msgs::msg::PoseAndTwist2DStamped & ros_pose_and_twist2d_msg_stamped)
 {
   ros_pose_and_twist2d_msg_stamped.header.stamp = stamp;
@@ -46,9 +48,10 @@ void to_ros_msg(
 }
 
 //-----------------------------------------------------------------------------
-PoseAndTwist2D to_romea(const romea_common_msgs::msg::PoseAndTwist2D & ros_pose_and_twist2d_msg)
+core::PoseAndTwist2D to_romea(
+  const romea_common_msgs::msg::PoseAndTwist2D & ros_pose_and_twist2d_msg)
 {
-  PoseAndTwist2D romea_pose_and_twist2d;
+  core::PoseAndTwist2D romea_pose_and_twist2d;
   to_romea(ros_pose_and_twist2d_msg, romea_pose_and_twist2d);
   return romea_pose_and_twist2d;
 }
@@ -56,10 +59,11 @@ PoseAndTwist2D to_romea(const romea_common_msgs::msg::PoseAndTwist2D & ros_pose_
 //-----------------------------------------------------------------------------
 void to_romea(
   const romea_common_msgs::msg::PoseAndTwist2D & ros_pose_and_twist2d_msg,
-  PoseAndTwist2D & romea_pose_and_twist2d)
+  core::PoseAndTwist2D & romea_pose_and_twist2d)
 {
   to_romea(ros_pose_and_twist2d_msg.pose, romea_pose_and_twist2d.pose);
   to_romea(ros_pose_and_twist2d_msg.twist, romea_pose_and_twist2d.twist);
 }
 
+}  // namespace ros2
 }  // namespace romea

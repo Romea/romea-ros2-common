@@ -34,6 +34,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType>
 class StampedPublisherBase
@@ -51,7 +53,7 @@ public:
 
   virtual bool is_activated() = 0;
 
-  virtual void publish(const romea::Duration & stamp, const DataType & data) = 0;
+  virtual void publish(const core::Duration & stamp, const DataType & data) = 0;
 
   virtual void publish(const rclcpp::Time & stampe, const DataType & data) = 0;
 };
@@ -209,6 +211,7 @@ protected:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_PUBLISHER_HPP_

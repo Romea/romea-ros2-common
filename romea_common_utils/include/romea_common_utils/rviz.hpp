@@ -25,6 +25,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void publish(
   rviz_visual_tools::RvizVisualTools & rvizVisualTool,
@@ -42,6 +44,7 @@ void publish(
   double scaleAlongZBodyAxis = 0.1,
   double sigma = 3);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__RVIZ_HPP_

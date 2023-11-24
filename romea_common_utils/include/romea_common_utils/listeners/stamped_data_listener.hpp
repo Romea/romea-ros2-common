@@ -26,6 +26,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename DataType>
 class DataListenerBase
@@ -68,6 +70,7 @@ private:
   std::shared_ptr<rclcpp::Subscription<MsgType>> data_sub_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__LISTENERS__STAMPED_DATA_LISTENER_HPP_

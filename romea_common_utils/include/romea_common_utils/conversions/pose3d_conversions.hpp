@@ -33,36 +33,39 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void to_ros_transform_msg(
-  const Pose3D & romea_pose_3d,
+  const core::Pose3D & romea_pose_3d,
   geometry_msgs::msg::Transform & ros_transform_msg);
 
 
 void to_ros_transform_msg(
   const rclcpp::Time & stamp,
-  const Pose3D & romea_pose_3d,
+  const core::Pose3D & romea_pose_3d,
   const std::string & frame_id,
   const std::string & child_frame_id,
   geometry_msgs::msg::TransformStamped & tf_msg);
 
 void to_ros_msg(
-  const Pose3D & romea_pose_3d,
+  const core::Pose3D & romea_pose_3d,
   geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
   const std::string & frame_id,
-  const Pose3D & romea_pose_3d,
+  const core::Pose3D & romea_pose_3d,
   geometry_msgs::msg::PoseWithCovarianceStamped & ros_pose_msg);
 
 
 void to_romea(
   const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg,
-  Pose3D & romea_pose_3d);
+  core::Pose3D & romea_pose_3d);
 
-Pose3D to_romea(const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
+core::Pose3D to_romea(const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_

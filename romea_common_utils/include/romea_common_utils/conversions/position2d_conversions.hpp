@@ -31,24 +31,27 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 void to_ros_msg(
-  const Position2D & romea_position2d,
+  const core::Position2D & romea_position2d,
   romea_common_msgs::msg::Position2D & ros_position2d_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
   const std::string & frame_id,
-  const Position2D & position2D,
+  const core::Position2D & position2D,
   romea_common_msgs::msg::Position2DStamped & ros_position2d_stamped);
 
 
 void to_romea(
   const romea_common_msgs::msg::Position2D & msg,
-  Position2D & position2d);
+  core::Position2D & position2d);
 
-Position2D to_romea(const romea_common_msgs::msg::Position2D & msg);
+core::Position2D to_romea(const romea_common_msgs::msg::Position2D & msg);
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__POSITION2D_CONVERSIONS_HPP_

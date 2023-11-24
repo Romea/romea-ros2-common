@@ -60,7 +60,7 @@ protected:
 TEST_F(TestRosTransform, DISABLED_lookupTransformOnce)
 {
   tf2_ros::Buffer tf_buffer(node->get_clock());
-  rclcpp::sleep_for(romea::durationFromSecond(1));
+  rclcpp::sleep_for(romea::core::durationFromSecond(1));
 
   geometry_msgs::msg::TransformStamped msg;
   msg.header.stamp = node->get_clock()->now();

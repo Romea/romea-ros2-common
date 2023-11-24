@@ -28,6 +28,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 inline std::string full_param_name(
@@ -258,6 +260,7 @@ inline std::map<std::string, T> get_parameters(
   return map;
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_

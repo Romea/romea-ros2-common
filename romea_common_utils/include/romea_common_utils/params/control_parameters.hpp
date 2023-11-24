@@ -28,6 +28,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 template<typename Node>
@@ -46,7 +48,7 @@ inline void declare_pid_parameters(
 
 //-----------------------------------------------------------------------------
 template<typename Node>
-inline PID::Parameters get_pid_parameters(
+inline core::PID::Parameters get_pid_parameters(
   std::shared_ptr<Node> node,
   const std::string & ns)
 {
@@ -60,7 +62,7 @@ inline PID::Parameters get_pid_parameters(
   };
 }
 
-
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__CONTROL_PARAMETERS_HPP_

@@ -25,6 +25,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 template<typename NodeType>
@@ -109,6 +111,7 @@ inline std::string get_frame_id(std::shared_ptr<NodeType> node)
   return get_parameter<std::string>(node, "frame_id");
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_

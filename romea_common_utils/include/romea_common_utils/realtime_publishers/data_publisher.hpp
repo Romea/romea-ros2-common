@@ -26,6 +26,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<class DataType, class MessageType>
 class RealtimeMessagePublisher
@@ -78,6 +80,7 @@ void RealtimeMessagePublisher<DataType, MessageType>::publish(const DataType & d
   }
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_

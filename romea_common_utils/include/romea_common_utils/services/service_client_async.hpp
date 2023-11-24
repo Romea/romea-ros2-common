@@ -27,6 +27,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 template<typename Service, typename Node = rclcpp::Node>
 class ServiceClientAsync
@@ -113,6 +115,7 @@ private:
   std::shared_ptr<rclcpp::Client<Service>> client_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_COMMON_UTILS__SERVICES__SERVICE_CLIENT_ASYNC_HPP_

@@ -17,19 +17,22 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 rclcpp::Time to_ros_time(
-  const Duration & duration,
+  const core::Duration & duration,
   rcl_clock_type_t clock_type)
 {
-  return rclcpp::Time(durationToNanoSecond(duration), clock_type);
+  return rclcpp::Time(core::durationToNanoSecond(duration), clock_type);
 }
 
 //-----------------------------------------------------------------------------
-Duration to_romea_duration(const rclcpp::Time & time)
+core::Duration to_romea_duration(const rclcpp::Time & time)
 {
-  return Duration(time.nanoseconds());
+  return core::Duration(time.nanoseconds());
 }
 
+}  // namespace ros2
 }  // namespace romea

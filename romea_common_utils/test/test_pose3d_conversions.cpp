@@ -48,14 +48,14 @@ public:
     romea_pose3d.orientation.y() = 0.2;
     romea_pose3d.orientation.z() = 0.3;
     fillEigenCovariance(romea_pose3d.covariance);
-    romea::to_ros_msg(stamp, frame_id, romea_pose3d, ros_pose3d_msg);
-    quaternion = romea::eulerAnglesToRotation3D(romea_pose3d.orientation);
+    romea::ros2::to_ros_msg(stamp, frame_id, romea_pose3d, ros_pose3d_msg);
+    quaternion = romea::core::eulerAnglesToRotation3D(romea_pose3d.orientation);
   }
 
   rclcpp::Time stamp;
   std::string frame_id;
   std::string child_frame_id;
-  romea::Pose3D romea_pose3d;
+  romea::core::Pose3D romea_pose3d;
   Eigen::Quaterniond quaternion;
   geometry_msgs::msg::PoseWithCovarianceStamped ros_pose3d_msg;
 };
@@ -63,7 +63,7 @@ public:
 //-----------------------------------------------------------------------------
 TEST_F(TestPose3DConversion, fromRomeato_ros_msg)
 {
-  EXPECT_EQ(romea::extract_time(ros_pose3d_msg).nanoseconds(), stamp.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_time(ros_pose3d_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(ros_pose3d_msg.header.frame_id.c_str(), frame_id.c_str());
   EXPECT_DOUBLE_EQ(ros_pose3d_msg.pose.pose.position.x, romea_pose3d.position.x());
   EXPECT_DOUBLE_EQ(ros_pose3d_msg.pose.pose.position.y, romea_pose3d.position.y());
@@ -78,7 +78,7 @@ TEST_F(TestPose3DConversion, fromRomeato_ros_msg)
 //-----------------------------------------------------------------------------
 TEST_F(TestPose3DConversion, fromRosMsgto_romea)
 {
-  romea::Pose3D romea_pose3d_bis = romea::to_romea(ros_pose3d_msg.pose);
+  romea::core::Pose3D romea_pose3d_bis = romea::ros2::to_romea(ros_pose3d_msg.pose);
 
   EXPECT_DOUBLE_EQ(romea_pose3d_bis.position.x(), romea_pose3d.position.x());
   EXPECT_DOUBLE_EQ(romea_pose3d_bis.position.y(), romea_pose3d.position.y());
@@ -94,9 +94,9 @@ TEST_F(TestPose3DConversion, fromRomeato_ros_transform_msg)
 {
   geometry_msgs::msg::TransformStamped tf_msg;
 
-  romea::to_ros_transform_msg(stamp, romea_pose3d, frame_id, child_frame_id, tf_msg);
+  romea::ros2::to_ros_transform_msg(stamp, romea_pose3d, frame_id, child_frame_id, tf_msg);
 
-  EXPECT_EQ(romea::extract_time(tf_msg).nanoseconds(), stamp.nanoseconds());
+  EXPECT_EQ(romea::ros2::extract_time(tf_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(tf_msg.header.frame_id.c_str(), frame_id.c_str());
   EXPECT_STREQ(tf_msg.child_frame_id.c_str(), child_frame_id.c_str());
   EXPECT_DOUBLE_EQ(tf_msg.transform.translation.x, romea_pose3d.position.x());
