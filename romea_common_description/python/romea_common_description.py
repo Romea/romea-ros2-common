@@ -48,7 +48,9 @@ def raised_device_configuration_file_not_found(
     )
 
 
-def get_device_configuration_file_path(device_category, device_type, device_model, configuration_file_type):
+def get_device_configuration_file_path(
+    device_category, device_type, device_model, configuration_file_type
+):
 
     file_path = (
         get_package_share_directory("romea_" + device_category + "_description")
@@ -70,15 +72,21 @@ def get_device_configuration_file_path(device_category, device_type, device_mode
 
 
 def get_device_specifications_file_path(device_category, device_type, device_model):
-    return get_device_configuration_file_path(device_category, device_type, device_model, "specifications")
+    return get_device_configuration_file_path(
+        device_category, device_type, device_model, "specifications"
+    )
 
 
 def get_device_geometry_file_path(device_category, device_type, device_model):
-    return get_device_configuration_file_path(device_category, device_type, device_model, "geometry")
+    return get_device_configuration_file_path(
+        device_category, device_type, device_model, "geometry"
+    )
 
 
 def get_device_specifications(device_category, device_type, device_model):
-    with open(get_device_specifications_file_path(device_category, device_type, device_model)) as f:
+    with open(
+        get_device_specifications_file_path(device_category, device_type, device_model)
+    ) as f:
         return yaml.safe_load(f)
 
 
@@ -88,7 +96,9 @@ def get_device_geometry(device_category, device_type, device_model):
 
 
 def save_device_configuration_file(prefix, device_name, configuration, configuration_file_type):
-    configuration_file_path = "/tmp/" + prefix + device_name + "_" + configuration_file_type + ".yaml"
+    configuration_file_path = (
+        "/tmp/" + prefix + device_name + "_" + configuration_file_type + ".yaml"
+    )
 
     with open(configuration_file_path, "w") as f:
         yaml.dump(configuration, f)
@@ -169,7 +179,12 @@ def evaluate_parameter(
     )
 
     specification_parameter = get_specification_parameter(
-        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+        device_category,
+        device_type,
+        device_model,
+        device_specifications,
+        parameter_name,
+        key_value,
     )
 
     if user_parameter is None or specification_parameter == user_parameter:
@@ -202,7 +217,12 @@ def evaluate_parameter_from_list(
     )
 
     specification_parameter = get_specification_parameter(
-        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+        device_category,
+        device_type,
+        device_model,
+        device_specifications,
+        parameter_name,
+        key_value,
     )
 
     if user_parameter is None:
@@ -236,13 +256,19 @@ def evaluate_parameter_from_range(
     )
 
     specification_parameter = get_specification_parameter(
-        device_category, device_type, device_model, device_specifications, parameter_name, key_value
+        device_category,
+        device_type,
+        device_model,
+        device_specifications,
+        parameter_name,
+        key_value,
     )
 
     if user_parameter is None:
         return specification_parameter["default"]
     elif (
-        user_parameter >= specification_parameter["range"][0] and user_parameter <= specification_parameter["range"][1]
+        user_parameter >= specification_parameter["range"][0]
+        and user_parameter <= specification_parameter["range"][1]
     ):
         return user_parameter
     else:

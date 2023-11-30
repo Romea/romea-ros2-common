@@ -103,20 +103,27 @@ def load_meta_description(meta_description_file_path, device_type=None):
 
 def load_meta_descriptions(meta_description_file_paths):
     return [
-        load_meta_description(meta_description_file_path) for meta_description_file_path in meta_description_file_paths
+        load_meta_description(meta_description_file_path)
+        for meta_description_file_path in meta_description_file_paths
     ]
 
 
 def find_meta_description(meta_descriptions, device_name):
     meta_description = next(
-        (meta_description for meta_description in meta_descriptions if meta_description.get_name() == device_name),
+        (
+            meta_description
+            for meta_description in meta_descriptions
+            if meta_description.get_name() == device_name
+        ),
         None,
     )
 
     if meta_description is None:
 
         raise LookupError(
-            "Cannot find meta description for device called" + device_name + "into the provided meta descriptions list"
+            "Cannot find meta description for device called"
+            + device_name
+            + "into the provided meta descriptions list"
         )
 
     return meta_description
