@@ -81,12 +81,12 @@ def get_file_path(file_configuration):
 
 
 def load_configuration(configuration_file_path):
-    with open(configuration_file_path, 'r') as f:
+    with open(configuration_file_path, "r") as f:
         return yaml.safe_load(f)
 
 
 def save_configuration(configuration, configuration_file_path):
-    with open(configuration_file_path, 'w') as f:
+    with open(configuration_file_path, "w") as f:
         yaml.dump(configuration, f)
 
 
@@ -103,36 +103,27 @@ def load_meta_description(meta_description_file_path, device_type=None):
 
 def load_meta_descriptions(meta_description_file_paths):
     return [
-        load_meta_description(meta_description_file_path)
-        for meta_description_file_path in meta_description_file_paths
+        load_meta_description(meta_description_file_path) for meta_description_file_path in meta_description_file_paths
     ]
 
 
 def find_meta_description(meta_descriptions, device_name):
     meta_description = next(
-        (
-            meta_description
-            for meta_description in meta_descriptions
-            if meta_description.get_name() == device_name
-        ),
+        (meta_description for meta_description in meta_descriptions if meta_description.get_name() == device_name),
         None,
     )
 
     if meta_description is None:
 
         raise LookupError(
-            "Cannot find meta description for device called"
-            + device_name
-            + "into the provided meta descriptions list")
+            "Cannot find meta description for device called" + device_name + "into the provided meta descriptions list"
+        )
 
     return meta_description
 
 
 def find_meta_descriptions(meta_descriptions, devices_names):
-    return [
-        find_meta_description(meta_descriptions, device_name)
-        for device_name in devices_names
-    ]
+    return [find_meta_description(meta_descriptions, device_name) for device_name in devices_names]
 
 
 class MetaDescription:
@@ -155,7 +146,12 @@ class MetaDescription:
 
         if ns is not None:
             try:
-                return self.data[ns].get(param, default)
+                config = self.data
+                for key in ns.split("."):
+                    config = config[key]
+
+                return config.get(param, default)
+                # return self.data[ns].get(param, default)
             except Exception:
                 raise LookupError(
                     "Cannot get param "
