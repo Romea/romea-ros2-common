@@ -20,6 +20,7 @@
 // std
 #include <string>
 #include <vector>
+#include <optional>
 
 // ros
 #include "sensor_msgs/msg/joint_state.hpp"

@@ -17,6 +17,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <limits>
 
 // local
 #include "romea_common_utils/joint_states.hpp"
