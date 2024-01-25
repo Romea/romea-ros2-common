@@ -26,6 +26,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
@@ -48,6 +49,7 @@ add_library(${PROJECT_NAME} SHARED
     src/conversions/position2d_conversions.cpp
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
+    src/joint_states.cpp
     src/qos.cpp)
 #    src/rviz.cpp
 
@@ -60,6 +62,7 @@ ament_target_dependencies(${PROJECT_NAME}
     diagnostic_msgs
     geometry_msgs
     nav_msgs
+    sensor_msgs
     tf2_ros
     tf2_eigen)
 #    rviz_visual_tools
@@ -81,6 +84,7 @@ ament_export_dependencies(romea_common_msgs)
 ament_export_dependencies(diagnostic_msgs)
 ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(nav_msgs)
+ament_export_dependencies(sensor_msgs)
 ament_export_dependencies(tf2_ros)
 ament_export_dependencies(tf2_eigen)
 #ament_export_dependencies(rviz_visual_tools)
