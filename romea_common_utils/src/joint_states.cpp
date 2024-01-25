@@ -45,7 +45,7 @@ void fill(
   joint_states.effort.resize(joint_names.size(), std::numeric_limits<double>::quiet_NaN());
 }
 
-}
+}  // namespace
 
 namespace romea
 {
@@ -77,7 +77,6 @@ std::shared_ptr<sensor_msgs::msg::JointState> make_shared_joint_state_msg(
   auto msg = std::make_shared<sensor_msgs::msg::JointState>();
   fill(*msg, number_of_joints);
   return msg;
-
 }
 
 //-----------------------------------------------------------------------------
