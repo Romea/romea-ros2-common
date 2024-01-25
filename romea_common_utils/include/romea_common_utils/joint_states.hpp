@@ -18,9 +18,10 @@
 
 
 // std
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
+#include <memory>
 
 // ros
 #include "sensor_msgs/msg/joint_state.hpp"
@@ -80,4 +81,4 @@ void set_effort(
 }  // namespace ros2
 }  // namespace romea
 
-#endif  // ROMEA_MOBILE_BASE_HARDWARE__JOINT_STATES_HPP_
+#endif  // ROMEA_COMMON_UTILS__JOINT_STATES_HPP_
