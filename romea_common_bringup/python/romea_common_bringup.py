@@ -17,6 +17,7 @@
 from ament_index_python import get_package_share_directory
 import importlib
 import yaml
+import os
 
 
 def robot_namespace(robot_name):
@@ -140,6 +141,15 @@ class MetaDescription:
         # TODO assert description type when base metadescription
         # will be called like this base_config_filename.mobile_base.yaml
         self.filename = meta_description_file_path
+
+        if not os.path.exists(meta_description_file_path):
+            raise LookupError(
+                description_type
+                + "meta description file "
+                + meta_description_file_path
+                + " does not exists"
+            )
+
         with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
 
