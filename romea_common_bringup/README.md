@@ -1,3 +1,3 @@
-# 1 Overview #
+# romea_ros2_common_bringup #
 
-# 2 Package organization #
+This package provides a Python module for manipulating and parsing metadata descriptions of sensors or hardware and their specification files.
