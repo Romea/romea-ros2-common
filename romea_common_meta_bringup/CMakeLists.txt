@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(romea_common_bringup)
+project(romea_common_meta_bringup)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -13,7 +13,7 @@ find_package(ament_cmake REQUIRED)
   # DESTINATION share/${PROJECT_NAME}
 # )
 
-ament_python_install_module(python/romea_common_bringup.py)
+ament_python_install_module(python/romea_common_meta_bringup.py)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -21,8 +21,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_pytest REQUIRED)
-  configure_file(test/test_common_bringup.yaml test_common_bringup.yaml)
-  ament_add_pytest_test(test_common_bringup test/test_common_bringup.py)
+  configure_file(test/test_common_meta_bringup.yaml test_common_meta_bringup.yaml)
+  ament_add_pytest_test(test_common_meta_bringup test/test_common_meta_bringup.py)
 endif()
 
 

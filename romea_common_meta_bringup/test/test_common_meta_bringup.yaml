@@ -2,5 +2,5 @@ foo: bar
 baz:
   qux: thud
 file:
-  pkg: romea_common_bringup
+  pkg: romea_common_meta_bringup
   file: config/foo.yaml

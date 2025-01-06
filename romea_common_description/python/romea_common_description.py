@@ -284,3 +284,135 @@ def evaluate_parameter_from_range(
             + str(specification_parameter["range"][1])
             + "]."
         )
+
+
+class DeviceConfiguration:
+    def __init__(self, device_name, specifications, user_configuration, units={}):
+        self.device_name = device_name
+        self.specifications = specifications
+        self.user_configuration = user_configuration
+        self.units = units
+
+    def get(self, parameter_name):
+
+        user_value = self.user_configuration.get(parameter_name, None)
+        specification = self.get_specification(parameter_name)
+
+        if not isinstance(specification, dict):
+            return self.evaluate_parameter(parameter_name, specification, user_value)
+        elif "list" in specification:
+            return self.evaluate_parameter_from_list(parameter_name, specification, user_value)
+        elif "range" in specification:
+            return self.evaluate_parameter_from_range(parameter_name, specification, user_value)
+        elif "dict" in specification:
+            return self.evaluate_parameter_from_dict(parameter_name, specification, user_value)
+        else:
+            pass
+
+    def get_specification(self, parameter_name):
+
+        if parameter_name not in self.specifications:
+            raise LookupError(
+                parameter_name
+                + " configuration does not exist in "
+                + self.device_name
+                + " specifications"
+            )
+
+        return self.specifications[parameter_name]
+
+    def evaluate_parameter_from_list(self, parameter_name, specification, user_value):
+
+        if user_value is None:
+            if "default" in specification:
+                return specification["default"]
+            else:
+                raise LookupError(
+                    "no default "
+                    + parameter_name
+                    + " is provided for "
+                    + self.device_name
+                    + ", user must choose one these values: "
+                    + str(specification["list"])
+                )
+        elif user_value in specification["list"]:
+            return user_value
+        else:
+            raise ValueError(
+                parameter_name
+                + " value ("
+                + str(user_value) + self.units.get(parameter_name, "")
+                + ") provided by user is not available for "
+                + self.device_name
+                + ", it must be one of these values: "
+                + str(specification["list"])
+            )
+
+    def evaluate_parameter_from_range(self, parameter_name, specification, user_value):
+
+        if user_value is None:
+            if "default" in specification:
+                return specification["default"]
+            else:
+                raise LookupError(
+                    "no default "
+                    + parameter_name
+                    + " is provided for "
+                    + self.device_name
+                    + ", user must choose a value between "
+                    + str(specification["range"][0])
+                    + " and "
+                    + str(specification["range"][1])
+                )
+        elif (
+            user_value >= specification["range"][0]
+            and user_value <= specification["range"][1]
+        ):
+            return user_value
+        else:
+            raise ValueError(
+                parameter_name
+                +" value ("
+                + str(user_value) + self.units.get(parameter_name, "")
+                + ") provided by user is not available for "
+                + self.device_name
+                + ", it must be inside ["
+                + str(specification["range"][0])
+                + ", "
+                + str(specification["range"][1])
+                + "]"
+            )
+
+    def evaluate_parameter_from_dict(self, parameter_name, specification, user_value):
+
+        key = self.get(specification["depend"])
+
+        if user_value is None:
+            return specification["dict"][key]
+        elif user_value == specification["dict"][key]:
+            return user_value
+        else:
+            raise ValueError(
+                parameter_name
+                + " value ("
+                + str(user_value) + self.units.get(parameter_name, "")
+                + ") provided by user is not available for this configuration of "
+                + self.device_name
+                + ", it must be equal to "
+                + str(specification["dict"][key])
+            )
+
+    def evaluate_parameter(self, parameter_name, specification, user_value):
+
+        if user_value is None or specification == user_value:
+            return specification
+        else:
+            raise ValueError(
+                parameter_name
+                + " value ("
+                + str(user_value) + self.units.get(parameter_name, "")                
+                + ") provided by user is not available for "
+                + self.device_name
+                + ", it must be equal to "
+                + str(specification)
+            )

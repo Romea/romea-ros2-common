@@ -21,6 +21,7 @@ from romea_common_description import (
     evaluate_parameter,
     evaluate_parameter_from_list,
     evaluate_parameter_from_range,
+    
     # get_device_geometry,
     # get_device_specifications,
 )
@@ -131,6 +132,7 @@ def test_evaluate_parameter_from_list():
         == 0.5
     )
 
+
 def test_evaluate_parameter_from_list_default():
     user_device_configuration = {"resolution": None}
     lidar_specification = {"resolution": {"default": 0.25, "list": [0.25, 0.5]}}
@@ -141,6 +143,7 @@ def test_evaluate_parameter_from_list_default():
         == 0.25
     )
 
+
 def test_evaluate_parameter_from_list_failed():
     user_device_configuration = {"resolution": 0.75}
     lidar_specification = {"resolution": {"default": 0.25, "list": [0.25, 0.5]}}
@@ -148,6 +151,7 @@ def test_evaluate_parameter_from_list_failed():
         evaluate_parameter_from_list(
             "lidar", "sick", "lms1xx", lidar_specification, user_device_configuration, "resolution"
         )
+
 
 def test_evaluate_parameter_from_range():
     user_device_configuration = {"horizontal_fov": 27}
@@ -169,6 +173,7 @@ def test_evaluate_parameter_from_range_default():
         )
         == 72
     )
+
 
 def test_evaluate_parameter_from_range_failed():
     user_device_configuration = {"horizontal_fov": 100}

@@ -23,7 +23,7 @@ if(BUILD_TESTING)
 
   find_package(ament_cmake_pytest REQUIRED)
   # configure_file(test/test_common_description.yaml test_common_description.yaml)
-  ament_add_pytest_test(test_common_description test/test_common_description.py)
+  ament_add_pytest_test(test_common_description2 test/test_common_description2.py)
 endif()
 
 

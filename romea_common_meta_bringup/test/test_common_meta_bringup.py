@@ -17,7 +17,7 @@ import os
 import pytest
 from ament_index_python import get_package_share_directory
 
-from romea_common_bringup import (
+from romea_common_meta_bringup import (
     robot_prefix,
     robot_namespace,
     device_prefix,
@@ -68,7 +68,7 @@ def test_device_link_name():
 
 @pytest.fixture(scope="module")
 def meta_description():
-    meta_description_file_path = os.path.join(os.getcwd(), "test_common_bringup.yaml")
+    meta_description_file_path = os.path.join(os.getcwd(), "test_common_meta_bringup.yaml")
     return MetaDescription("common", meta_description_file_path)
 
 
@@ -111,14 +111,14 @@ def test_get_or_foo_baz(meta_description):
 def test_get_or_foo_thud(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("foo", "thud")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param thud.foo" in str(excinfo.value)
 
 
 def test_get_or_baz_foo(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("baz", "foo")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param foo.baz" in str(excinfo.value)
 
 
@@ -133,31 +133,31 @@ def test_get_qux_baz(meta_description):
 def test_get_bar(meta_description):
     with pytest.raises(LookupError) as excinfo:
         assert meta_description.get("bar")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param bar" in str(excinfo.value)
 
 
 def test_get_foo_baz(meta_description):
     with pytest.raises(LookupError) as excinfo:
         assert meta_description.get("foo", "baz")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param baz.foo" in str(excinfo.value)
 
 
 def test_get_foo_thud(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get_or("foo", "thud")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param thud.foo" in str(excinfo.value)
 
 
 def test_get_baz_foo(meta_description):
     with pytest.raises(LookupError) as excinfo:
         meta_description.get("baz", "foo")
-    assert "romea_common_bringup/test_common_bringup.yaml" in str(excinfo.value)
+    assert "romea_common_meta_bringup/test_common_meta_bringup.yaml" in str(excinfo.value)
     assert "Cannot get param foo.baz" in str(excinfo.value)
 
 
 def test_get_file(meta_description):
     file_path = get_file_path(meta_description.get("file"))
-    assert file_path == get_package_share_directory("romea_common_bringup")+"/config/foo.yaml"
+    assert file_path == get_package_share_directory("romea_common_meta_bringup")+"/config/foo.yaml"
