@@ -251,6 +251,27 @@ TEST_F(TestNodeParameters, loadPIDParameters)
   EXPECT_EQ(pid_parameters.imax, 5.0);
 }
 
+TEST(TestNodeParameterList, getValueFromParameterListFailed) {
+  EXPECT_THROW(romea::ros2::get_parameter_value<double>({}, "foo"), std::runtime_error);
+}
+
+TEST(TestNodeParametersList, getValueFromParameterListOK) {
+  std::vector<rclcpp::Parameter> parameters;
+  parameters.push_back(rclcpp::Parameter("foo", 1.0));
+  EXPECT_DOUBLE_EQ(romea::ros2::get_parameter_value<double>(parameters, "foo"), 1.0);
+}
+
+TEST(TestNodeParametersList, getValueOrFromParameterListOK) {
+
+  std::vector<rclcpp::Parameter> parameters;
+  parameters.push_back(rclcpp::Parameter("foo", true));
+  EXPECT_TRUE(romea::ros2::get_parameter_value<bool>(parameters, "foo"));
+}
+
+TEST(TestNodeParametersList, getDefaultValueFromParameterList) {
+  EXPECT_FALSE(romea::ros2::get_parameter_value_or<bool>({}, "foo", false));
+}
+
 int main(int argc, char ** argv)
 {
   testing::InitGoogleTest(&argc, argv);

@@ -43,10 +43,12 @@ inline std::string full_param_name(
 template<typename T, typename Node>
 inline void declare_parameter(
   std::shared_ptr<Node> node,
-  const std::string & param_name)
+  const std::string & param_name,
+  const rcl_interfaces::msg::ParameterDescriptor & parameter_descriptor =
+  rcl_interfaces::msg::ParameterDescriptor())
 {
   try {
-    node->template declare_parameter<T>(param_name);
+    node->template declare_parameter<T>(param_name, parameter_descriptor);
   } catch (std::runtime_error & e) {
     throw std::runtime_error("Declare parameter " + param_name + " : " + e.what());
   }
@@ -59,8 +61,13 @@ inline void declare_parameter_with_default(
   const std::string & param_name,
   const T & default_value)
 {
-  node->template declare_parameter<T>(param_name, default_value);
+  try {
+    node->template declare_parameter<T>(param_name, default_value);
+  } catch (std::runtime_error & e) {
+    throw std::runtime_error("Declare parameter " + param_name + " : " + e.what());
+  }
 }
+
 
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
@@ -259,6 +266,49 @@ inline std::map<std::string, T> get_parameters(
   }
   return map;
 }
+
+//-----------------------------------------------------------------------------
+template<typename ParameterType>
+ParameterType get_parameter_value(
+  const std::vector<rclcpp::Parameter> & parameters,
+  const std::string & parameter_name)
+{
+  auto it = std::find_if(
+    parameters.begin(), parameters.end(),
+    [parameter_name](const rclcpp::Parameter & parameter) {
+      return parameter.get_name() == parameter_name;
+    }
+  );
+
+  if (it == parameters.end()) {
+    throw std::runtime_error(
+            "Parameter called " + parameter_name + " does not exist in parameters list");
+  }
+
+  return it->template get_value<ParameterType>();
+}
+
+//-----------------------------------------------------------------------------
+template<typename ParameterType>
+ParameterType get_parameter_value_or(
+  const std::vector<rclcpp::Parameter> & parameters,
+  const std::string & parameter_name,
+  const ParameterType & default_value)
+{
+  auto it = std::find_if(
+    parameters.begin(), parameters.end(),
+    [parameter_name](const rclcpp::Parameter & parameter) {
+      return parameter.get_name() == parameter_name;
+    }
+  );
+
+  if (it != parameters.end()) {
+    return it->template get_value<ParameterType>();
+  } else {
+    return default_value;
+  }
+}
+
 
 }  // namespace ros2
 }  // namespace romea
