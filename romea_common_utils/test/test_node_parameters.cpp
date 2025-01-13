@@ -262,7 +262,6 @@ TEST(TestNodeParametersList, getValueFromParameterListOK) {
 }
 
 TEST(TestNodeParametersList, getValueOrFromParameterListOK) {
-
   std::vector<rclcpp::Parameter> parameters;
   parameters.push_back(rclcpp::Parameter("foo", true));
   EXPECT_TRUE(romea::ros2::get_parameter_value<bool>(parameters, "foo"));
