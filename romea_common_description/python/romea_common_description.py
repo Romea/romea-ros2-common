@@ -307,7 +307,11 @@ class DeviceConfiguration:
         elif "dict" in specification:
             return self.evaluate_parameter_from_dict(parameter_name, specification, user_value)
         else:
-            pass
+            raise LookupError(
+                "specification for "
+                + parameter_name
+                + " parameter is not well formed"
+            )
 
     def get_specification(self, parameter_name):
 
@@ -385,11 +389,16 @@ class DeviceConfiguration:
 
     def evaluate_parameter_from_dict(self, parameter_name, specification, user_value):
 
-        key = self.get(specification["depend"])
+        if isinstance(specification["depend"], list):
+            parameter = specification["dict"]
+            for depend in specification["depend"]:
+                parameter = parameter[self.get(depend)]
+        else:
+            parameter = specification["dict"][self.get(specification["depend"])]
 
         if user_value is None:
-            return specification["dict"][key]
-        elif user_value == specification["dict"][key]:
+            return parameter
+        elif user_value == parameter:
             return user_value
         else:
             raise ValueError(
