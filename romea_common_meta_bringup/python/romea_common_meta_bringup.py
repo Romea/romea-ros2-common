@@ -153,6 +153,11 @@ class MetaDescription:
         with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
 
+        if "configuration" in self.data:
+            if "type" in self.data["configuration"]:
+                self.data["configuration"]["manufacturer"] = self.data["configuration"]["type"]
+                del self.data["configuration"]["type"]
+
     def exists(self, param, ns=None):
         if ns:
             return ns in self.data and param in self.data[ns]
