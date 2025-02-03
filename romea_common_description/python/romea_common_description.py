@@ -396,20 +396,33 @@ class DeviceConfiguration:
         else:
             parameter = specification["dict"][self.get(specification["depend"])]
 
-        if user_value is None:
-            return parameter
-        elif user_value == parameter:
-            return user_value
+        if isinstance(parameter, dict):
+            if "list" in parameter:
+                return self.evaluate_parameter_from_list(parameter_name, parameter, user_value)
+            elif "range" in parameter:
+                return self.evaluate_parameter_from_range(parameter_name, parameter, user_value)
+            else:
+                raise LookupError(
+                    "specification for "
+                    + parameter_name
+                    + " parameter is not well formed"
+                )
+
         else:
-            raise ValueError(
-                parameter_name
-                + " value ("
-                + str(user_value) + self.units.get(parameter_name, "")
-                + ") provided by user is not available for this configuration of "
-                + self.device_name
-                + ", it must be equal to "
-                + str(specification["dict"][key])
-            )
+            if user_value is None:
+                return parameter
+            elif user_value == parameter:
+                return user_value
+            else:
+                raise ValueError(
+                    parameter_name
+                    + " value ("
+                    + str(user_value) + self.units.get(parameter_name, "")
+                    + ") provided by user is not available for this configuration of "
+                    + self.device_name
+                    + ", it must be equal to "
+                    + str(parameter)
+                )
 
     def evaluate_parameter(self, parameter_name, specification, user_value):
 

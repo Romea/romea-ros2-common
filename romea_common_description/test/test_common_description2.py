@@ -253,3 +253,69 @@ def test_get_parameter_from_dict_with_iterative_depends_ok():
 
     configuration = DeviceConfiguration("lidar", lidar_specification, user_configuration)
     assert configuration.get("maximal_range") == 20.0
+
+
+def test_get_parameter_from_dict_with_multiple_depends_ok():
+
+    user_configuration = {
+        "model": "landmark40",
+        "acceleration_range": 19.62
+    }
+
+    imu_specification = {
+        "model": {
+            "list": ["landmark10", "landmark20", "landmark30", "landmark40"],
+        },
+        "acceleration_range": {
+            "default": 98.1,
+            "list": [19.62, 98.1],
+        },
+        "acceleration_noise_density": {
+            "depend": ["model", "acceleration_range"],
+            "dict": {
+                "landmark40": {
+                    19.62: 0.39240e-03,
+                    98.1: 1.1772e-03,
+                }
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("lidar", imu_specification, user_configuration)
+    assert configuration.get("acceleration_noise_density") == 0.0003924
+
+
+def test_get_parameter_from_list_into_a_dict_ok():
+
+    user_configuration = {
+        "resolution": "1920x1080",
+        "frame_rate": 30
+    }
+
+    camera_specification = {
+        "resolution": {
+            "default": "1280x720",
+            "list": ["2208x1242", "1920x1080", "1280x720", "672x376"]
+        },
+        "frame_rate": {
+            "depend": "resolution",
+            "dict": {
+                "2208x1242": 15,
+                "1920x1080": {
+                    "default": 30,
+                    "list": [15, 30],
+                },
+                "1280x720": {
+                    "default": 30,
+                    "list": [15, 30, 60],
+                },
+                "672x376": {
+                    "default": 30,
+                    "list": [15, 30, 60, 100]
+                }
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("camera", camera_specification, user_configuration)
+    assert configuration.get("frame_rate") == 30
