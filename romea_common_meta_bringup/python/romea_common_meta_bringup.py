@@ -14,10 +14,12 @@
 
 
 # !/usr/bin/env python3
+from functools import reduce
 from ament_index_python import get_package_share_directory
 import importlib
 import yaml
 import os
+import math
 
 
 def robot_namespace(robot_name):
@@ -98,7 +100,7 @@ def meta_description_type(meta_description_file_path):
 def load_meta_description(meta_description_file_path, device_type=None):
     if device_type is None:
         device_type = meta_description_type(meta_description_file_path)
-    bringup = importlib.import_module("romea_" + device_type + "_bringup")
+    bringup = importlib.import_module("romea_" + device_type + "meta_bringup")
     return bringup.load_meta_description(meta_description_file_path)
 
 
@@ -207,3 +209,100 @@ class MetaDescription:
             return ns + "." + param
         else:
             return param
+
+        # package = driver_meta_description.get("package")
+        # profile = driver_meta_description.get("profile")
+        # if not package or not profile:
+        #     raise ValueError("driver package or profile missing in the meta description file")
+        # filename = os.path.join(get_package_share_directory(package), "config", profile_filename)
+
+        # remappings = (
+        #     driver_profile.get(node_name, {}).get("remappings", {}).items()
+        #     + driver_configuration.get(node_name, {}).get("remappings", {}).items()
+        # )
+
+        # driver_profile[node_name]["remappings"] = remappings
+
+
+class DriverLaunchFileConfiguration:
+    def __init__(self, driver_profile_filename, configuration):
+
+        self.configuration = configuration
+        self.driver_profile_filename = driver_profile_filename
+
+        if not os.path.exists(driver_profile_filename):
+            raise FileNotFoundError(
+                "driver profile file " + driver_profile_filename + " not found."
+            )
+
+        with open(driver_profile_filename, "r") as f:
+            self.driver_profile = yaml.safe_load(f)
+
+    def evaluate(self):
+
+        for node_name, node_configuration in self.driver_profile.items():
+            self.__evaluate_parameters(node_name, node_configuration)
+            # self.__evaluate_remappings(node_name, node_configuration)
+
+        return self.driver_profile
+
+    def __evaluate_parameters(self, node_name, node_configuration):
+        parameters = node_configuration.get("parameters")
+        if parameters:
+            for parameter_name, parameter in parameters.items():
+                if isinstance(parameter, dict):
+                    parameters[parameter_name] = self.__evaluate_parameter(
+                        f"{node_name}.parameters.{parameter_name}", parameter
+                    )
+
+    def __evaluate_parameter(self, parameter_name, parameter_description):
+
+        configuration_source_name = parameter_description.get("from")
+        configuration = self.configuration.get(configuration_source_name)
+
+        if configuration is None:
+            raise ValueError(
+                f"No {configuration_source_name} is provided, unable to substitute parameter "
+                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+            )
+
+        configuration_parameter_name = parameter_description.get("remap", parameter_name)
+        parameter_default_value = parameter_description.get("default", None)
+
+        value = self.__get_parameter_value(
+            configuration, configuration_parameter_name, parameter_default_value
+        )
+
+        if value is None:
+            raise ValueError(
+                f"Parameter {configuration_parameter_name} does not exists in "
+                f"{configuration_source_name}, unable to substitute parmeter "
+                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+            )
+
+        if isinstance(value, (int, float)):
+            scale = parameter_description.get("scale")
+            if scale is not None:
+                if isinstance(scale, str):
+                    value *= eval(scale, {"__builtins__": {}}, {"pi": math.pi})
+                else:
+                    value *= scale
+
+        return value
+
+    def __get_parameter_value(
+        self, configuration, configuration_parameter_name, parameter_default_value
+    ):
+        try:
+            keys = configuration_parameter_name.split(".")
+            value = reduce(
+                lambda config, key: config[key]
+                if isinstance(config, dict)
+                else key,
+                keys,
+                configuration,
+            )
+        except KeyError:
+            return parameter_default_value
+
+        return value

@@ -1,0 +1,26 @@
+driver1:
+  package: pk1
+  executable: executable1
+  plugin: none
+  parameters:
+    p1: 1
+    p2:
+      from: driver_configuration
+    p3:
+      from: device_configuration
+      remap: foo
+    p4:
+      from: device_configuration
+      remap: bar
+      scale: 2
+driver2:
+  package: pk2
+  executable: executable2
+  plugin: component2
+  parameters:
+    p5: 5
+    p6:
+      from: driver_configuration
+    p7:
+      from: driver_configuration
+      default: 7
