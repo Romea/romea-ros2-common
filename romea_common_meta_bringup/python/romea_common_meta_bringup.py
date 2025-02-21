@@ -13,9 +13,12 @@
 # limitations under the License.
 
 
-# !/usr/bin/env python3
-from functools import reduce
+from launch_ros.descriptions import ComposableNode
+from launch_ros.actions import LoadComposableNodes, Node
 from ament_index_python import get_package_share_directory
+
+from os.path import join
+from functools import reduce
 import importlib
 import yaml
 import os
@@ -224,7 +227,7 @@ class MetaDescription:
         # driver_profile[node_name]["remappings"] = remappings
 
 
-class DriverLaunchFileConfiguration:
+class DriverLaunchFileProfile:
     def __init__(self, driver_profile_filename, configuration):
 
         self.configuration = configuration
@@ -238,13 +241,58 @@ class DriverLaunchFileConfiguration:
         with open(driver_profile_filename, "r") as f:
             self.driver_profile = yaml.safe_load(f)
 
-    def evaluate(self):
+    def evaluate(self, mode, namespace=None):
 
         for node_name, node_configuration in self.driver_profile.items():
+            if not self.__is_available_mode(mode, node_configuration):
+                self.driver_profile.pop(node_name, None)
+                continue
+
+            self.__evaluate_component_container(node_name, node_configuration)
+            self.__evaluate_plugin(node_configuration)
+            self.__evaluate_executable(node_configuration)
+            self.__set_namespace(node_configuration, namespace)
             self.__evaluate_parameters(node_name, node_configuration)
             # self.__evaluate_remappings(node_name, node_configuration)
 
         return self.driver_profile
+
+    def __is_available_mode(self, mode, node_configuration):
+        available_mode = node_configuration.get("avaliable_mode", "live")
+        return mode == "live" or available_mode == "all"
+
+    def __evaluate_component_container(self, node_name, node_configuration):
+        if isinstance(node_configuration.get("component_container", None), dict):
+
+            configuration_source_name = node_configuration["component_container"].get("from")
+            configuration = self.configuration.get(configuration_source_name)
+            parameter_name = f"{node_name}.component_container"
+
+            if configuration is None:
+                raise ValueError(
+                    f"No {configuration_source_name} is provided, unable to substitute parameter "
+                    f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                )
+
+            value = self.__get_parameter_value(configuration, parameter_name, None)
+
+            if value:
+                node_configuration["component_container"] = value
+            else:
+                node_configuration.pop("component_container", None)
+
+    def __set_namespace(self, node_configuration, namespace):
+        node_configuration["namespace"] = namespace
+
+    def __evaluate_plugin(self, node_configuration):
+        if "plugin" in node_configuration:
+            if node_configuration.get("component_container", None) is None:
+                node_configuration.pop("plugin", None)
+
+    def __evaluate_executable(self, node_configuration):
+        if node_configuration.get("plugin", None):
+            if node_configuration.get("component_container", None):
+                node_configuration.pop("executable", None)
 
     def __evaluate_parameters(self, node_name, node_configuration):
         parameters = node_configuration.get("parameters")
@@ -296,13 +344,137 @@ class DriverLaunchFileConfiguration:
         try:
             keys = configuration_parameter_name.split(".")
             value = reduce(
-                lambda config, key: config[key]
-                if isinstance(config, dict)
-                else key,
+                lambda config, key: config[key] if isinstance(config, dict) else key,
                 keys,
                 configuration,
             )
+
+            return value
         except KeyError:
             return parameter_default_value
 
-        return value
+
+class DriverLaunchFileConfiguration:
+    def __init__(self, device_type, meta_bringup_package=None):
+        self.__device_type = device_type
+        if meta_bringup_package is not None:
+            self.__meta_bringup_package = meta_bringup_package
+        else:
+            self.__meta_bringup_package = f"romea_{device_type}_meta_bringup"
+
+    def evaluate(
+            self, mode, launch_file_configuration, device_configuration, device_namespace
+    ):
+        configuration = {}
+
+        for driver_name, driver_description in launch_file_configuration.items():
+            driver_launch_file_configuration = DriverLaunchFileProfile(
+                self.__get_profile_filename(driver_description),
+                {
+                    f"{self.__device_type}_configuration": device_configuration,
+                    f"{driver_name}_configuration": driver_description.get(
+                        "configuration", {}
+                    ),
+                },
+            ).evaluate(mode, device_namespace)
+
+            configuration.update(driver_launch_file_configuration)
+
+        return configuration
+
+    def __get_profile_filename(self, driver_configuration):
+        pkg_path = get_package_share_directory(self.__meta_bringup_package)
+        return join(pkg_path, "config", driver_configuration["profile"])
+
+
+class DriverLaunchDescription:
+    def __init__(self, device_type, meta_bringup_package=None):
+        self.__configuration = DriverLaunchFileConfiguration(device_type, meta_bringup_package)
+
+    def get_nodes(self, mode, launch_file_configuration, device_configuration, device_namespace):
+        nodes_configuration = self.__configuration.evaluate(
+            mode, launch_file_configuration, device_configuration, device_namespace
+        )
+
+        return DriverLaunchDescription.get_nodes_from_configuration(nodes_configuration)
+
+    @staticmethod
+    def get_nodes_from_configuration(driver_launch_file_configuration):
+        nodes = []
+        for node_name, node_configuration in driver_launch_file_configuration.items():
+            nodes.append(DriverLaunchDescription.__get_node(
+                device_namespace, node_name, node_configuration)
+            )
+
+        return nodes
+
+    @staticmethod
+    def __get_node_type(self, node_configuration):
+        if DriverLaunchDescription.__get_component_container(node_configuration):
+            if DriverLaunchDescription.__get_node_plugin(node_configuration):
+                return "composable_node"
+        return "executable_node"
+
+    @staticmethod
+    def __get_node(self, driver_namespace, node_name, node_configuration):
+        if DriverLaunchDescription.__get_node_type(node_configuration) == "composable_node":
+            return DriverLaunchDescription.__get_composable_node(
+                driver_namespace, node_name, node_configuration
+            )
+        else:
+            return DriverLaunchDescription.__get_executable_node(
+                driver_namespace, node_name, node_configuration
+            )
+
+    @staticmethod
+    def __get_executable_node(self, driver_namespace, node_name, node_configuration):
+        return Node(
+            name=node_name,
+            namespace=driver_namespace,
+            package=DriverLaunchDescription.__get_node_package(node_configuration),
+            executable=DriverLaunchDescription.__get_node_executable(node_configuration),
+            parameters=DriverLaunchDescription.__get_node_parameters(node_configuration),
+            remappings=DriverLaunchDescription.__get_node_remappings(node_configuration),
+        )
+
+    @staticmethod
+    def __get_composable_node(driver_namespace, node_name, node_configuration):
+        return LoadComposableNodes(
+            target_container=DriverLaunchDescription.__get_component_container(node_configuration),
+            composable_node_descriptions=[
+                ComposableNode(
+                    name=node_name,
+                    namespace=driver_namespace,
+                    package=DriverLaunchDescription.__get_node_package(node_configuration),
+                    plugin=DriverLaunchDescription.__get_node_plugin(node_configuration),
+                    parameters=DriverLaunchDescription.__get_node_parameters(node_configuration),
+                    remappings=DriverLaunchDescription.__get_node_remappings(node_configuration),
+                )
+            ],
+        )
+
+    @staticmethod
+    def __get_node_package(node_configuration):
+        return node_configuration["package"]
+
+    @staticmethod
+    def __get_node_executable(node_configuration):
+        return node_configuration["executable"]
+
+    @staticmethod
+    def __get_component_container(node_configuration):
+        return node_configuration.get("component_container", None)
+
+    @staticmethod
+    def __get_node_plugin(node_configuration):
+        return node_configuration.get_plugin("plugin", None)
+
+    @staticmethod
+    def __get_node_parameters(node_configuration):
+        parameters = node_configuration.get("parameters")
+        return [parameters] if parameters is not None else None
+
+    @staticmethod
+    def __get_node_remappings(node_configuration):
+        remappings = node_configuration.get("remappings")
+        return list(remappings.items()) if remappings is not None else None

@@ -16,7 +16,7 @@
 import os
 import yaml
 import pytest
-from romea_common_meta_bringup import DriverLaunchFileConfiguration
+from romea_common_meta_bringup import DriverLaunchFileProfile
 
 
 @pytest.fixture
@@ -32,9 +32,9 @@ def configuration():
 
 
 def test_get_complete_configuration(profile_filename, configuration):
-    complete_configuration = DriverLaunchFileConfiguration(
+    complete_configuration = DriverLaunchFileProfile(
         profile_filename, configuration
-    ).evaluate()
+    ).evaluate("live", "ns")
 
     assert complete_configuration["driver1"]["parameters"]["p1"] == 1
     assert complete_configuration["driver1"]["parameters"]["p2"] == 2
@@ -49,7 +49,7 @@ def test_check_failed_when_driver_configuration_is_missing(profile_filename, con
 
     del configuration["driver_configuration"]
     with pytest.raises(ValueError) as excinfo:
-        DriverLaunchFileConfiguration(profile_filename, configuration).evaluate()
+        DriverLaunchFileProfile(profile_filename, configuration).evaluate("live", "ns")
 
     assert (
         "No driver_configuration is provided, unable to substitute parameter driver1.parameters.p2"
@@ -61,7 +61,7 @@ def test_check_failed_when_device_configuration_is_missing(profile_filename, con
 
     del configuration["device_configuration"]
     with pytest.raises(ValueError) as excinfo:
-        DriverLaunchFileConfiguration(profile_filename, configuration).evaluate()
+        DriverLaunchFileProfile(profile_filename, configuration).evaluate("live", "ns")
 
     assert (
         "No device_configuration is provided, unable to substitute parameter driver1.parameters.p3"
@@ -75,7 +75,7 @@ def test_check_failed_when_parameter_does_not_exists_in_device_configuration_(
 
     del configuration["device_configuration"]["foo"]
     with pytest.raises(ValueError) as excinfo:
-        DriverLaunchFileConfiguration(profile_filename, configuration).evaluate()
+        DriverLaunchFileProfile(profile_filename, configuration).evaluate("live", "ns")
 
     assert (
         "Parameter foo does not exists in device_configuration, unable to substitute parmeter"
@@ -89,7 +89,7 @@ def test_check_failed_when_parameter_does_not_exists_in_driver_configuration(
 
     del configuration["driver_configuration"]["driver2"]["parameters"]["p6"]
     with pytest.raises(ValueError) as excinfo:
-        DriverLaunchFileConfiguration(profile_filename, configuration).evaluate()
+        DriverLaunchFileProfile(profile_filename, configuration).evaluate("live", "ns")
 
     assert (
         "Parameter driver2.parameters.p6 does not exists in driver_configuration, unable"

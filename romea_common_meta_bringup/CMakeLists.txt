@@ -23,7 +23,7 @@ if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   configure_file(test/test_driver_launch_file_configuration.yaml test_driver_launch_file_configuration.yaml)
   configure_file(test/test_driver_launch_file_profile.yaml test_driver_launch_file_profile.yaml)
-  ament_add_pytest_test(test_driver_launch_file_configuration test/test_driver_launch_file_configuration.py)
+  ament_add_pytest_test(test_driver_launch_file_configuration test/test_driver_launch_file_profile.py)
   # ament_add_pytest_test(test_common_meta_bringup test/test_common_meta_bringup.py)
 endif()
 
