@@ -8,10 +8,10 @@ driver1:
       from: driver_configuration
     p3:
       from: device_configuration
-      remap: foo
+      name: foo
     p4:
       from: device_configuration
-      remap: bar
+      name: bar
       scale: 2
 driver2:
   package: pk2

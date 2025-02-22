@@ -21,10 +21,11 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_pytest REQUIRED)
+  configure_file(test/test_common_meta_bringup.yaml test_common_meta_bringup.yaml)
   configure_file(test/test_driver_launch_file_configuration.yaml test_driver_launch_file_configuration.yaml)
   configure_file(test/test_driver_launch_file_profile.yaml test_driver_launch_file_profile.yaml)
   ament_add_pytest_test(test_driver_launch_file_configuration test/test_driver_launch_file_profile.py)
-  # ament_add_pytest_test(test_common_meta_bringup test/test_common_meta_bringup.py)
+  ament_add_pytest_test(test_common_meta_bringup test/test_common_meta_bringup.py)
 endif()
 
 
