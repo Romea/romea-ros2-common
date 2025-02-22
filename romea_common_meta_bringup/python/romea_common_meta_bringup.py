@@ -73,11 +73,15 @@ def device_link_name(robot_name, device_name):
     return robot_urdf_prefix(robot_name) + device_name + "_link"
 
 
-# def temporary_file_path(robot_name, filename):
-#     if robot_name == "":
-#         return "/tmp/" + filename
-#     else:
-#         return "/tmp/" + robot_name + "_" + filename
+def device_configuration_filename(robot_name, device_name, filename):
+    return f"{device_urdf_prefix(robot_name,device_name)}{filename}"
+
+
+def save_temporary_file(configuration, filename):
+    temporaty_filename = f"/tmp/{filename}"
+    with open(temporaty_filename, 'w') as f:
+        yaml.dump(configuration, f)
+    return temporaty_filename
 
 
 def get_file_path(file_configuration):
@@ -227,6 +231,124 @@ class MetaDescription:
         # driver_profile[node_name]["remappings"] = remappings
 
 
+class SensorMetaDescription:
+    def __init__(self, description_type, meta_description_file_path, robot_name=None):
+        self.__type = description_type
+        self.__robot_name = str(robot_name or "")
+        self.__filename = meta_description_file_path
+
+        if not os.path.exists(meta_description_file_path):
+            raise LookupError(
+                description_type
+                + "meta description file "
+                + meta_description_file_path
+                + " does not exists"
+            )
+
+        with open(meta_description_file_path) as f:
+            self.__description = yaml.safe_load(f)
+
+    def get_name(self):
+        return self._get("name")
+
+    def get_robot_name(self):
+        return self.__robot_name
+
+    def get_namespace(self):
+        return self._get_or("namespace", None)
+
+    def get_full_namespace(self):
+        return device_namespace(self.__robot_name, self.get_namespace(), self.get_name())
+
+    def get_launch_file_configuration(self):
+        return self._get_or("launch_file", None, {})
+
+    def get_configuration(self):
+        return self._get("configuration")
+
+    def get_manufacturer(self):
+        return self._get("manufacturer", "configuration")
+
+    def get_model(self):
+        return self._get("model", "configuration")
+
+    def get_location(self):
+        return self._get("location")
+
+    def get_urdf_prefix(self):
+        return robot_urdf_prefix(self.__robot_name)
+
+    def get_link(self):
+        return device_link_name(self.__robot_name, self.get_name())
+
+    def get_parent_link(self):
+        return self._get("parent_link", "location")
+
+    def get_xyz(self):
+        return self._get("xyz", "location")
+
+    def get_rpy(self):
+        return self._get_or("rpy", "location", [0.0, 0.0, 0.0])
+
+    def get_records(self):
+        return self._get_or("records", None, {})
+
+    def get_bridge(self):
+        return self._get_or("bridge", None, {})
+
+    def _get_or(self, param, ns=None, default=None):
+
+        if ns is not None:
+            try:
+                config = self.__description
+                for key in ns.split("."):
+                    config = config[key]
+
+                return config.get(param, default)
+            except Exception:
+                raise LookupError(
+                    "Cannot get "
+                    + self.__get_param_name(param, ns)
+                    + " from "
+                    + self.type
+                    + " description file "
+                    + self.filename
+                )
+        else:
+            return self.__description.get(param, default)
+
+    def _get(self, param, ns=None):
+
+        value = self._get_or(param, ns)
+
+        if value is None:
+            raise LookupError(
+                "Cannot get "
+                + self.__get_param_name(param, ns)
+                + " from "
+                + self.type
+                + " description file "
+                + self.filename
+            )
+
+        return value
+
+    def __get_param_name(self, param, ns):
+        if ns:
+            return ns + "." + param
+        else:
+            return param
+
+
+def generate_device_temporary_configuration_file(meta_description, configuration, filename):
+    return save_temporary_file(
+        configuration,
+        device_configuration_filename(
+            meta_description.get_robot_name(), meta_description.get_name(), filename
+        )
+    )
+
+
 class DriverLaunchFileProfile:
     def __init__(self, driver_profile_filename, configuration):
 
@@ -251,7 +373,7 @@ class DriverLaunchFileProfile:
             self.__evaluate_component_container(node_name, node_configuration)
             self.__evaluate_plugin(node_configuration)
             self.__evaluate_executable(node_configuration)
-            self.__set_namespace(node_configuration, namespace)
+            # self.__set_namespace(node_configuration, namespace)
             self.__evaluate_parameters(node_name, node_configuration)
             # self.__evaluate_remappings(node_name, node_configuration)
 
@@ -281,8 +403,8 @@ class DriverLaunchFileProfile:
             else:
                 node_configuration.pop("component_container", None)
 
-    def __set_namespace(self, node_configuration, namespace):
-        node_configuration["namespace"] = namespace
+    # def __set_namespace(self, node_configuration, namespace):
+    #     node_configuration["namespace"] = namespace
 
     def __evaluate_plugin(self, node_configuration):
         if "plugin" in node_configuration:
@@ -385,96 +507,3 @@ class DriverLaunchFileConfiguration:
     def __get_profile_filename(self, driver_configuration):
         pkg_path = get_package_share_directory(self.__meta_bringup_package)
         return join(pkg_path, "config", driver_configuration["profile"])
-
-
-class DriverLaunchDescription:
-    def __init__(self, device_type, meta_bringup_package=None):
-        self.__configuration = DriverLaunchFileConfiguration(device_type, meta_bringup_package)
-
-    def get_nodes(self, mode, launch_file_configuration, device_configuration, device_namespace):
-        nodes_configuration = self.__configuration.evaluate(
-            mode, launch_file_configuration, device_configuration, device_namespace
-        )
-
-        return DriverLaunchDescription.get_nodes_from_configuration(nodes_configuration)
-
-    @staticmethod
-    def get_nodes_from_configuration(driver_launch_file_configuration):
-        nodes = []
-        for node_name, node_configuration in driver_launch_file_configuration.items():
-            nodes.append(DriverLaunchDescription.__get_node(
-                device_namespace, node_name, node_configuration)
-            )
-
-        return nodes
-
-    @staticmethod
-    def __get_node_type(self, node_configuration):
-        if DriverLaunchDescription.__get_component_container(node_configuration):
-            if DriverLaunchDescription.__get_node_plugin(node_configuration):
-                return "composable_node"
-        return "executable_node"
-
-    @staticmethod
-    def __get_node(self, driver_namespace, node_name, node_configuration):
-        if DriverLaunchDescription.__get_node_type(node_configuration) == "composable_node":
-            return DriverLaunchDescription.__get_composable_node(
-                driver_namespace, node_name, node_configuration
-            )
-        else:
-            return DriverLaunchDescription.__get_executable_node(
-                driver_namespace, node_name, node_configuration
-            )
-
-    @staticmethod
-    def __get_executable_node(self, driver_namespace, node_name, node_configuration):
-        return Node(
-            name=node_name,
-            namespace=driver_namespace,
-            package=DriverLaunchDescription.__get_node_package(node_configuration),
-            executable=DriverLaunchDescription.__get_node_executable(node_configuration),
-            parameters=DriverLaunchDescription.__get_node_parameters(node_configuration),
-            remappings=DriverLaunchDescription.__get_node_remappings(node_configuration),
-        )
-
-    @staticmethod
-    def __get_composable_node(driver_namespace, node_name, node_configuration):
-        return LoadComposableNodes(
-            target_container=DriverLaunchDescription.__get_component_container(node_configuration),
-            composable_node_descriptions=[
-                ComposableNode(
-                    name=node_name,
-                    namespace=driver_namespace,
-                    package=DriverLaunchDescription.__get_node_package(node_configuration),
-                    plugin=DriverLaunchDescription.__get_node_plugin(node_configuration),
-                    parameters=DriverLaunchDescription.__get_node_parameters(node_configuration),
-                    remappings=DriverLaunchDescription.__get_node_remappings(node_configuration),
-                )
-            ],
-        )
-
-    @staticmethod
-    def __get_node_package(node_configuration):
-        return node_configuration["package"]
-
-    @staticmethod
-    def __get_node_executable(node_configuration):
-        return node_configuration["executable"]
-
-    @staticmethod
-    def __get_component_container(node_configuration):
-        return node_configuration.get("component_container", None)
-
-    @staticmethod
-    def __get_node_plugin(node_configuration):
-        return node_configuration.get_plugin("plugin", None)
-
-    @staticmethod
-    def __get_node_parameters(node_configuration):
-        parameters = node_configuration.get("parameters")
-        return [parameters] if parameters is not None else None
-
-    @staticmethod
-    def __get_node_remappings(node_configuration):
-        remappings = node_configuration.get("remappings")
-        return list(remappings.items()) if remappings is not None else None
