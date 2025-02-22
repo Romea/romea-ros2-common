@@ -308,9 +308,7 @@ class DeviceConfiguration:
             return self.evaluate_parameter_from_dict(parameter_name, specification, user_value)
         else:
             raise LookupError(
-                "specification for "
-                + parameter_name
-                + " parameter is not well formed"
+                "specification for " + parameter_name + " parameter is not well formed"
             )
 
     def get_specification(self, parameter_name):
@@ -345,7 +343,8 @@ class DeviceConfiguration:
             raise ValueError(
                 parameter_name
                 + " value ("
-                + str(user_value) + self.units.get(parameter_name, "")
+                + str(user_value)
+                + self.units.get(parameter_name, "")
                 + ") provided by user is not available for "
                 + self.device_name
                 + ", it must be one of these values: "
@@ -368,16 +367,14 @@ class DeviceConfiguration:
                     + " and "
                     + str(specification["range"][1])
                 )
-        elif (
-            user_value >= specification["range"][0]
-            and user_value <= specification["range"][1]
-        ):
+        elif user_value >= specification["range"][0] and user_value <= specification["range"][1]:
             return user_value
         else:
             raise ValueError(
                 parameter_name
-                +" value ("
-                + str(user_value) + self.units.get(parameter_name, "")
+                + " value ("
+                + str(user_value)
+                + self.units.get(parameter_name, "")
                 + ") provided by user is not available for "
                 + self.device_name
                 + ", it must be inside ["
@@ -403,9 +400,7 @@ class DeviceConfiguration:
                 return self.evaluate_parameter_from_range(parameter_name, parameter, user_value)
             else:
                 raise LookupError(
-                    "specification for "
-                    + parameter_name
-                    + " parameter is not well formed"
+                    "specification for " + parameter_name + " parameter is not well formed"
                 )
 
         else:
@@ -417,7 +412,8 @@ class DeviceConfiguration:
                 raise ValueError(
                     parameter_name
                     + " value ("
-                    + str(user_value) + self.units.get(parameter_name, "")
+                    + str(user_value)
+                    + self.units.get(parameter_name, "")
                     + ") provided by user is not available for this configuration of "
                     + self.device_name
                     + ", it must be equal to "
@@ -432,7 +428,8 @@ class DeviceConfiguration:
             raise ValueError(
                 parameter_name
                 + " value ("
-                + str(user_value) + self.units.get(parameter_name, "")                
+                + str(user_value)
+                + self.units.get(parameter_name, "")
                 + ") provided by user is not available for "
                 + self.device_name
                 + ", it must be equal to "
