@@ -12,13 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from launch_ros.descriptions import ComposableNode
-from launch_ros.actions import LoadComposableNodes, Node
 from ament_index_python import get_package_share_directory
-
-from os.path import join
 from functools import reduce
+from os.path import join
 import importlib
 import yaml
 import os
@@ -216,19 +212,6 @@ class MetaDescription:
             return ns + "." + param
         else:
             return param
-
-        # package = driver_meta_description.get("package")
-        # profile = driver_meta_description.get("profile")
-        # if not package or not profile:
-        #     raise ValueError("driver package or profile missing in the meta description file")
-        # filename = os.path.join(get_package_share_directory(package), "config", profile_filename)
-
-        # remappings = (
-        #     driver_profile.get(node_name, {}).get("remappings", {}).items()
-        #     + driver_configuration.get(node_name, {}).get("remappings", {}).items()
-        # )
-
-        # driver_profile[node_name]["remappings"] = remappings
 
 
 class SensorMetaDescription:
@@ -436,7 +419,7 @@ class DriverLaunchFileProfile:
                 f"{parameter_name} in driver profile {self.driver_profile_filename}."
             )
 
-        configuration_parameter_name = parameter_description.get("remap", parameter_name)
+        configuration_parameter_name = parameter_description.get("name", parameter_name)
         parameter_default_value = parameter_description.get("default", None)
 
         value = self.__get_parameter_value(
