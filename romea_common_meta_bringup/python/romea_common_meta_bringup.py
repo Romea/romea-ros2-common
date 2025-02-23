@@ -241,7 +241,10 @@ class SensorMetaDescription:
         return self._get_or("namespace", None)
 
     def get_full_namespace(self):
-        return device_namespace(self.__robot_name, self.get_namespace(), self.get_name())
+        return device_namespace(self.get_robot_name(), self.get_namespace(), self.get_name())
+
+    def get_filename_prefix(self):
+        return device_urdf_prefix(self.get_robot_name(), self.get_name())
 
     def get_launch_file_configuration(self):
         return self._get_or("launch_file", None, {})
@@ -259,10 +262,10 @@ class SensorMetaDescription:
         return self._get("location")
 
     def get_urdf_prefix(self):
-        return robot_urdf_prefix(self.__robot_name)
+        return robot_urdf_prefix(self.get_robot_name())
 
     def get_link(self):
-        return device_link_name(self.__robot_name, self.get_name())
+        return device_link_name(self.get_robot_name(), self.get_name())
 
     def get_parent_link(self):
         return self._get("parent_link", "location")
@@ -321,15 +324,6 @@ class SensorMetaDescription:
             return ns + "." + param
         else:
             return param
-
-
-def generate_device_temporary_configuration_file(meta_description, configuration, filename):
-    return save_temporary_file(
-        configuration,
-        device_configuration_filename(
-            meta_description.get_robot_name(), meta_description.get_name(), filename
-        )
-    )
 
 
 class DriverLaunchFileProfile:
