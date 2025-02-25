@@ -75,7 +75,7 @@ def device_configuration_filename(robot_name, device_name, filename):
 
 def save_temporary_file(configuration, filename):
     temporaty_filename = f"/tmp/{filename}"
-    with open(temporaty_filename, 'w') as f:
+    with open(temporaty_filename, "w") as f:
         yaml.dump(configuration, f)
     return temporaty_filename
 
@@ -404,53 +404,106 @@ class DriverLaunchFileProfile:
 
     def __evaluate_parameter(self, parameter_name, parameter_description):
 
-        configuration_source_name = parameter_description.get("from")
-        configuration = self.configuration.get(configuration_source_name)
+        configuration_source_name = self.__get_configuration_source_name(
+            parameter_name, parameter_description
+        )
 
-        if configuration is None:
-            raise ValueError(
-                f"No {configuration_source_name} is provided, unable to substitute parameter "
-                f"{parameter_name} in driver profile {self.driver_profile_filename}."
-            )
+        configuration_parameter_name = self.__get_configuration_parameter_name(
+            parameter_name, parameter_description
+        )
 
-        configuration_parameter_name = parameter_description.get("name", parameter_name)
         parameter_default_value = parameter_description.get("default", None)
 
         value = self.__get_parameter_value(
-            configuration, configuration_parameter_name, parameter_default_value
+            parameter_name,
+            configuration_source_name,
+            configuration_parameter_name,
+            parameter_default_value,
         )
+
+        format_expression = parameter_description.get("format")
+        if format_expression:
+            value = self.__evaluate_parameter_format_expression(
+                format_expression, {configuration_parameter_name: value}
+            )
 
         if value is None:
             raise ValueError(
-                f"Parameter {configuration_parameter_name} does not exists in "
-                f"{configuration_source_name}, unable to substitute parmeter "
-                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                f"Failed to evaluatue fomat expression {format_expression}, unable to substitute "
+                f"parameter {parameter_name} in driver profile {self.driver_profile_filename}."
             )
 
-        if isinstance(value, (int, float)):
-            scale = parameter_description.get("scale")
-            if scale is not None:
-                if isinstance(scale, str):
-                    value *= eval(scale, {"__builtins__": {}}, {"pi": math.pi})
-                else:
-                    value *= scale
-
+        self.__check_parameter_value(parameter_name, parameter_description, value)
         return value
 
     def __get_parameter_value(
-        self, configuration, configuration_parameter_name, parameter_default_value
+        self,
+        parameter_name,
+        configuration_source_name,
+        configuration_parameter_name,
+        parameter_default_value,
     ):
         try:
             keys = configuration_parameter_name.split(".")
             value = reduce(
                 lambda config, key: config[key] if isinstance(config, dict) else key,
                 keys,
-                configuration,
+                self.__get_configuration(parameter_name, configuration_source_name)
             )
-
             return value
         except KeyError:
+            if not parameter_default_value:
+                raise ValueError(
+                    f"Parameter {configuration_parameter_name} does not exists in "
+                    f"{configuration_source_name}, unable to substitute parmeter "
+                    f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                )
             return parameter_default_value
+
+    def __evaluate_parameter_format_expression(self, expression, variables):
+        try:
+            safe_globals = {"__builtins__": None, "math": math, "pi": math.pi}
+            safe_globals.update(variables)
+            expression = expression.format(**variables)
+            return eval(expression, safe_globals)
+        except Exception:
+            return None
+
+    def __get_configuration_source_name(self, parameter_name, parameter_description):
+        configuration_source_name = parameter_description.get("source", {}).get("from")
+        if configuration_source_name is None:
+            raise ValueError(
+                f"No 'from' item is provided in source info, unable to substitute parameter "
+                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+            )
+        return configuration_source_name
+
+    def __get_configuration_parameter_name(self, parameter_name, parameter_description):
+        configuration_parameter_name = parameter_description.get("source", {}).get("parameter")
+        if configuration_parameter_name is None:
+            raise ValueError(
+                f"No 'parameter' item is provided in source info, unable to substitute parameter "
+                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+            )
+        return configuration_parameter_name
+
+    def __get_configuration(self, parameter_name, configuration_source_name):
+        configuration = self.configuration.get(configuration_source_name)
+        if configuration is None:
+            raise ValueError(
+                f"No {configuration_source_name} is provided, unable to substitute parameter "
+                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+            )
+        return configuration
+
+    def __check_parameter_value(self, parameter_name, parameter_description, value):
+        choices = parameter_description.get("choices")
+        if choices and value not in choices:
+            raise ValueError(
+                f"Parameter value {value} does not belong to choices {choices}, "
+                f"unable to substitute parameter {parameter_name} "
+                f"in driver profile {self.driver_profile_filename}."
+            )
 
 
 class DriverLaunchFileConfiguration:
@@ -461,9 +514,7 @@ class DriverLaunchFileConfiguration:
         else:
             self.__meta_bringup_package = f"romea_{device_type}_meta_bringup"
 
-    def evaluate(
-            self, mode, launch_file_configuration, device_configuration, device_namespace
-    ):
+    def evaluate(self, mode, launch_file_configuration, device_configuration, device_namespace):
         configuration = {}
 
         for driver_name, driver_description in launch_file_configuration.items():
@@ -471,9 +522,7 @@ class DriverLaunchFileConfiguration:
                 self.__get_profile_filename(driver_description),
                 {
                     f"{self.__device_type}_configuration": device_configuration,
-                    f"{driver_name}_configuration": driver_description.get(
-                        "configuration", {}
-                    ),
+                    f"{driver_name}_configuration": driver_description.get("configuration", {}),
                 },
             ).evaluate(mode, device_namespace)
 

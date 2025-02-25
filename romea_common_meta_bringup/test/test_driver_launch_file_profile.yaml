@@ -5,14 +5,18 @@ driver1:
   parameters:
     p1: 1
     p2:
-      from: driver_configuration
+      source:
+        from: driver_configuration
+        parameter: driver1.parameters.p2
     p3:
-      from: device_configuration
-      name: foo
+      source:
+        from: device_configuration
+        parameter: foo
     p4:
-      from: device_configuration
-      name: bar
-      scale: 2
+      source:
+        from: device_configuration
+        parameter: bar
+      format: "2*{bar}"
 driver2:
   package: pk2
   executable: executable2
@@ -20,7 +24,12 @@ driver2:
   parameters:
     p5: 5
     p6:
-      from: driver_configuration
+      source:
+        from: driver_configuration
+        parameter: driver2.parameters.p6
+      choices: [6, 10]
     p7:
-      from: driver_configuration
+      source:
+        from: driver_configuration
+        parameter: driver.parameters.p7
       default: 7

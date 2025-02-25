@@ -95,3 +95,17 @@ def test_check_failed_when_parameter_does_not_exists_in_driver_configuration(
         "Parameter driver2.parameters.p6 does not exists in driver_configuration, unable"
         in str(excinfo.value)
     )
+
+
+def test_check_failed_when_parameter_value_does_not_belong_in_choices(
+    profile_filename, configuration
+):
+
+    configuration["driver_configuration"]["driver2"]["parameters"]["p6"] = 7
+    with pytest.raises(ValueError) as excinfo:
+        DriverLaunchFileProfile(profile_filename, configuration).evaluate("live", "ns")
+
+    assert (
+        "Parameter value 7 does not belong to choices [6, 10], unable to "
+        in str(excinfo.value)
+    )
