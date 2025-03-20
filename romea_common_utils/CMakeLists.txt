@@ -47,6 +47,7 @@ add_library(${PROJECT_NAME} SHARED
     src/conversions/pose_and_twist2d_conversions.cpp
     src/conversions/pose_and_twist3d_conversions.cpp
     src/conversions/position2d_conversions.cpp
+    src/conversions/position3d_conversions.cpp
     src/conversions/twist2d_conversions.cpp
     src/conversions/twist3d_conversions.cpp
     src/joint_states.cpp

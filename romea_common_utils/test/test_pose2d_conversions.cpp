@@ -50,7 +50,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-TEST_F(TestPose2DConversion, fromRomeato_ros_msg)
+TEST_F(TestPose2DConversion, from_romea_to_ros_msg)
 {
   EXPECT_EQ(romea::ros2::extract_time(ros_pose2d_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(ros_pose2d_msg.header.frame_id.c_str(), frame_id.c_str());

@@ -15,10 +15,12 @@ find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
     msg/Position2D.msg
+    msg/Position3D.msg
     msg/Pose2D.msg
     msg/Twist2D.msg
     msg/PoseAndTwist2D.msg
     msg/Position2DStamped.msg
+    msg/Position3DStamped.msg
     msg/Pose2DStamped.msg
     msg/Twist2DStamped.msg
     msg/PoseAndTwist2DStamped.msg

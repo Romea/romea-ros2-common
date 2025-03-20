@@ -61,7 +61,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-TEST_F(TestPose3DConversion, fromRomeato_ros_msg)
+TEST_F(TestPose3DConversion, from_romea_to_ros_msg)
 {
   EXPECT_EQ(romea::ros2::extract_time(ros_pose3d_msg).nanoseconds(), stamp.nanoseconds());
   EXPECT_STREQ(ros_pose3d_msg.header.frame_id.c_str(), frame_id.c_str());
@@ -76,7 +76,7 @@ TEST_F(TestPose3DConversion, fromRomeato_ros_msg)
 }
 
 //-----------------------------------------------------------------------------
-TEST_F(TestPose3DConversion, fromRosMsgto_romea)
+TEST_F(TestPose3DConversion, from_ros_msg_to_romea)
 {
   romea::core::Pose3D romea_pose3d_bis = romea::ros2::to_romea(ros_pose3d_msg.pose);
 
@@ -90,7 +90,7 @@ TEST_F(TestPose3DConversion, fromRosMsgto_romea)
 }
 
 //-----------------------------------------------------------------------------
-TEST_F(TestPose3DConversion, fromRomeato_ros_transform_msg)
+TEST_F(TestPose3DConversion, from_romea_to_ros_transform_msg)
 {
   geometry_msgs::msg::TransformStamped tf_msg;
 
