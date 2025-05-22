@@ -1,0 +1,29 @@
+launch:
+  - node:
+      # profile: /home/jeanlaneurit/dev/romea_ros2/src/tools/romea_common/romea_common_meta_bringup/test/test_node_profile.yaml
+      profile: test_node_profile.yaml
+      param:
+        - name: p2
+          value: 2
+        - name: p6
+          value: 6
+  - node_container:
+      pkg: rclcpp_components
+      exec: component_container
+      name: container
+      composable_node:
+        - profile: test_node_profile.yaml
+          param:
+            - name: p2
+              value: 2
+            - name: p6
+              value: 6
+  - load_composable_node:
+      target: container
+      composable_node:
+        - profile: test_node_profile.yaml
+          param:
+            - name: p2
+              value: 2
+            - name: p6
+              value: 6

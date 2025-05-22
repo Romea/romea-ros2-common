@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from ament_index_python import get_package_share_directory
-from functools import reduce
-from os.path import join
 import importlib
 import yaml
 import os
@@ -100,10 +98,10 @@ def meta_description_type(meta_description_file_path):
     return meta_description_file_path.split(".")[1]
 
 
-def load_meta_description(meta_description_file_path, device_type=None):
-    if device_type is None:
-        device_type = meta_description_type(meta_description_file_path)
-    bringup = importlib.import_module("romea_" + device_type + "meta_bringup")
+def load_meta_description(meta_description_file_path, entity_type=None):
+    if entity_type is None:
+        entity_type = meta_description_type(meta_description_file_path)
+    bringup = importlib.import_module("romea_" + entity_type + "meta_bringup")
     return bringup.load_meta_description(meta_description_file_path)
 
 
@@ -246,8 +244,8 @@ class SensorMetaDescription:
     def get_filename_prefix(self):
         return device_urdf_prefix(self.get_robot_name(), self.get_name())
 
-    def get_launch_file_configuration(self):
-        return self._get_or("launch_file", None, {})
+    def get_launch_file(self):
+        return self._get_or("launch", None, {})
 
     def get_configuration(self):
         return self._get("configuration")
@@ -296,7 +294,7 @@ class SensorMetaDescription:
                     "Cannot get "
                     + self.__get_param_name(param, ns)
                     + " from "
-                    + self.type
+                    + self.__type
                     + " description file "
                     + self.filename
                 )
@@ -312,9 +310,9 @@ class SensorMetaDescription:
                 "Cannot get "
                 + self.__get_param_name(param, ns)
                 + " from "
-                + self.type
+                + self.__type
                 + " description file "
-                + self.filename
+                + self.__filename
             )
 
         return value
@@ -326,81 +324,65 @@ class SensorMetaDescription:
             return param
 
 
-class DriverLaunchFileProfile:
-    def __init__(self, driver_profile_filename, configuration):
+class NodeLaunchFileProfile:
+    def __init__(self, node_profile_name, node_configuration, device_configuration):
 
-        self.configuration = configuration
-        self.driver_profile_filename = driver_profile_filename
+        self.node_profile_name = node_profile_name
+        self.device_configuration = device_configuration
+        self.node_configuration = node_configuration
 
-        if not os.path.exists(driver_profile_filename):
-            raise FileNotFoundError(
-                "driver profile file " + driver_profile_filename + " not found."
-            )
+        if not os.path.exists(node_profile_name):
+            raise FileNotFoundError("node profile file " + node_profile_name + " not found.")
 
-        with open(driver_profile_filename, "r") as f:
-            self.driver_profile = yaml.safe_load(f)
+        with open(node_profile_name, "r") as f:
+            self.node_profile = yaml.safe_load(f)
 
-    def evaluate(self, mode, namespace=None):
+    def evaluate(self, node_type):
 
-        for node_name, node_configuration in self.driver_profile.items():
-            if not self.__is_available_mode(mode, node_configuration):
-                self.driver_profile.pop(node_name, None)
-                continue
+        self.__check_pkg()
+        if node_type == "node":
+            self.__check_exec()
+            self.__remove_plugin()
+        else:
+            self.__check_plugin()
+            self.__remove_exec()
 
-            self.__evaluate_component_container(node_name, node_configuration)
-            self.__evaluate_plugin(node_configuration)
-            self.__evaluate_executable(node_configuration)
-            # self.__set_namespace(node_configuration, namespace)
-            self.__evaluate_parameters(node_name, node_configuration)
-            # self.__evaluate_remappings(node_name, node_configuration)
+        self.__check_name()
+        # self.__set_namespace()
+        self.__evaluate_parameters()
+        # self.__evaluate_remappings()
 
-        return self.driver_profile
-
-    def __is_available_mode(self, mode, node_configuration):
-        available_mode = node_configuration.get("avaliable_mode", "live")
-        return mode == "live" or available_mode == "all"
-
-    def __evaluate_component_container(self, node_name, node_configuration):
-        if isinstance(node_configuration.get("component_container", None), dict):
-
-            configuration_source_name = node_configuration["component_container"].get("from")
-            configuration = self.configuration.get(configuration_source_name)
-            parameter_name = f"{node_name}.component_container"
-
-            if configuration is None:
-                raise ValueError(
-                    f"No {configuration_source_name} is provided, unable to substitute parameter "
-                    f"{parameter_name} in driver profile {self.driver_profile_filename}."
-                )
-
-            value = self.__get_parameter_value(configuration, parameter_name, None)
-
-            if value:
-                node_configuration["component_container"] = value
-            else:
-                node_configuration.pop("component_container", None)
+        return self.node_profile
 
     # def __set_namespace(self, node_configuration, namespace):
     #     node_configuration["namespace"] = namespace
 
-    def __evaluate_plugin(self, node_configuration):
-        if "plugin" in node_configuration:
-            if node_configuration.get("component_container", None) is None:
-                node_configuration.pop("plugin", None)
+    def __check_pkg(self):
+        if "pkg" not in self.node_profile:
+            raise LookupError("no pkg is given in" + self.node_profile_name)
 
-    def __evaluate_executable(self, node_configuration):
-        if node_configuration.get("plugin", None):
-            if node_configuration.get("component_container", None):
-                node_configuration.pop("executable", None)
+    def __check_exec(self):
+        if "exec" not in self.node_profile:
+            raise LookupError("no exec is given in" + self.node_profile_name)
 
-    def __evaluate_parameters(self, node_name, node_configuration):
-        parameters = node_configuration.get("parameters")
-        if parameters:
-            for parameter_name, parameter in parameters.items():
-                if isinstance(parameter, dict):
-                    parameters[parameter_name] = self.__evaluate_parameter(
-                        f"{node_name}.parameters.{parameter_name}", parameter
-                    )
+    def __check_plugin(self):
+        if "exec" not in self.node_profile:
+            raise LookupError("no plugin is given in" + self.node_profile_name)
+
+    def __remove_plugin(self):
+        self.node_profile.pop("plugin", None)
+
+    def __remove_exec(self):
+        self.node_profile.pop("exec", None)
+
+    def __check_name(self):
+        if "name" not in self.node_profile:
+            raise LookupError("no name is given in" + self.node_profile_name)
+
+    def __evaluate_parameters(self):
+        for param in self.node_profile.get("param", []):
+            if isinstance(param["value"], dict):
+                param["value"] = self.__evaluate_parameter(param["name"], param["value"])
 
     def __evaluate_parameter(self, parameter_name, parameter_description):
 
@@ -443,20 +425,23 @@ class DriverLaunchFileProfile:
         configuration_parameter_name,
         parameter_default_value,
     ):
+        # print("node_configuration", self.node_configuration)
+        # print("device_configuration", self.device_configuration)
+        if configuration_source_name == "node_configuration":
+            params = {
+                item["name"]: item["value"] for item in self.node_configuration.get("param", [])
+            }
+        else:
+            params = self.device_configuration or {}
+
         try:
-            keys = configuration_parameter_name.split(".")
-            value = reduce(
-                lambda config, key: config[key] if isinstance(config, dict) else key,
-                keys,
-                self.__get_configuration(parameter_name, configuration_source_name)
-            )
-            return value
+            return params[configuration_parameter_name]
         except KeyError:
-            if not parameter_default_value:
+            if parameter_default_value is None:
                 raise ValueError(
                     f"Parameter {configuration_parameter_name} does not exists in "
                     f"{configuration_source_name}, unable to substitute parmeter "
-                    f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                    f"{parameter_name} in driver profile {self.node_profile_name}."
                 )
             return parameter_default_value
 
@@ -474,27 +459,18 @@ class DriverLaunchFileProfile:
         if configuration_source_name is None:
             raise ValueError(
                 f"No 'from' item is provided in source info, unable to substitute parameter "
-                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                f"{parameter_name} in driver profile {self.node_profile_name}."
             )
         return configuration_source_name
 
     def __get_configuration_parameter_name(self, parameter_name, parameter_description):
-        configuration_parameter_name = parameter_description.get("source", {}).get("parameter")
+        configuration_parameter_name = parameter_description.get("source", {}).get("param")
         if configuration_parameter_name is None:
             raise ValueError(
                 f"No 'parameter' item is provided in source info, unable to substitute parameter "
-                f"{parameter_name} in driver profile {self.driver_profile_filename}."
+                f"{parameter_name} in driver profile {self.node_profile_name}."
             )
         return configuration_parameter_name
-
-    def __get_configuration(self, parameter_name, configuration_source_name):
-        configuration = self.configuration.get(configuration_source_name)
-        if configuration is None:
-            raise ValueError(
-                f"No {configuration_source_name} is provided, unable to substitute parameter "
-                f"{parameter_name} in driver profile {self.driver_profile_filename}."
-            )
-        return configuration
 
     def __check_parameter_value(self, parameter_name, parameter_description, value):
         choices = parameter_description.get("choices")
@@ -502,34 +478,96 @@ class DriverLaunchFileProfile:
             raise ValueError(
                 f"Parameter value {value} does not belong to choices {choices}, "
                 f"unable to substitute parameter {parameter_name} "
-                f"in driver profile {self.driver_profile_filename}."
+                f"in driver profile {self.node_profile_name}."
             )
 
 
-class DriverLaunchFileConfiguration:
-    def __init__(self, device_type, meta_bringup_package=None):
-        self.__device_type = device_type
-        if meta_bringup_package is not None:
-            self.__meta_bringup_package = meta_bringup_package
+class LaunchFileGenerator:
+    def __init__(self, entity_type):
+        self.__entity_namespace_name = f"{entity_type}_namespace"
+        self.__meta_bringup_package = f"romea_{entity_type}_meta_bringup"
+
+    def generate(self, mode, launch_file, device_configuration, robot_name, entity_name):
+
+        actions = []
+        actions.append(self.__generate_push_ros_namespace("robot_namespace"))
+        actions.append(self.__generate_push_ros_namespace(self.__entity_namespace_name))
+        for item in launch_file:
+            if "node" in item:
+                actions.append(self.__generate_node(
+                    item["node"].copy(), device_configuration
+                    )
+                )
+            elif "node_container" in item:
+                actions.append(
+                    self.__generate_node_container(
+                        item["node_container"].copy(), device_configuration
+                    )
+                )
+            elif "load_composable_node" in item:
+                actions.append(
+                    self.__generate_load_composable_node(
+                        item["load_composable_node"].copy(), device_configuration
+                    )
+                )
+            else:
+                actions.append(item)
+
+        launch = []
+        launch.append(self.__generate_argument("mode", "live"))
+        launch.append(self.__generate_argument("robot_namespace", robot_name))
+        launch.append(self.__generate_argument(self.__entity_namespace_name, entity_name))
+        launch.append({"group": actions})
+
+        return yaml.dump(
+            {"launch": launch},
+            default_flow_style=False,
+            allow_unicode=True,
+            encoding=None,
+            sort_keys=False,
+        )
+
+    def __generate_argument(self, name, default_value=None):
+        return {"arg": {"name": name, "default": default_value}}
+
+    def __generate_push_ros_namespace(self, namespace):
+        return {"push-ros-namespace": {"namespace": f"$(var {namespace})"}}
+
+    def __generate_node(self, node, device_configuration):
+        if "profile" in node:
+            file = self.__get_profile_filename(node)
+            node_generator = NodeLaunchFileProfile(file, node, device_configuration)
+            return {"node": node_generator.evaluate("node")}
         else:
-            self.__meta_bringup_package = f"romea_{device_type}_meta_bringup"
+            return {"node": node}
 
-    def evaluate(self, mode, launch_file_configuration, device_configuration, device_namespace):
-        configuration = {}
+    def __generate_plugin(self, plugin, device_configuration):
+        if "profile" in plugin:
+            file = self.__get_profile_filename(plugin)
+            node_generator = NodeLaunchFileProfile(file, plugin, device_configuration)
+            return node_generator.evaluate("plugin")
+        else:
+            return plugin
 
-        for driver_name, driver_description in launch_file_configuration.items():
-            driver_launch_file_configuration = DriverLaunchFileProfile(
-                self.__get_profile_filename(driver_description),
-                {
-                    f"{self.__device_type}_configuration": device_configuration,
-                    f"{driver_name}_configuration": driver_description.get("configuration", {}),
-                },
-            ).evaluate(mode, device_namespace)
+    def __generate_plugins(self, plugins, device_configuration):
+        return [self.__generate_plugin(plugin, device_configuration) for plugin in plugins]
 
-            configuration.update(driver_launch_file_configuration)
+    def __generate_node_container(self, node_container, device_configuration):
+        node_container["composable_node"] = self.__generate_plugins(
+            node_container["composable_node"], device_configuration
+        )
+        return {"node_container": node_container}
 
-        return configuration
+    def __generate_load_composable_node(self, load_composable_node, device_configuration):
+        load_composable_node["composable_node"] = self.__generate_plugins(
+            load_composable_node["composable_node"], device_configuration
+        )
+        return {"load_composable_node": load_composable_node}
 
-    def __get_profile_filename(self, driver_configuration):
-        pkg_path = get_package_share_directory(self.__meta_bringup_package)
-        return join(pkg_path, "config", driver_configuration["profile"])
+    def __get_profile_filename(self, node_or_plugin_configuration):
+        file = node_or_plugin_configuration.get("profile", None)
+        if os.path.isabs(file):
+            return file
+        else:
+            pkg = node_or_plugin_configuration.get("pkg", self.__meta_bringup_package)
+            return os.path.join(get_package_share_directory(pkg), file)
