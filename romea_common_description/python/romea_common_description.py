@@ -13,15 +13,21 @@
 # limitations under the License.
 
 
-def generate_configuration_file(configuration, units, extended):
+def generate_configuration_file(configuration, units, extended, depth=0):
     yaml_lines = []
-    for key in configuration:
-        if extended:
-            yaml_lines.append(f"{key}:")
-            yaml_lines.append(f"    value: {configuration[key]}")
-            yaml_lines.append(f"    unit: {units.get(key, 'null')}")
+    indent = '    ' * depth
+    for key, value in configuration.items():
+        if isinstance(value, dict):
+            yaml_lines.append(f"{indent}{key}:")
+            yaml_lines.extend(generate_configuration_file(value, units, extended, depth + 1).splitlines())
         else:
-            yaml_lines.append(f"{key}: {configuration[key]}  # unit {units.get(key, 'none')}")
+            if extended:
+                yaml_lines.append(f"{indent}{key}:")
+                yaml_lines.append(f"{indent}    value: {value}")
+                yaml_lines.append(f"{indent}    unit: {units.get(key, 'null')}")
+            else:
+                yaml_lines.append(f"{indent}{key}: {value}  # unit {units.get(key, 'none')}")
+
     return "\n".join(yaml_lines)
 
 
