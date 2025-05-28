@@ -8,11 +8,6 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-# install(
-  # DIRECTORY launch
-  # DESTINATION share/${PROJECT_NAME}
-# )
-
 ament_python_install_module(python/romea_common_meta_bringup.py)
 
 if(BUILD_TESTING)
@@ -22,10 +17,10 @@ if(BUILD_TESTING)
 
   find_package(ament_cmake_pytest REQUIRED)
   configure_file(test/test_common_meta_bringup.yaml test_common_meta_bringup.yaml)
-  configure_file(test/test_launch_file.yaml test_launch_file.yaml)
-  configure_file(test/test_node_profile.yaml test_node_profile.yaml)
+  # configure_file(test/test_launch_file.yaml test_launch_file.yaml)
+  # configure_file(test/test_node_profile.yaml test_node_profile.yaml)
   ament_add_pytest_test(test_launch_file test/test_launch_file.py)
-  ament_add_pytest_test(test_node_launch_file_configuration test/test_node_profile.py)
+  # ament_add_pytest_test(test_node_launch_file_configuration test/test_node_profile.py)
   ament_add_pytest_test(test_common_meta_bringup test/test_common_meta_bringup.py)
 endif()
 
