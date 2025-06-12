@@ -155,10 +155,10 @@ class MetaDescription:
         with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
 
-        if "configuration" in self.data:
-            if "type" in self.data["configuration"]:
-                self.data["configuration"]["manufacturer"] = self.data["configuration"]["type"]
-                del self.data["configuration"]["type"]
+        # if "configuration" in self.data:
+        #     if "type" in self.data["configuration"]:
+        #         self.data["configuration"]["manufacturer"] = self.data["configuration"]["type"]
+        #         del self.data["configuration"]["type"]
 
     def exists(self, param, ns=None):
         if ns:
@@ -364,7 +364,7 @@ class LaunchFileGenerator:
         for k, v in device_configuration.items():
             new_key = f"{parent_key}.{k}" if parent_key else k
             if isinstance(v, dict):
-                items.update(self.__flatten_(v, new_key))
+                items.update(self.__flatten(v, new_key))
             else:
                 items[new_key] = str(v)
         return items
