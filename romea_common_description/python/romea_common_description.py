@@ -12,14 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+
+def get_configuration_file(directory_path, filename):
+    files = [
+        f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))
+    ]
+
+    for file in files:
+        if len(file) != len(filename):
+            continue
+
+        if all(f == "x" or f == fn for f, fn in zip(file, filename)):
+            return f"{directory_path}/{file}"
+
+    return None
+
 
 def generate_configuration_file(configuration, units, extended, depth=0):
     yaml_lines = []
-    indent = '    ' * depth
+    indent = "    " * depth
     for key, value in configuration.items():
         if isinstance(value, dict):
             yaml_lines.append(f"{indent}{key}:")
-            yaml_lines.extend(generate_configuration_file(value, units, extended, depth + 1).splitlines())
+            yaml_lines.extend(
+                generate_configuration_file(value, units, extended, depth + 1).splitlines()
+            )
         else:
             if extended:
                 yaml_lines.append(f"{indent}{key}:")
