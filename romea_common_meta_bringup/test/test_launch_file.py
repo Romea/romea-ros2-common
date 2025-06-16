@@ -21,10 +21,11 @@ def test_get_complete_launch_file():
 
     device_configuration = {"foo": 2.0, "bar": "toto"}
     launch = [{"node": {"pkg": "pkg1", "exec": "exec1"}}]
-    print("launch", launch)
+    launch_arguments = [{"name": "mode", "default": "live"}]
+
     launch_file_generator = LaunchFileGenerator("common")
     launch_file = yaml.safe_load(launch_file_generator.generate(
-          launch, device_configuration, "robot", "ns"
+          launch, launch_arguments, device_configuration, "robot", "ns"
         )
     )
 

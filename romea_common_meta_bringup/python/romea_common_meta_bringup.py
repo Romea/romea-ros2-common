@@ -155,11 +155,6 @@ class MetaDescription:
         with open(meta_description_file_path) as f:
             self.data = yaml.safe_load(f)
 
-        # if "configuration" in self.data:
-        #     if "type" in self.data["configuration"]:
-        #         self.data["configuration"]["manufacturer"] = self.data["configuration"]["type"]
-        #         del self.data["configuration"]["type"]
-
     def exists(self, param, ns=None):
         if ns:
             return ns in self.data and param in self.data[ns]
@@ -228,6 +223,10 @@ class SensorMetaDescription:
         with open(meta_description_file_path) as f:
             self.__description = yaml.safe_load(f)
 
+        if "configuration" in self.__description:
+            if "version" not in self.__description["configuration"]:
+                self.__description["configuration"]["version"] = ""
+
     def get_name(self):
         return self._get("name")
 
@@ -254,6 +253,9 @@ class SensorMetaDescription:
 
     def get_model(self):
         return self._get("model", "configuration")
+
+    def get_version(self):
+        return str(self._get_or("version", "configuration", ""))
 
     def get_location(self):
         return self._get("location")
@@ -327,10 +329,13 @@ class LaunchFileGenerator:
     def __init__(self, entity_type):
         self.__entity_namespace_name = f"{entity_type}_namespace"
 
-    def generate(self, launch_file, device_configuration, robot_name, entity_name):
+    def generate(
+        self, launch_file, launch_arguments, device_configuration, robot_name, entity_name
+    ):
 
         launch = []
-        launch.append(self.__generate_argument("mode", "live"))
+        for argument in launch_arguments:
+            launch.append(self.__generate_argument(argument))
 
         actions = []
         actions.append(self.__generate_push_ros_namespace(robot_name))
@@ -350,8 +355,8 @@ class LaunchFileGenerator:
             sort_keys=False,
         )
 
-    def __generate_argument(self, name, default_value=None):
-        return {"arg": {"name": name, "default": default_value}}
+    def __generate_argument(self, argument):
+        return {"arg": argument}
 
     def __generate_push_ros_namespace(self, namespace):
         return {"push-ros-namespace": {"namespace": namespace}}
@@ -359,7 +364,7 @@ class LaunchFileGenerator:
     def __generate_let(self, name, value):
         return {"let": {"name": name, "value": value}}
 
-    def __flatten(self, device_configuration, parent_key=''):
+    def __flatten(self, device_configuration, parent_key=""):
         items = {}
         for k, v in device_configuration.items():
             new_key = f"{parent_key}.{k}" if parent_key else k
