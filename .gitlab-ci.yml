@@ -28,7 +28,7 @@ galactic_focal_build:
   script:
     - colcon build
     - source install/setup.bash
-    - colcon test --packages-select romea_common_bringup romea_common_utils
+    - colcon test --packages-select romea_common_meta_bringup romea_common_utils
     - colcon test-result --verbose
 
 # galatic
@@ -38,5 +38,5 @@ humble_jammy_build:
   script:
     - colcon build
     - source install/setup.bash
-    - colcon test --packages-select romea_common_bringup romea_common_utils
+    - colcon test --packages-select romea_common_meta_bringup romea_common_utils
     - colcon test-result --verbose
