@@ -19,13 +19,14 @@ from romea_common_meta_bringup import LaunchFileGenerator
 
 def test_get_complete_launch_file():
 
-    device_configuration = {"foo": 2.0, "bar": "toto"}
+    configuration = {"foo": 2.0, "bar": "toto"}
     launch = [{"node": {"pkg": "pkg1", "exec": "exec1"}}]
     launch_arguments = [{"name": "mode", "default": "live"}]
+    namespaces = ["robot", "ns"]
 
     launch_file_generator = LaunchFileGenerator("common")
     launch_file = yaml.safe_load(launch_file_generator.generate(
-          launch, launch_arguments, device_configuration, "robot", "ns"
+          launch, launch_arguments, namespaces, configuration,
         )
     )
 

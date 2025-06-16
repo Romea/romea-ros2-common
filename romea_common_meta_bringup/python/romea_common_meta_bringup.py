@@ -329,18 +329,16 @@ class LaunchFileGenerator:
     def __init__(self, entity_type):
         self.__entity_namespace_name = f"{entity_type}_namespace"
 
-    def generate(
-        self, launch_file, launch_arguments, device_configuration, robot_name, entity_name
-    ):
+    def generate(self, launch_file, launch_arguments, namespaces, configuration):
 
         launch = []
         for argument in launch_arguments:
             launch.append(self.__generate_argument(argument))
 
         actions = []
-        actions.append(self.__generate_push_ros_namespace(robot_name))
-        actions.append(self.__generate_push_ros_namespace(entity_name))
-        for name, value in self.__flatten(device_configuration).items():
+        for namespace in namespaces:
+            actions.append(self.__generate_push_ros_namespace(namespace))
+        for name, value in self.__flatten(configuration).items():
             actions.append(self.__generate_let(name, value))
         for action in launch_file:
             actions.append(action)
