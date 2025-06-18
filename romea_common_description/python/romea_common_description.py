@@ -13,21 +13,43 @@
 # limitations under the License.
 
 import os
+from ament_index_python.packages import get_package_share_directory
 
 
-def get_configuration_file(directory_path, filename):
-    files = [
+def get_configuration_file_path(pkg, device_description, what, config_directory):
+    model = device_description["model"]
+    version = device_description["version"]
+    manufacturer = device_description["manufacturer"]
+    filename = f"{manufacturer}_{model}_{version}_{what}.yaml"
+    directory_path = f"{get_package_share_directory(pkg)}/{config_directory}"
+
+    confuration_files = [
         f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))
     ]
 
-    for file in files:
-        if len(file) != len(filename):
+    for configuration_file in confuration_files:
+        if len(configuration_file) != len(filename):
             continue
 
-        if all(f == "x" or f == fn for f, fn in zip(file, filename)):
-            return f"{directory_path}/{file}"
+        if all(f == "x" or f == fn for f, fn in zip(configuration_file, filename)):
+            return f"{directory_path}/{configuration_file}"
 
-    return None
+    raise RuntimeError(
+        f"No {manufacturer} {model} {version} device is supported by {pkg} package."
+        ' Please check your configuration or contribute to support this kind of device.'
+    )
+
+
+def get_specifications_file_path(pkg, device_description, config_directory="config"):
+    return get_configuration_file_path(
+        pkg, device_description, "specifications", config_directory
+    )
+
+
+def get_geometry_file_path(pkg, device_description, config_directory="config"):
+    return get_configuration_file_path(
+        pkg, device_description, "geometry", config_directory
+    )
 
 
 def generate_configuration_file(configuration, units, extended, depth=0):
