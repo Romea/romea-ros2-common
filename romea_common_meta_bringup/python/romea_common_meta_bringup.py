@@ -226,6 +226,10 @@ class SensorMetaDescription:
         if "configuration" in self.__description:
             if "version" not in self.__description["configuration"]:
                 self.__description["configuration"]["version"] = ""
+            if not isinstance(self.__description["configuration"]["version"], str):
+                self.__description["configuration"]["version"] = (
+                    str(self.__description["configuration"]["version"])
+                )
 
     def get_name(self):
         return self._get("name")
