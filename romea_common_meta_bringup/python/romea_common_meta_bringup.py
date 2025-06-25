@@ -264,6 +264,9 @@ class SensorMetaDescription:
     def get_location(self):
         return self._get("location")
 
+    def get_simulation(self):
+        return self._get_or("simulation", None, {})
+
     def get_urdf_prefix(self):
         return robot_urdf_prefix(self.get_robot_name())
 

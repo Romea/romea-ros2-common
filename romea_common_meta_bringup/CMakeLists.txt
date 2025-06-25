@@ -7,8 +7,17 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+
 
 ament_python_install_module(python/romea_common_meta_bringup.py)
+
+add_executable(urdf_broadcaster_node src/urdf_broadcaster.cpp)
+
+ament_target_dependencies(urdf_broadcaster_node rclcpp std_msgs)
+
+install(TARGETS urdf_broadcaster_node DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
