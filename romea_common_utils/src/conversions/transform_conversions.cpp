@@ -17,6 +17,7 @@
 #include <string>
 
 // ros
+#include "romea_common_utils/ros_versions.hpp"
 #include "tf2_eigen/tf2_eigen.hpp"
 #include "tf2_ros/transform_listener.h"
 
