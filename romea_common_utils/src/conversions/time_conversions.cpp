@@ -12,27 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "romea_common_utils/conversions/time_conversions.hpp"
+#include <romea_core_common/time/Time.hpp>
 
-namespace romea
-{
-namespace ros2
+namespace romea::ros2
 {
 
-//-----------------------------------------------------------------------------
-rclcpp::Time to_ros_time(
-  const core::Duration & duration,
-  rcl_clock_type_t clock_type)
+rclcpp::Time to_ros_time(const core::Duration & duration, rcl_clock_type_t clock_type)
 {
   return rclcpp::Time(core::durationToNanoSecond(duration), clock_type);
 }
 
-//-----------------------------------------------------------------------------
 core::Duration to_romea_duration(const rclcpp::Time & time)
 {
   return core::Duration(time.nanoseconds());
 }
 
-}  // namespace ros2
-}  // namespace romea
+core::TimePoint to_romea_time(const rclcpp::Time & time)
+{
+  return core::TimePoint(to_romea_duration(time));
+}
+
+}  // namespace romea::ros2

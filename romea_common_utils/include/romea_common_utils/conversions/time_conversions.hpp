@@ -12,27 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__TIME_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__TIME_CONVERSIONS_HPP_
 
 // ros
-#include "message_filters/message_traits.h"
-#include "rclcpp/time.hpp"
+#include <message_filters/message_traits.h>
+#include <rclcpp/time.hpp>
 
 // romea core
-#include "romea_core_common/time/Time.hpp"
+#include <romea_core_common/time/Time.hpp>
 
-namespace romea
-{
-namespace ros2
+namespace romea::ros2
 {
 
 rclcpp::Time to_ros_time(
-  const core::Duration & duration,
-  rcl_clock_type_t clock_type = RCL_SYSTEM_TIME);
+  const core::Duration & duration, rcl_clock_type_t clock_type = RCL_SYSTEM_TIME);
 
 core::Duration to_romea_duration(const rclcpp::Time & time);
+
+core::TimePoint to_romea_time(const rclcpp::Time & time);
 
 template<typename Msg>
 rclcpp::Time extract_time(const Msg & msg)
@@ -46,7 +44,6 @@ core::Duration extract_duration(const Msg & msg)
   return to_romea_duration(extract_time(msg));
 }
 
-}  // namespace ros2
-}  // namespace romea
+}  // namespace romea::ros2
 
 #endif  // ROMEA_COMMON_UTILS__CONVERSIONS__TIME_CONVERSIONS_HPP_
