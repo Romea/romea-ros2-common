@@ -14,19 +14,21 @@
 
 
 import os
-import pytest
+
 from ament_index_python import get_package_share_directory
 
-from romea_common_meta_bringup import (
-    robot_prefix,
-    robot_namespace,
-    device_prefix,
-    device_namespace,
-    robot_urdf_prefix,
-    device_urdf_prefix,
+import pytest
+
+from romea_common_meta_bringup.meta_description import MetaDescription
+from romea_common_meta_bringup.utils import (
     device_link_name,
+    device_namespace,
+    device_prefix,
+    device_urdf_prefix,
     get_file_path,
-    MetaDescription,
+    robot_namespace,
+    robot_prefix,
+    robot_urdf_prefix,
 )
 
 

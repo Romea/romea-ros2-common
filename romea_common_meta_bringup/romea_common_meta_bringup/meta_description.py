@@ -12,128 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ament_index_python import get_package_share_directory
-import importlib
-import yaml
 import os
 
+import yaml
 
-def robot_namespace(robot_name):
-    if robot_name == "":
-        return "/"
-    else:
-        return "/" + robot_name
-
-
-def robot_prefix(robot_name):
-
-    if robot_name == "":
-        return "/"
-    else:
-        return "/" + robot_name + "/"
-
-
-def device_namespace(robot_name, ros_namespace, device_name):
-    if ros_namespace is not None:
-        return robot_prefix(robot_name) + ros_namespace + "/" + device_name
-    else:
-        return robot_prefix(robot_name) + device_name
-
-
-def device_prefix(robot_name, ros_namespace, device_name):
-    if ros_namespace is not None:
-        return robot_prefix(robot_name) + ros_namespace + "/" + device_name + "/"
-    else:
-        return robot_prefix(robot_name) + device_name + "/"
-
-
-def robot_urdf_prefix(robot_name):
-
-    if robot_name == "":
-        return ""
-    else:
-        return robot_name + "_"
-
-
-def device_urdf_prefix(robot_name, device_name):
-    if device_name == "":
-        return robot_urdf_prefix(robot_name)
-    else:
-        return robot_urdf_prefix(robot_name) + device_name + "_"
-
-
-def device_link_name(robot_name, device_name):
-    return robot_urdf_prefix(robot_name) + device_name + "_link"
-
-
-def device_configuration_filename(robot_name, device_name, filename):
-    return f"{device_urdf_prefix(robot_name,device_name)}{filename}"
-
-
-def save_temporary_file(configuration, filename):
-    temporaty_filename = f"/tmp/{filename}"
-    with open(temporaty_filename, "w") as f:
-        yaml.dump(configuration, f)
-    return temporaty_filename
-
-
-def get_file_path(file_configuration):
-    pkg = file_configuration["pkg"]
-    file = file_configuration["file"]
-    return get_package_share_directory(pkg) + "/" + file
-
-
-def load_configuration(configuration_file_path):
-    with open(configuration_file_path, "r") as f:
-        return yaml.safe_load(f)
-
-
-def save_configuration(configuration, configuration_file_path):
-    with open(configuration_file_path, "w") as f:
-        yaml.dump(configuration, f)
-
-
-def meta_description_type(meta_description_file_path):
-    return meta_description_file_path.split(".")[1]
-
-
-def load_meta_description(meta_description_file_path, entity_type=None):
-    if entity_type is None:
-        entity_type = meta_description_type(meta_description_file_path)
-    bringup = importlib.import_module("romea_" + entity_type + "meta_bringup")
-    return bringup.load_meta_description(meta_description_file_path)
-
-
-def load_meta_descriptions(meta_description_file_paths):
-    return [
-        load_meta_description(meta_description_file_path)
-        for meta_description_file_path in meta_description_file_paths
-    ]
-
-
-def find_meta_description(meta_descriptions, device_name):
-    meta_description = next(
-        (
-            meta_description
-            for meta_description in meta_descriptions
-            if meta_description.get_name() == device_name
-        ),
-        None,
-    )
-
-    if meta_description is None:
-
-        raise LookupError(
-            "Cannot find meta description for device called"
-            + device_name
-            + "into the provided meta descriptions list"
-        )
-
-    return meta_description
-
-
-def find_meta_descriptions(meta_descriptions, devices_names):
-    return [find_meta_description(meta_descriptions, device_name) for device_name in devices_names]
+from .utils import (
+    device_link_name,
+    device_namespace,
+    device_urdf_prefix,
+    robot_urdf_prefix
+)
 
 
 class MetaDescription:
@@ -330,51 +218,3 @@ class SensorMetaDescription:
             return ns + "." + param
         else:
             return param
-
-
-class LaunchFileGenerator:
-    def __init__(self, entity_type):
-        self.__entity_namespace_name = f"{entity_type}_namespace"
-
-    def generate(self, launch_file, launch_arguments, namespaces, configuration):
-
-        launch = []
-        for argument in launch_arguments:
-            launch.append(self.__generate_argument(argument))
-
-        actions = []
-        for namespace in namespaces:
-            actions.append(self.__generate_push_ros_namespace(namespace))
-        for name, value in self.__flatten(configuration).items():
-            actions.append(self.__generate_let(name, value))
-        for action in launch_file:
-            actions.append(action)
-
-        launch.append({"group": actions})
-
-        return yaml.dump(
-            {"launch": launch},
-            default_flow_style=False,
-            allow_unicode=True,
-            encoding=None,
-            sort_keys=False,
-        )
-
-    def __generate_argument(self, argument):
-        return {"arg": argument}
-
-    def __generate_push_ros_namespace(self, namespace):
-        return {"push-ros-namespace": {"namespace": namespace}}
-
-    def __generate_let(self, name, value):
-        return {"let": {"name": name, "value": value}}
-
-    def __flatten(self, device_configuration, parent_key=""):
-        items = {}
-        for k, v in device_configuration.items():
-            new_key = f"{parent_key}.{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.update(self.__flatten(v, new_key))
-            else:
-                items[new_key] = str(v)
-        return items

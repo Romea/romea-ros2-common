@@ -11,7 +11,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
 
-ament_python_install_module(python/romea_common_meta_bringup.py)
+# ament_python_install_module(python/romea_common_meta_bringup.py)
+ament_python_install_package(romea_common_meta_bringup)
 
 add_executable(urdf_broadcaster_node src/urdf_broadcaster.cpp)
 
