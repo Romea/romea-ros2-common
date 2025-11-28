@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from romea_common_meta_bringup.ros_launch import LaunchFileGenerator
 
 import yaml
-from romea_common_meta_bringup import LaunchFileGenerator
 
 
 def test_get_complete_launch_file():
