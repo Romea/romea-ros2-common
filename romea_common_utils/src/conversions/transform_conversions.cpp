@@ -17,12 +17,7 @@
 #include <string>
 
 // ros
-#include "romea_common_utils/ros_versions.hpp"
-#if ROS_DISTRO == ROS_GALACTIC
-#include "tf2_eigen/tf2_eigen.h"
-#else
 #include "tf2_eigen/tf2_eigen.hpp"
-#endif
 #include "tf2_ros/transform_listener.h"
 
 
