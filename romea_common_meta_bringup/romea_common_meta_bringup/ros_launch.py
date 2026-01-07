@@ -146,7 +146,8 @@ class LaunchFileGenerator:
 
         actions = []
         for namespace in namespaces:
-            actions.append(self.__generate_push_ros_namespace(namespace))
+            if namespace is not None:
+                actions.append(self.__generate_push_ros_namespace(namespace))
         for name, value in self.__flatten(configuration).items():
             actions.append(self.__generate_let(name, value))
         for action in launch_file:
