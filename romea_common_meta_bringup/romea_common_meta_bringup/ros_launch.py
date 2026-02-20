@@ -23,7 +23,7 @@ from .utils import complete_mode
 
 
 def declare_argument(description, default_value):
-    if not default_value:
+    if default_value is None:
         return DeclareLaunchArgument(**description)
     else:
         return DeclareLaunchArgument(**description, default_value=default_value)
@@ -114,6 +114,16 @@ def declare_robot_ros2_control_description(default_value=None):
     )
 
 
+def declare_meta_description_file_path(device_name, default_value=None):
+    return declare_argument(
+        {
+            "name": "meta_description_file_path",
+            "description": f"{device_name} meta description filename",
+        },
+        default_value
+    )
+
+
 def get_mode(context):
     return complete_mode(LaunchConfiguration("mode").perform(context))
 
@@ -132,6 +142,10 @@ def get_robot_urdf_description(context):
 
 def get_robot_ros2_control_description(context):
     return LaunchConfiguration("robot_ros2_control_description").perform(context)
+
+
+def get_meta_description_file_path(context):
+    return LaunchConfiguration("meta_description_file_path").perform(context)
 
 
 class LaunchFileGenerator:
