@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+  
+  <xacro:property name="ros_namespace" value="$(arg ros_namespace)" />
+
+  <xacro:property name="allowed_chars_in_ros_namespace"
+    value="${'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'}" />
+
+  <xacro:macro name="check_ros_namespace">
+
+    <xacro:assert_true
+      condition="${ros_namespace != ''}"
+      message="ros_namespace cannot be empty" />
+
+    <xacro:assert_true
+      condition="${ros_namespace == '/' or ros_namespace.startswith('/')}"
+      message="ros_namespace must start with '/'. Got: ${ros_namespace}" />
+
+    <xacro:assert_true
+      condition="${ros_namespace == '/' or not ros_namespace.endswith('/')}"
+      message="ros_namespace must not end with '/' unless it is root '/'. Got: ${ros_namespace}" />
+
+    <xacro:assert_true
+      condition="${'//' not in ros_namespace}"
+      message="ros_namespace must not contain '//'. Got: ${ros_namespace}" />
+
+    <xacro:assert_true
+      condition="${'__' not in ros_namespace}"
+      message="ros_namespace must not contain consecutive underscores. Got: ${ros_namespace}" />  
+
+    <xacro:assert_true
+      condition="${python.all(c in allowed_chars_in_ros_namespace + '/' for c in ros_namespace)}"
+      message="ros_namespace contains invalid characters. Allowed: [a-zA-Z0-9_/]. Got: ${ros_namespace}" />
+
+  </xacro:macro>
+
+  <xacro:check_ros_namespace/>
+
+</robot>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:property name="parent_link" value="$(arg parent_link)" />
+
+  <xacro:property name="allowed_chars_in_parent_link"
+    value="${'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-'}" />
+
+  <xacro:macro name="check_parent_link">
+
+    <xacro:assert_true
+      condition="${parent_link != ''}"
+      message="parent_link cannot be empty" />
+
+    <xacro:assert_true
+      condition="${' ' not in parent_link}"
+      message="parent_link must not contain spaces. Got: ${parent_link}" />
+
+    <xacro:assert_true
+      condition="${'/' not in parent_link}"
+      message="parent_link must not contain '/'. Got: ${parent_link}" />
+
+    <xacro:assert_true
+      condition="${python.all(c in allowed_chars_in_parent_link for c in parent_link)}"
+      message="parent_link contains invalid characters. Allowed: [a-zA-Z0-9_-]. Got: ${parent_link}" />
+
+  </xacro:macro>
+
+  <xacro:check_parent_link/>
+
+</robot>

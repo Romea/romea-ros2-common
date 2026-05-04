@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:property name="ros_distro" value="$(arg ros_distro)" />
+
+  <xacro:property name="ros_distro_versions"
+    value="${dict(
+      foxy=1 ,
+      galactic=2,
+      humble=3,
+      iron=4,
+      jazzy=4,
+      kilted=6,
+      lyrical=7,
+      rolling=999
+    )}" />
+
+  <xacro:property name="ros_distro_version"
+    value="${ros_distro_versions.get('$(arg ros_distro)', 0)}" />
+
+  <xacro:property name="ros_distro_lt_jazzy"
+    value="${ros_distro_version &lt; ros_distro_versions['jazzy']}" />
+
+  <xacro:property name="ros_distro_ge_jazzy"
+    value="${ros_distro_version &gt;= ros_distro_versions['jazzy']}" />
+
+
+  <xacro:macro name="check_ros_distro">
+    <xacro:assert_true
+      condition="${ros_distro in ['foxy', 'galactic', 'humble', 'iron', 'jazzy', 'kilted', 'lyrical', 'rolling']}"
+      message="Invalid ros_distro: ${ros_distro}. Expected one of: foxy, galactic, humble, iron, jazzy, kilted, lyrical, rolling" />
+  </xacro:macro>
+
+  <xacro:check_ros_distro/>
+
+</robot>

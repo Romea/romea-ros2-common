@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:check_bool value="'$(arg generate_ros2_control_tag)'" label="generate_ros2_control_tag" />
+
+  <xacro:property name="generate_ros2_control_tag" value="${'$(arg generate_ros2_control_tag)' == 'true'}" />
+
+</robot>

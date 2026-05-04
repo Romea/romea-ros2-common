@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:check_bool value="'$(arg standalone)'" label="standalone" />
+
+  <xacro:property name="standalone" value="${'$(arg standalone)' == 'true'}" />
+
+</robot>

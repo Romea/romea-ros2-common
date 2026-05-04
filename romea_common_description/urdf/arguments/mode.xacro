@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:property name="mode" value="$(arg mode)" />
+
+  <xacro:property name="simulation"
+    value="${mode.split('_', 1)[0] == 'simulation'}" />
+
+  <xacro:property name="live"
+    value="${mode == 'live'}" />
+
+  <xacro:property name="replay"
+    value="${mode == 'replay'}" />
+
+  <!-- <xacro:property name="simulator"
+    value="${mode.split('_', 1)[1] if '_' in mode else ''}" /> -->
+
+  <xacro:property name="gazebo"
+    value="${mode == 'simulation_gazebo'}" />
+
+  <xacro:property name="gazebo_classic"
+    value="${mode == 'simulation_gazebo_classic'}" />
+
+  <xacro:property name="isaac"
+    value="${mode == 'simulation_isaac'}" />
+
+  <xacro:property name="_4dv"
+    value="${mode == 'simulation_4dv'}" />
+
+  <xacro:macro name="check_mode">
+    <xacro:assert_true
+      condition="${mode in ['live', 'replay', 'simulation_gazebo', 'simulation_gazebo_classic', 'simulation_isaac', 'simulation_4dv']}"
+      message="Invalid mode: ${mode}. Expected one of: live, replay, simulation_gazebo, simulation_gazebo_classic, simulation_isaac, simulation_4dv" />
+  </xacro:macro>
+
+  <xacro:check_mode/>
+
+ <!-- <xacro:macro name="check_simulator">
+    <xacro:assert_true
+      condition="${simulator in ['', 'gazebo', 'gazebo_classic', 'isaac', '4dv']}"
+      message="Invalid simulator: ${simulator}" />
+
+    <xacro:assert_true
+      condition="${simulator != 'gazebo_classic' or ros_distro_gt_jazzy == 'true'}"
+      message="gazebo_classic is not supported on ROS 2 Jazzy or newer. Use gazebo instead." />
+  </xacro:macro> -->
+
+
+</robot>

@@ -13,8 +13,12 @@
 # limitations under the License.
 
 import os
+import re
+import xml.dom
 
 from ament_index_python.packages import get_package_share_directory
+
+import xacro
 
 
 def get_configuration_file_path(pkg, device_description, what, config_directory):
@@ -54,6 +58,22 @@ def get_geometry_file_path(pkg, device_description, config_directory="config"):
 
 
 def generate_configuration_file(configuration, units, extended, depth=0):
+    def get_unit(key, default=None):
+        if key in units:
+            return units[key]
+
+        matches = []
+        for pattern, value in units.items():
+            if "*" in pattern:
+                regex = "^" + re.escape(pattern).replace(r"\*", ".*") + "$"
+                if re.match(regex, key):
+                    matches.append((pattern, value))
+
+        if matches:
+            return max(matches, key=lambda x: len(x[0].replace("*", "")))[1]
+
+        return default
+
     yaml_lines = []
     indent = "    " * depth
     for key, value in configuration.items():
@@ -63,12 +83,17 @@ def generate_configuration_file(configuration, units, extended, depth=0):
                 generate_configuration_file(value, units, extended, depth + 1).splitlines()
             )
         else:
+            unit = get_unit(key)
             if extended:
                 yaml_lines.append(f"{indent}{key}:")
                 yaml_lines.append(f"{indent}    value: {value}")
-                yaml_lines.append(f"{indent}    unit: {units.get(key, 'null')}")
+                if unit is not None:
+                    yaml_lines.append(f"{indent}    unit: {unit}")
             else:
-                yaml_lines.append(f"{indent}{key}: {value}  # unit {units.get(key, 'none')}")
+                if unit is None:
+                    yaml_lines.append(f"{indent}{key}: {value}")
+                else:
+                    yaml_lines.append(f"{indent}{key}: {value}  # unit {unit}")
 
     return "\n".join(yaml_lines)
 
@@ -85,8 +110,10 @@ class DeviceConfiguration:
         user_value = self.user_configuration.get(parameter_name, None)
         specification = self.get_specification(parameter_name)
 
-        if not isinstance(specification, dict):
-            return self.evaluate_parameter(parameter_name, specification, user_value)
+        if self._is_scalar_parameter(specification):
+            return self.evaluate_scalar_parameter(parameter_name, specification, user_value)
+        elif self._is_flat_dict_parameter(specification):
+            return self.evaluate_flat_dict_parameter(parameter_name, specification, user_value)
         elif "list" in specification:
             return self.evaluate_parameter_from_list(parameter_name, specification, user_value)
         elif "range" in specification:
@@ -207,18 +234,121 @@ class DeviceConfiguration:
                     + str(parameter)
                 )
 
-    def evaluate_parameter(self, parameter_name, specification, user_value):
+    def evaluate_scalar_parameter(self, parameter_name, specification, user_value):
 
-        if user_value is None or specification == user_value:
-            return specification
+        if isinstance(specification, dict):
+            value = specification.get("value", None)
+            default_value = specification.get("default", None)
+            has_value = "value" in specification
+            has_default = "default" in specification
         else:
-            raise ValueError(
+            value = specification
+            default_value = None
+            has_value = True
+            has_default = False
+
+        assert has_value != has_default
+
+        if user_value is not None:
+            if has_default:
+                if type(user_value) is type(default_value):
+                    return user_value
+                else:
+                    raise TypeError(
+                        parameter_name
+                        + " value ("
+                        + str(user_value)
+                        + self.units.get(parameter_name, "")
+                        + ") provided by user is not available for "
+                        + self.device_name
+                        + ", it must be of type "
+                        + type(default_value).__name__
+                    )
+
+            if user_value == value:
+                return user_value
+            else:
+                raise ValueError(
+                    parameter_name
+                    + " value ("
+                    + str(user_value)
+                    + self.units.get(parameter_name, "")
+                    + ") provided by user is not available for "
+                    + self.device_name
+                    + ", it must be equal to "
+                    + str(value)
+                )
+
+        return default_value if has_default else value
+
+    def evaluate_flat_dict_parameter(self, parameter_name, specification, user_value):
+
+        exact_values = "values" in specification
+        flat_dict = specification["values"] if exact_values else specification["defaults"]
+
+        if user_value is None:
+            return flat_dict
+
+        if not isinstance(user_value, dict) or set(user_value.keys()) != set(flat_dict.keys()):
+            raise TypeError(
                 parameter_name
-                + " value ("
-                + str(user_value)
-                + self.units.get(parameter_name, "")
-                + ") provided by user is not available for "
-                + self.device_name
-                + ", it must be equal to "
-                + str(specification)
+                + " must be a flat dictionary having the following keys "
+                + str(list(flat_dict.keys()))
             )
+
+        result = {}
+        for key, value in flat_dict.items():
+            child_specification = {"value": value} if exact_values else {"default": value}
+            result[key] = self.evaluate_scalar_parameter(
+                parameter_name + "." + str(key),
+                child_specification,
+                user_value[key],
+            )
+
+        return flat_dict if exact_values else result
+
+    def _is_scalar(self, value):
+        if isinstance(value, bool):
+            return True
+        return isinstance(value, (int, float, str))
+
+    def _is_flat_dict(self, value):
+        return isinstance(value, dict) and all(self._is_scalar(v) for v in value.values())
+
+    def _is_scalar_parameter(self, specification):
+        if self._is_scalar(specification):
+            return True
+
+        if isinstance(specification, dict):
+            keys = set(specification.keys())
+            if keys in ({"value"}, {"default"}):
+                value = next(iter(specification.values()))
+                return self._is_scalar(value)
+
+        return False
+
+    def _is_flat_dict_parameter(self, specification):
+        if self._is_flat_dict(specification):
+            return True
+
+        if isinstance(specification, dict):
+            keys = set(specification.keys())
+            if keys in ({"values"}, {"defaults"}):
+                value = next(iter(specification.values()))
+                return self._is_flat_dict(value)
+
+        return False
+
+
+def generate_urdf_description_str(xacro_file, mappings):
+
+    def remove_comments(node):
+        for child in list(node.childNodes):
+            if child.nodeType == xml.dom.Node.COMMENT_NODE:
+                node.removeChild(child)
+            else:
+                remove_comments(child)
+
+    urdf_xml = xacro.process_file(xacro_file, mappings=mappings)
+    remove_comments(urdf_xml)
+    return urdf_xml.toprettyxml()

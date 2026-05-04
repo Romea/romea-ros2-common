@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:property name="tf_prefix" value="$(arg tf_prefix)" />
+
+  <xacro:property name="allowed_chars_in_tf_prefix"
+    value="${'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'}" />
+
+  <xacro:macro name="check_tf_prefix">
+
+    <xacro:assert_true
+      condition="${tf_prefix == '' or tf_prefix[0].isalpha()}"
+      message="tf_prefix must start with a letter. Got: ${tf_prefix}" />
+
+    <xacro:assert_true
+      condition="${python.all(c in allowed_chars_in_tf_prefix for c in tf_prefix)}"
+      message="tf_prefix contains invalid characters. Allowed: [a-zA-Z0-9_]. Got: ${tf_prefix}" />
+
+    <xacro:assert_true
+      condition="${tf_prefix == '' or tf_prefix.endswith('_')}"
+      message="tf_prefix must end with '_' when not empty. Got: ${tf_prefix}" />
+
+    <xacro:assert_true
+      condition="${'__' not in tf_prefix}"
+      message="tf_prefix must not contain consecutive underscores. Got: ${tf_prefix}" />
+
+  </xacro:macro>
+
+  <xacro:check_tf_prefix/>
+
+</robot>

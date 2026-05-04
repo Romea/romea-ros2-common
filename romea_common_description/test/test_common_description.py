@@ -65,6 +65,126 @@ def test_get_default_parameter_from_list_ok():
     assert configuration.get("resolution") == "1280x720"
 
 
+def test_get_flat_dict_parameter_without_user_configuration_ok():
+    arm_specification = {
+        "joint_positions": {
+            "values": {
+                "shoulder_pan_joint": 0.0,
+                "shoulder_lift_joint": -80.0,
+                "elbow_joint": 155.0,
+                "wrist_1_joint": 90.0,
+                "wrist_2_joint": -90.0,
+                "wrist_3_joint": 0.0,
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("arm", arm_specification, {})
+    joint_positions = configuration.get("joint_positions")
+    assert joint_positions["shoulder_pan_joint"] == 0.0
+    assert joint_positions["shoulder_lift_joint"] == -80.0
+    assert joint_positions["elbow_joint"] == 155.0
+    assert joint_positions["wrist_1_joint"] == 90.0
+    assert joint_positions["wrist_2_joint"] == -90.0
+    assert joint_positions["wrist_3_joint"] == 0.0
+
+
+def test_get_flat_dict_parameter_without_user_configuration_with_default_ok():
+    arm_specification = {
+        "joint_positions": {
+            "values": {
+                "shoulder_pan_joint": 0.0,
+                "shoulder_lift_joint": -80.0,
+                "elbow_joint": 155.0,
+                "wrist_1_joint": 90.0,
+                "wrist_2_joint": -90.0,
+                "wrist_3_joint": 0.0,
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("arm", arm_specification, {})
+    joint_positions = configuration.get("joint_positions")
+    assert joint_positions["shoulder_pan_joint"] == 0.0
+    assert joint_positions["shoulder_lift_joint"] == -80.0
+    assert joint_positions["elbow_joint"] == 155.0
+    assert joint_positions["wrist_1_joint"] == 90.0
+    assert joint_positions["wrist_2_joint"] == -90.0
+    assert joint_positions["wrist_3_joint"] == 0.0
+
+
+def test_get_flat_dict_parameter_with_incomplete_user_configuration_failed():
+
+    arm = {
+        "joint_positions": {
+            "shoulder_pan_joint": 0.0,
+            "shoulder_lift_joint": -80.0,
+        }
+    }
+
+    arm_specification = {
+        "joint_positions": {
+            "values": {
+                "shoulder_pan_joint": 0.0,
+                "shoulder_lift_joint": -80.0,
+                "elbow_joint": 155.0,
+                "wrist_1_joint": 90.0,
+                "wrist_2_joint": -90.0,
+                "wrist_3_joint": 0.0,
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("arm", arm_specification, arm)
+
+    msg = (
+        "joint_positions must be a flat dictionary having the following keys "
+        "['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', "
+        "'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']"
+    )
+
+    with pytest.raises(TypeError) as excinfo:
+        configuration.get("joint_positions")
+
+    assert excinfo.value.args[0] == msg
+
+
+def test_get_flat_dict_parameter_with_available_user_configuration_ok():
+
+    arm = {
+        "joint_positions": {
+            "shoulder_pan_joint": 0.0,
+            "shoulder_lift_joint": 0.0,
+            "elbow_joint": 0.0,
+            "wrist_1_joint": 0.0,
+            "wrist_2_joint": 0.0,
+            "wrist_3_joint": 0.0,
+        }
+    }
+
+    arm_specification = {
+        "joint_positions": {
+            "defaults": {
+                "shoulder_pan_joint": 0.0,
+                "shoulder_lift_joint": -80.0,
+                "elbow_joint": 155.0,
+                "wrist_1_joint": 90.0,
+                "wrist_2_joint": -90.0,
+                "wrist_3_joint": 0.0,
+            }
+        }
+    }
+
+    configuration = DeviceConfiguration("arm", arm_specification, arm)
+    joint_positions = configuration.get("joint_positions")
+    assert joint_positions["shoulder_pan_joint"] == 0.0
+    assert joint_positions["shoulder_lift_joint"] == 0.0
+    assert joint_positions["elbow_joint"] == 0.0
+    assert joint_positions["wrist_1_joint"] == 0.0
+    assert joint_positions["wrist_2_joint"] == 0.0
+    assert joint_positions["wrist_3_joint"] == 0.0
+
+
 def test_get_default_parameter_from_list_failed():
     user_configuration = {}
     camera_specification = {

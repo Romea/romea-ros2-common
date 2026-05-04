@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="assert_true" params="condition message">
+    <xacro:if value="${not condition}">
+      ${xacro.fatal(message)}
+    </xacro:if>
+  </xacro:macro>
+
+  <xacro:macro name="check_bool" params="value label">
+
+    <xacro:assert_true
+      condition="${value in ['true', 'false']}"
+      message="${label} must be 'true' or 'false' (lowercase). Got: ${value}" />
+
+  </xacro:macro>
+
+  <xacro:macro name="check_vector3" params="value label">
+    <xacro:property name="vector3_tokens" value="${xacro.tokenize(value, ' ')}" />
+
+    <xacro:assert_true
+      condition="${python.len(vector3_tokens) == 3}"
+      message="${label} must contain exactly 3 values. Got: ${value}" />
+
+    <xacro:assert_true
+      condition="${python.all([float(v) or True for v in vector3_tokens])}"
+      message="${label} must contain 3 numeric values. Got: ${value}" />
+  
+  </xacro:macro>
+
+
+
+</robot>

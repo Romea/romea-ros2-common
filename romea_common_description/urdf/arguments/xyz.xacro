@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find romea_common_description)/urdf/check.xacro"/>
+
+  <xacro:property name="xyz" value="$(arg xyz)" />
+
+  <xacro:check_vector3 value="${xyz}" label="xyz"/>
+
+</robot>
