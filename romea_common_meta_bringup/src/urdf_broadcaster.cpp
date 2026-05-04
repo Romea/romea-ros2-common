@@ -32,7 +32,7 @@ public:
       throw std::runtime_error("robot_description parameter must not be empty");
     }
 
-    auto timeout = this->declare_parameter("timeout", 10);
+    auto timeout = this->declare_parameter("timeout", 100);
 
     description_pub_ = this->create_publisher<std_msgs::msg::String>(
       "robot_description", rclcpp::QoS(1).transient_local().reliable());

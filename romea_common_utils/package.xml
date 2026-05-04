@@ -22,7 +22,8 @@
   <depend>nav_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_eigen</depend>
-  <depend>rviz_visual_tools</depend>
+  <depend>hardware_interface</depend>
+  <!-- <depend>rviz_visual_tools</depend> -->
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

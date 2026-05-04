@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import xml.etree.ElementTree as ET
 
 from ament_index_python import get_package_share_directory, get_packages_with_prefixes
+
+
+def get_ros_distro():
+    return os.environ.get("ROS_DISTRO", "")
 
 
 def robot_namespace(robot_name):

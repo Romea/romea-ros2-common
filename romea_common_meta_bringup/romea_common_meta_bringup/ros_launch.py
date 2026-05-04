@@ -33,20 +33,16 @@ def declare_robot_namespace(default_value=None):
     return declare_argument(
         {
             "name": "robot_namespace",
-            "description": "ROS namespace used for the robot without the '/' prefix",
+            "description": "ROS namespace for the robot (without leading '/')",
         },
-        default_value
+        default_value,
     )
 
 
 def declare_robot_model(choices, default_value=None):
     return declare_argument(
-        {
-            "name": "robot_model",
-            "description": "Model of the robot",
-            "choices": choices
-        },
-        default_value
+        {"name": "robot_model", "description": "Model of the robot", "choices": choices},
+        default_value,
     )
 
 
@@ -65,7 +61,7 @@ def declare_mode(default_value=None):
                 "replay",
             ],
         },
-        default_value
+        default_value,
     )
 
 
@@ -100,7 +96,7 @@ def declare_robot_urdf_description(default_value=None):
             "name": "robot_urdf_description",
             "description": "Content of URDF xml description in string format",
         },
-        default_value
+        default_value,
     )
 
 
@@ -110,7 +106,7 @@ def declare_robot_ros2_control_description(default_value=None):
             "name": "robot_ros2_control_description",
             "description": "Content of ROS2 control xml description in string format",
         },
-        default_value
+        default_value,
     )
 
 
@@ -118,9 +114,9 @@ def declare_meta_description_file_path(device_name, default_value=None):
     return declare_argument(
         {
             "name": "meta_description_file_path",
-            "description": f"{device_name} meta description filename",
+            "description": f"Path to {device_name} meta description YAML file",
         },
-        default_value
+        default_value,
     )
 
 
@@ -175,6 +171,7 @@ class LaunchFileGenerator:
             allow_unicode=True,
             encoding=None,
             sort_keys=False,
+            width=1000,
         )
 
     def __generate_argument(self, argument):
