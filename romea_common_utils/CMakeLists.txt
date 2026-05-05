@@ -94,6 +94,8 @@ ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 #ament_export_targets(export_${PROJECT_NAME})
 
+ament_python_install_module(python/romea_common_utils.py)
+
 install(
   DIRECTORY include/
   DESTINATION include
