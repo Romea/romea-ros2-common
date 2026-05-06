@@ -33,14 +33,13 @@ def render_template_file(file_path, context):
 
 
 def save_temporary_file(file_name=None, content=""):
-    
     if file_name:
         file_name = os.path.basename(file_name)
         file_path = os.path.join("/tmp", file_name)
-        
+
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         return file_path
 
     # Si aucun nom fourni → fichier temporaire auto
