@@ -283,9 +283,9 @@ def robot_urdf_description_generation_parameters_from_cli(device_type: str) -> S
     )
 
 
-def sensor_urdf_description_generation_parameters_from_cli(sensor_type: str) -> ScriptParameters:
+def device_urdf_description_generation_parameters_from_cli(device_type: str) -> ScriptParameters:
     return ScriptParameters.from_cli(
-        ScriptParameterProfiles.for_sensor_urdf_description_generation(sensor_type),
-        prog=f"generate-{sensor_type}-urdf-description",
-        description=f"Generate {sensor_type} URDF description.",
+        ScriptParameterProfiles.for_device_urdf_description_generation(device_type),
+        prog=f"generate-{device_type}-urdf-description",
+        description=f"Generate {device_type} URDF description.",
     )

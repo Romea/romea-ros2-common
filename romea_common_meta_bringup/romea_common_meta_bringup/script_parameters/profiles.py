@@ -53,14 +53,13 @@ class ScriptParameterProfiles:
         ]
 
     @staticmethod
-    def for_sensor_urdf_description_generation(
+    def for_device_urdf_description_generation(
         sensor_type: str,
     ) -> list[ScriptParameterDescription]:
         return [
             mode_parameter(),
             robot_namespace_parameter(),
             meta_description_file_path_parameter(sensor_type),
-            generate_gazebo_tag_parameter(),
             standalone_parameter(),
             ros_distro_parameter(),
         ]

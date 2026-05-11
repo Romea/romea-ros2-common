@@ -32,11 +32,11 @@ from .parser import (
     CompactHelpFormatter,
     configuration_file_generation_parameters_from_cli,
     controllers_configuration_file_generation_parameters_from_cli,
+    device_urdf_description_generation_parameters_from_cli,
     launch_file_generation_parameters_from_cli,
     robot_urdf_description_generation_parameters_from_cli,
     ScriptParameters,
     ScriptParametersCompleter,
-    sensor_urdf_description_generation_parameters_from_cli,
 )
 
 
