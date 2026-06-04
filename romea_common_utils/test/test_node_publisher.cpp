@@ -20,6 +20,9 @@
 #include "gtest/gtest.h"
 
 // romea
+// clang-format off
+#include "test_node_publisher_utils.hpp"
+// clang-format on
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
 #include "romea_common_utils/conversions/transform_conversions.hpp"
@@ -28,7 +31,6 @@
 #include "romea_common_utils/publishers/odom_publisher.hpp"
 #include "romea_common_utils/publishers/stamped_data_publisher.hpp"
 #include "romea_common_utils/publishers/transform_publisher.hpp"
-#include "test_node_publisher_utils.hpp"
 
 class TestNodePublisher : public ::testing::Test
 {

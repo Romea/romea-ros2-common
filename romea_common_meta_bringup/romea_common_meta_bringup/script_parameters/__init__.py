@@ -62,6 +62,7 @@ __all__ = [
     "ScriptParameters",
     "configuration_file_generation_parameters_from_cli",
     "controllers_configuration_file_generation_parameters_from_cli",
+    "device_urdf_description_generation_parameters_from_cli",
     "launch_file_generation_parameters_from_cli",
     "robot_urdf_description_generation_parameters_from_cli",
     "sensor_urdf_description_generation_parameters_from_cli",
