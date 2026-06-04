@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <string>
 
@@ -26,8 +25,7 @@ namespace ros2
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const core::Twist3D & romea_twist3d,
-  geometry_msgs::msg::TwistWithCovariance & ros_twist_msg)
+  const core::Twist3D & romea_twist3d, geometry_msgs::msg::TwistWithCovariance & ros_twist_msg)
 {
   const auto & linearSpeeds = romea_twist3d.linearSpeeds;
   const auto & angularSpeeds = romea_twist3d.angularSpeeds;
@@ -60,8 +58,7 @@ void to_ros_msg(
 
 //-----------------------------------------------------------------------------
 void to_romea(
-  const geometry_msgs::msg::TwistWithCovariance & ros_twist_msg,
-  core::Twist3D & romea_twist3d)
+  const geometry_msgs::msg::TwistWithCovariance & ros_twist_msg, core::Twist3D & romea_twist3d)
 {
   romea_twist3d.linearSpeeds.x() = ros_twist_msg.twist.linear.x;
   romea_twist3d.linearSpeeds.y() = ros_twist_msg.twist.linear.y;

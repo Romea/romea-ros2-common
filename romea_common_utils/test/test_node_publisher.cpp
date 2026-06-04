@@ -20,33 +20,24 @@
 #include "gtest/gtest.h"
 
 // romea
-#include "test_node_publisher_utils.hpp"
-#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/publishers/data_publisher.hpp"
-#include "romea_common_utils/publishers/stamped_data_publisher.hpp"
-#include "romea_common_utils/publishers/odom_publisher.hpp"
-#include "romea_common_utils/publishers/transform_publisher.hpp"
 #include "romea_common_utils/publishers/diagnostic_publisher.hpp"
+#include "romea_common_utils/publishers/odom_publisher.hpp"
+#include "romea_common_utils/publishers/stamped_data_publisher.hpp"
+#include "romea_common_utils/publishers/transform_publisher.hpp"
+#include "test_node_publisher_utils.hpp"
 
 class TestNodePublisher : public ::testing::Test
 {
 protected:
-  static void SetUpTestCase()
-  {
-    rclcpp::init(0, nullptr);
-  }
+  static void SetUpTestCase() { rclcpp::init(0, nullptr); }
 
-  static void TearDownTestCase()
-  {
-    rclcpp::shutdown();
-  }
+  static void TearDownTestCase() { rclcpp::shutdown(); }
 
-  void SetUp() override
-  {
-    node = std::make_shared<rclcpp::Node>("test_ros_publishers");
-  }
+  void SetUp() override { node = std::make_shared<rclcpp::Node>("test_ros_publishers"); }
 
   void SleedpAndSpinSome()
   {
@@ -57,11 +48,10 @@ protected:
   std::shared_ptr<rclcpp::Node> node;
 };
 
-
 TEST_F(TestNodePublisher, testDataPublisher)
 {
-  auto pub = romea::ros2::make_data_publisher<std::string, std_msgs::msg::String>(
-    node, "foo", 1, true);
+  auto pub =
+    romea::ros2::make_data_publisher<std::string, std_msgs::msg::String>(node, "foo", 1, true);
   Subscription<std_msgs::msg::String> sub(node, "foo");
 
   pub->publish("bar");
@@ -73,8 +63,9 @@ TEST_F(TestNodePublisher, testDataPublisher)
 
 TEST_F(TestNodePublisher, testStampedDataPublisher)
 {
-  auto pub = romea::ros2::make_stamped_data_publisher<Eigen::Vector3d,
-      geometry_msgs::msg::PointStamped>(node, "foo", "bar", 1, true);
+  auto pub =
+    romea::ros2::make_stamped_data_publisher<Eigen::Vector3d, geometry_msgs::msg::PointStamped>(
+      node, "foo", "bar", 1, true);
 
   Subscription<geometry_msgs::msg::PointStamped> sub(node, "foo");
 
@@ -134,7 +125,6 @@ TEST_F(TestNodePublisher, testTransformPublisher)
   tf2_ros::Buffer tf_buffer(node->get_clock());
   tf2_ros::TransformListener tf_listener(tf_buffer);
   auto pub = romea::ros2::make_transform_publisher<Eigen::Affine3d>(node, "foo", "bar", true);
-
 
   rclcpp::Time t = node->get_clock()->now();
   pub->publish(t - rclcpp::Duration(std::chrono::milliseconds(100)), Eigen::Affine3d::Identity());

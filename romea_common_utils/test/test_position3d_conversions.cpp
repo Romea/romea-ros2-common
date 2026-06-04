@@ -22,23 +22,19 @@
 #include "romea_core_common/math/EulerAngles.hpp"
 
 // local
-#include "test_utils.hpp"
 #include "romea_common_utils/conversions/position3d_conversions.hpp"
+#include "test_utils.hpp"
 
 //-----------------------------------------------------------------------------
 class TestPosition3DConversion : public ::testing::Test
 {
 public:
   TestPosition3DConversion()
-  : stamp(1000),
-    frame_id("foo"),
-    child_frame_id("bar"),
-    romea_position3d(),
-    ros_position3d_msg()
+  : stamp(1000), frame_id("foo"), child_frame_id("bar"), romea_position3d(), ros_position3d_msg()
   {
   }
 
-  void SetUp()override
+  void SetUp() override
   {
     romea_position3d.position.x() = 1;
     romea_position3d.position.y() = 2;
@@ -75,7 +71,6 @@ TEST_F(TestPosition3DConversion, from_ros_msg_to_romea)
   EXPECT_DOUBLE_EQ(romea_position3d_bis.position.z(), romea_position3d.position.z());
   isSame(romea_position3d_bis.covariance, romea_position3d.covariance);
 }
-
 
 //-----------------------------------------------------------------------------
 int main(int argc, char ** argv)

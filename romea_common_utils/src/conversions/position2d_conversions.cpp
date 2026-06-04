@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <string>
 
@@ -51,9 +50,7 @@ void to_ros_msg(
 }
 
 //-----------------------------------------------------------------------------
-void to_romea(
-  const romea_common_msgs::msg::Position2D & msg,
-  core::Position2D & position2d)
+void to_romea(const romea_common_msgs::msg::Position2D & msg, core::Position2D & position2d)
 {
   position2d.position.x() = msg.x;
   position2d.position.y() = msg.y;

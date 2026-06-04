@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__ACTIONS__ACTION_CLIENT_BASE_HPP_
 #define ROMEA_COMMON_UTILS__ACTIONS__ACTION_CLIENT_BASE_HPP_
 
 // std
-#include <memory>
-#include <string>
 #include <chrono>
+#include <memory>
 #include <sstream>
+#include <string>
 
 // ros
 #include "rclcpp/rclcpp.hpp"
@@ -49,12 +48,9 @@ public:
     const std::string & action_name,
     const std::chrono::duration<RepT, RatioT> & timeout,
     std::shared_ptr<rclcpp::CallbackGroup> callback_group)
-  : name_(action_name), node_(node),
-    client_(nullptr),
-    goal_handle_(nullptr)
+  : name_(action_name), node_(node), client_(nullptr), goal_handle_(nullptr)
   {
-    client_ = rclcpp_action::create_client<Action>(
-      node, action_name, callback_group);
+    client_ = rclcpp_action::create_client<Action>(node, action_name, callback_group);
 
     if (!client_->wait_for_action_server(timeout)) {
       std::stringstream msg;
@@ -101,36 +97,30 @@ protected:
       case rclcpp_action::ResultCode::SUCCEEDED:
         return wrapped_result.result;
         break;
-      case rclcpp_action::ResultCode::ABORTED:
-        {
-          std::stringstream msg;
-          msg << "Goal has been aborted by ";
-          msg << name_;
-          msg << " action server";
-          RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
-          return nullptr;
-        }
-        break;
-      case rclcpp_action::ResultCode::CANCELED:
-        {
-          std::stringstream msg;
-          msg << "Goal has been canceled by ";
-          msg << name_;
-          msg << " action server";
-          RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
-          return nullptr;
-        }
-        break;
-      default:
-        {
-          std::stringstream msg;
-          msg << "Result has been sent with an unknown status by ";
-          msg << name_;
-          msg << " action server ";
-          RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
-          return nullptr;
-        }
-        break;
+      case rclcpp_action::ResultCode::ABORTED: {
+        std::stringstream msg;
+        msg << "Goal has been aborted by ";
+        msg << name_;
+        msg << " action server";
+        RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
+        return nullptr;
+      } break;
+      case rclcpp_action::ResultCode::CANCELED: {
+        std::stringstream msg;
+        msg << "Goal has been canceled by ";
+        msg << name_;
+        msg << " action server";
+        RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
+        return nullptr;
+      } break;
+      default: {
+        std::stringstream msg;
+        msg << "Result has been sent with an unknown status by ";
+        msg << name_;
+        msg << " action server ";
+        RCLCPP_ERROR_STREAM(this->node_->get_logger(), msg.str());
+        return nullptr;
+      } break;
     }
   }
 

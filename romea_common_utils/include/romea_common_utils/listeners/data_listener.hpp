@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_
 #define ROMEA_COMMON_UTILS__LISTENERS__DATA_LISTENER_HPP_
 
@@ -27,7 +26,6 @@
 // romea ros
 #include "romea_core_common/concurrency/SharedVariable.hpp"
 
-
 namespace romea
 {
 namespace ros2
@@ -41,37 +39,31 @@ public:
 
   virtual ~DataListenerBase() = default;
 
-  DataType get_data()const
+  DataType get_data() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
     return data_;
   }
 
-  virtual std::string get_topic_name()const = 0;
+  virtual std::string get_topic_name() const = 0;
 
 protected:
   mutable std::mutex mutex_;
   DataType data_;
 };
 
-
 template<typename DataType, typename MsgType, typename NodeType>
 class DataListener : public DataListenerBase<DataType>
 {
 public:
   DataListener(
-    std::shared_ptr<NodeType> node,
-    const std::string & topic_name,
-    const rclcpp::QoS & qos)
+    std::shared_ptr<NodeType> node, const std::string & topic_name, const rclcpp::QoS & qos)
   {
     auto callback = std::bind(&DataListener::callback_, this, std::placeholders::_1);
     data_sub_ = node->template create_subscription<MsgType>(topic_name, qos, callback);
   }
 
-  virtual std::string get_topic_name()const
-  {
-    return data_sub_->get_topic_name();
-  }
+  virtual std::string get_topic_name() const { return data_sub_->get_topic_name(); }
 
   virtual ~DataListener() = default;
 
@@ -87,11 +79,8 @@ private:
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
-std::shared_ptr<DataListener<DataType, MsgType, NodeType>>
-make_data_listener(
-  std::shared_ptr<NodeType> node,
-  const std::string & topic_name,
-  const rclcpp::QoS & qos)
+std::shared_ptr<DataListener<DataType, MsgType, NodeType>> make_data_listener(
+  std::shared_ptr<NodeType> node, const std::string & topic_name, const rclcpp::QoS & qos)
 {
   using Listener = DataListener<DataType, MsgType, NodeType>;
   return std::make_shared<Listener>(node, topic_name, qos);

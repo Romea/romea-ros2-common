@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <string>
 
@@ -27,9 +26,7 @@ namespace ros2
 {
 
 //-----------------------------------------------------------------------------
-void to_ros_msg(
-  const core::Pose2D & romea_pose2d,
-  romea_common_msgs::msg::Pose2D & ros_pose2d_msg)
+void to_ros_msg(const core::Pose2D & romea_pose2d, romea_common_msgs::msg::Pose2D & ros_pose2d_msg)
 {
   ros_pose2d_msg.position.x = romea_pose2d.position.x();
   ros_pose2d_msg.position.y = romea_pose2d.position.y();
@@ -54,8 +51,7 @@ void to_ros_msg(
 
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
-  const core::Pose2D & romea_pose_2d,
-  geometry_msgs::msg::Transform & ros_transform_msg)
+  const core::Pose2D & romea_pose_2d, geometry_msgs::msg::Transform & ros_transform_msg)
 {
   ros_transform_msg.translation.x = romea_pose_2d.position.x();
   ros_transform_msg.translation.y = romea_pose_2d.position.y();
@@ -67,7 +63,6 @@ void to_ros_transform_msg(
   ros_transform_msg.rotation.z = q.z();
   ros_transform_msg.rotation.w = q.w();
 }
-
 
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
@@ -83,11 +78,8 @@ void to_ros_transform_msg(
   to_ros_transform_msg(romea_pose_2d, ros_transform_msg.transform);
 }
 
-
 //-----------------------------------------------------------------------------
-void to_romea(
-  const romea_common_msgs::msg::Pose2D & msg,
-  core::Pose2D & romea_pose_2d)
+void to_romea(const romea_common_msgs::msg::Pose2D & msg, core::Pose2D & romea_pose_2d)
 {
   romea_pose_2d.position.x() = msg.position.x;
   romea_pose_2d.position.y() = msg.position.y;

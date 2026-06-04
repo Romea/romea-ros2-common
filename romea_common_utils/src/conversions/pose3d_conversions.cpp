@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <string>
 
@@ -28,11 +27,9 @@ namespace romea
 namespace ros2
 {
 
-
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
-  const core::Pose3D & romea_pose_3d,
-  geometry_msgs::msg::Transform & ros_transform_msg)
+  const core::Pose3D & romea_pose_3d, geometry_msgs::msg::Transform & ros_transform_msg)
 {
   ros_transform_msg.translation.x = romea_pose_3d.position.x();
   ros_transform_msg.translation.y = romea_pose_3d.position.y();
@@ -62,8 +59,7 @@ void to_ros_transform_msg(
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const core::Pose3D & romea_pose_3d,
-  geometry_msgs::msg::PoseWithCovariance & ros_pose_msg)
+  const core::Pose3D & romea_pose_3d, geometry_msgs::msg::PoseWithCovariance & ros_pose_msg)
 {
   const auto & position = romea_pose_3d.position;
   const auto & orientation = romea_pose_3d.orientation;
@@ -99,14 +95,14 @@ void to_ros_msg(
 
 //-----------------------------------------------------------------------------
 void to_romea(
-  const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg,
-  core::Pose3D & romea_pose_3d)
+  const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg, core::Pose3D & romea_pose_3d)
 {
   romea_pose_3d.position.x() = ros_pose_msg.pose.position.x;
   romea_pose_3d.position.y() = ros_pose_msg.pose.position.y;
   romea_pose_3d.position.z() = ros_pose_msg.pose.position.z;
 
-  Eigen::Quaterniond q(ros_pose_msg.pose.orientation.w,
+  Eigen::Quaterniond q(
+    ros_pose_msg.pose.orientation.w,
     ros_pose_msg.pose.orientation.x,
     ros_pose_msg.pose.orientation.y,
     ros_pose_msg.pose.orientation.z);

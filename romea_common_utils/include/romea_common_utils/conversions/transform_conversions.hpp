@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__TRANSFORM_CONVERSIONS_HPP_
 
@@ -34,12 +33,10 @@ namespace ros2
 {
 
 void to_romea(
-  const geometry_msgs::msg::Transform & tranform_msg,
-  Eigen::Affine3d & eigen_transform);
+  const geometry_msgs::msg::Transform & tranform_msg, Eigen::Affine3d & eigen_transform);
 
 void to_ros_transform_msg(
-  const Eigen::Affine3d & eigen_transform,
-  geometry_msgs::msg::Transform & tranform_msg);
+  const Eigen::Affine3d & eigen_transform, geometry_msgs::msg::Transform & tranform_msg);
 
 // Eigen::Affine3d lookupTransformOnce(
 //   std::shared_ptr<rclcpp::Node> node,
@@ -48,7 +45,6 @@ void to_ros_transform_msg(
 //   const std::string & source_frame,
 //   const rclcpp::Time & time,
 //   const rclcpp::Duration timeout);
-
 
 }  // namespace ros2
 }  // namespace romea

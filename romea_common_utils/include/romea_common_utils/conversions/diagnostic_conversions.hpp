@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__DIAGNOSTIC_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__DIAGNOSTIC_CONVERSIONS_HPP_
-
 
 // std
 #include <string>
@@ -25,7 +23,6 @@
 
 // romea core
 #include "romea_core_common/diagnostic/DiagnosticReport.hpp"
-
 
 namespace romea
 {

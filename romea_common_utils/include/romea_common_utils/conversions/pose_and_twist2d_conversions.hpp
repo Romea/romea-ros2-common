@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST2D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST2D_CONVERSIONS_HPP_
 

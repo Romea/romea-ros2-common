@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__JOINT_STATES_HPP_
 #define ROMEA_COMMON_UTILS__JOINT_STATES_HPP_
 
-
 // std
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
-#include <memory>
 
 // ros
 #include "sensor_msgs/msg/joint_state.hpp"
@@ -31,11 +29,9 @@ namespace romea
 namespace ros2
 {
 
-sensor_msgs::msg::JointState make_joint_state_msg(
-  const size_t & number_of_joints);
+sensor_msgs::msg::JointState make_joint_state_msg(const size_t & number_of_joints);
 
-sensor_msgs::msg::JointState make_joint_state_msg(
-  const std::vector<std::string> joint_names);
+sensor_msgs::msg::JointState make_joint_state_msg(const std::vector<std::string> joint_names);
 
 std::shared_ptr<sensor_msgs::msg::JointState> make_shared_joint_state_msg(
   const size_t & number_of_joints);
@@ -44,39 +40,25 @@ std::shared_ptr<sensor_msgs::msg::JointState> make_shared_joint_state_msg(
   const std::vector<std::string> joint_names);
 
 size_t get_joint_id(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::string & joint_name);
+  const sensor_msgs::msg::JointState & joint_states, const std::string & joint_name);
 
 std::optional<size_t> find_joint_id(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::string & joint_name);
+  const sensor_msgs::msg::JointState & joint_states, const std::string & joint_name);
 
-double get_position(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id);
+double get_position(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id);
 
-double get_velocity(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id);
+double get_velocity(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id);
 
-double get_effort(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id);
+double get_effort(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id);
 
 void set_position(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & position);
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & position);
 
 void set_velocity(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & velocity);
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & velocity);
 
 void set_effort(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & effort);
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & effort);
 
 }  // namespace ros2
 }  // namespace romea

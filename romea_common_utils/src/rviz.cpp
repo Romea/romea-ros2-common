@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // ros
 #include "tf2_eigen/tf2_eigen.h"
 
@@ -24,25 +23,21 @@ namespace
 
 //-----------------------------------------------------------------------------
 inline Eigen::Isometry3d computeRobotPose(
-  const romea::Pose2D & bodyPose2D,
-  const double & positionAlongZBodyAxis)
+  const romea::Pose2D & bodyPose2D, const double & positionAlongZBodyAxis)
 {
   return Eigen::Translation3d(
-    bodyPose2D.position.x(),
-    bodyPose2D.position.y(),
-    positionAlongZBodyAxis) *
+           bodyPose2D.position.x(), bodyPose2D.position.y(), positionAlongZBodyAxis) *
          Eigen::AngleAxisd(bodyPose2D.yaw, Eigen::Vector3d::UnitZ());
 }
 
 //-----------------------------------------------------------------------------
 inline Eigen::Isometry3d computeEllipsePose(
-  const romea::Ellipse & ellipse,
-  const double & positionAlongZBodyAxis)
+  const romea::Ellipse & ellipse, const double & positionAlongZBodyAxis)
 {
   return Eigen::Translation3d(
-    ellipse.getCenterPosition().x(),
-    ellipse.getCenterPosition().y(),
-    positionAlongZBodyAxis) *
+           ellipse.getCenterPosition().x(),
+           ellipse.getCenterPosition().y(),
+           positionAlongZBodyAxis) *
          Eigen::AngleAxisd(ellipse.getOrientation(), Eigen::Vector3d::UnitZ());
 }
 
@@ -52,7 +47,6 @@ namespace romea
 {
 namespace ros2
 {
-
 
 //-----------------------------------------------------------------------------
 void publish(
@@ -73,10 +67,7 @@ void publish(
   geometry_msgs::msg::Pose ellipse_pose_msg =
     tf2::toMsg(computeEllipsePose(ellipse, positionAlongZBodyAxis));
 
-  rvizVisualTool.publishSphere(
-    ellipse_pose_msg,
-    rvizVisualTool.getColor(color),
-    scale);
+  rvizVisualTool.publishSphere(ellipse_pose_msg, rvizVisualTool.getColor(color), scale);
 
   geometry_msgs::msg::Pose robot_pose_msg =
     tf2::toMsg(computeRobotPose(bodyPose2D, positionAlongZBodyAxis));
@@ -103,9 +94,7 @@ void publish(
   geometry_msgs::msg::Pose ellipse_pose_msg =
     tf2::toMsg(computeEllipsePose(ellipse, positionAlongZBodyAxis));
 
-  rvizVisualTool.publishSphere(
-    ellipse_pose_msg,
-    rvizVisualTool.getColor(color), scale);
+  rvizVisualTool.publishSphere(ellipse_pose_msg, rvizVisualTool.getColor(color), scale);
 }
 
 }  // namespace ros2

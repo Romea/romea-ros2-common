@@ -19,22 +19,19 @@
 #include "gtest/gtest.h"
 
 // local
-#include "test_utils.hpp"
 #include "romea_common_utils/conversions/position2d_conversions.hpp"
+#include "test_utils.hpp"
 
 //-----------------------------------------------------------------------------
 class TestPosition2DConversion : public ::testing::Test
 {
 public:
   TestPosition2DConversion()
-  : stamp(1000),
-    frame_id("foo"),
-    romea_position2d(),
-    ros_position2d_msg()
+  : stamp(1000), frame_id("foo"), romea_position2d(), ros_position2d_msg()
   {
   }
 
-  void SetUp()override
+  void SetUp() override
   {
     romea_position2d.position.x() = 1;
     romea_position2d.position.y() = 2;
@@ -66,7 +63,6 @@ TEST_F(TestPosition2DConversion, from_ros_msg_to_romea)
   EXPECT_DOUBLE_EQ(romea_position2d_bis.position.y(), romea_position2d.position.y());
   isSame(romea_position2d_bis.covariance, romea_position2d.covariance);
 }
-
 
 //-----------------------------------------------------------------------------
 int main(int argc, char ** argv)

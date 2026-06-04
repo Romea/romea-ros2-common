@@ -16,8 +16,8 @@
 #define ROMEA_COMMON_UTILS__DEFERRED_CALL_HPP_
 
 // std
-#include <utility>
 #include <memory>
+#include <utility>
 
 // rclcpp
 #include "rclcpp/timer.hpp"
@@ -32,11 +32,10 @@ class DeferredCall
 public:
   template<typename Node, typename CallbackT>
   DeferredCall(Node & node, CallbackT && callback)
-  : timer_(
-      node.create_wall_timer({}, [this, cb = std::forward<CallbackT>(callback)] {
-        timer_->cancel();
-        cb();
-      }))
+  : timer_(node.create_wall_timer({}, [this, cb = std::forward<CallbackT>(callback)] {
+      timer_->cancel();
+      cb();
+    }))
   {
   }
 

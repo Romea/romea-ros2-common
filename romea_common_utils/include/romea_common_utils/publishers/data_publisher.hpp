@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__DATA_PUBLISHER_HPP_
 
@@ -22,8 +21,8 @@
 #include <utility>
 
 // local
-#include "romea_common_utils/publishers/publisher.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/publishers/publisher.hpp"
 
 namespace romea
 {
@@ -49,7 +48,6 @@ public:
   void publish(const DataType & data);
 };
 
-
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
 DataPublisher<DataType, MsgType, NodeType>::DataPublisher(
@@ -72,8 +70,7 @@ void DataPublisher<DataType, MsgType, NodeType>::publish(const DataType & data)
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
-std::shared_ptr<DataPublisher<DataType, MsgType, NodeType>>
-make_data_publisher(
+std::shared_ptr<DataPublisher<DataType, MsgType, NodeType>> make_data_publisher(
   std::shared_ptr<NodeType> node,
   const std::string & topic_name,
   const rclcpp::QoS & qos,

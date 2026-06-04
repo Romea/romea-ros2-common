@@ -25,116 +25,109 @@
 
 // local
 #include "../test/test_helper.h"
-#include "romea_common_utils/params/node_parameters.hpp"
-#include "romea_common_utils/params/geodesy_parameters.hpp"
-#include "romea_common_utils/params/eigen_parameters.hpp"
 #include "romea_common_utils/params/algorithm_parameters.hpp"
 #include "romea_common_utils/params/control_parameters.hpp"
-
+#include "romea_common_utils/params/eigen_parameters.hpp"
+#include "romea_common_utils/params/geodesy_parameters.hpp"
+#include "romea_common_utils/params/node_parameters.hpp"
 
 class TestLifecycleNodeParameters : public ::testing::Test
 {
 protected:
-  static void SetUpTestCase()
-  {
-    rclcpp::init(0, nullptr);
-  }
+  static void SetUpTestCase() { rclcpp::init(0, nullptr); }
 
-  static void TearDownTestCase()
-  {
-    rclcpp::shutdown();
-  }
+  static void TearDownTestCase() { rclcpp::shutdown(); }
 
   void SetUp() override
   {
     rclcpp::NodeOptions no;
 
     no.arguments(
-      {"--ros-args",
-        "--params-file",
-        std::string(TEST_DIR) + "/test_node_parameters.yaml"});
+      {"--ros-args", "--params-file", std::string(TEST_DIR) + "/test_node_parameters.yaml"});
 
-    node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
-      "test_lifecyle_node_parameters", "ns", no);
+    node =
+      std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_lifecyle_node_parameters", "ns", no);
   }
 
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node;
 };
 
-
-TEST_F(TestLifecycleNodeParameters, getParameter) {
+TEST_F(TestLifecycleNodeParameters, getParameter)
+{
   romea::ros2::declare_parameter<std::string>(node, "foo");
   std::string value = romea::ros2::get_parameter<std::string>(node, "foo");
   EXPECT_STREQ(value.c_str(), "bar");
 }
 
-TEST_F(TestLifecycleNodeParameters, getParameterDeclareDefault) {
+TEST_F(TestLifecycleNodeParameters, getParameterDeclareDefault)
+{
   std::string default_value = "foo";
   romea::ros2::declare_parameter_with_default<std::string>(node, "bar", "foo");
   std::string value = romea::ros2::get_parameter<std::string>(node, "bar");
   EXPECT_STREQ(value.c_str(), default_value.c_str());
 }
 
-TEST_F(TestLifecycleNodeParameters, getParameterOr) {
+TEST_F(TestLifecycleNodeParameters, getParameterOr)
+{
   std::string default_value = "foo";
   std::string value = romea::ros2::get_parameter_or<std::string>(node, "bar", default_value);
   EXPECT_STREQ(value.c_str(), default_value.c_str());
 }
 
-TEST_F(TestLifecycleNodeParameters, getParameterInSubNamespace) {
+TEST_F(TestLifecycleNodeParameters, getParameterInSubNamespace)
+{
   romea::ros2::declare_parameter<double>(node, "one", "two");
   double value = romea::ros2::get_parameter<double>(node, "one", "two");
   EXPECT_DOUBLE_EQ(value, 3.);
 }
 
-
-TEST_F(TestLifecycleNodeParameters, loadVectorOfDouble) {
+TEST_F(TestLifecycleNodeParameters, loadVectorOfDouble)
+{
   std::vector<double> vector_of_double;
   romea::ros2::declare_vector_parameter<double>(node, "vector3d");
   EXPECT_NO_THROW(
-    {vector_of_double = romea::ros2::get_vector_parameter<double>(node, "vector3d");});
+    { vector_of_double = romea::ros2::get_vector_parameter<double>(node, "vector3d"); });
   EXPECT_NEAR(vector_of_double[0], 2.3, 0.000001);
   EXPECT_NEAR(vector_of_double[1], 5.4, 0.000001);
   EXPECT_NEAR(vector_of_double[2], -8.9, 0.000001);
 }
 
-TEST_F(TestLifecycleNodeParameters, loadVectorOfInt) {
+TEST_F(TestLifecycleNodeParameters, loadVectorOfInt)
+{
   romea::ros2::declare_vector_parameter<int64_t>(node, "vector3i");
 
   std::vector<int64_t> vector_of_int;
   EXPECT_NO_THROW(
-    {vector_of_int =
-      romea::ros2::get_vector_parameter<int64_t>(node, "vector3i");});
+    { vector_of_int = romea::ros2::get_vector_parameter<int64_t>(node, "vector3i"); });
 
   EXPECT_EQ(vector_of_int[0], 2);
   EXPECT_EQ(vector_of_int[1], -5);
   EXPECT_EQ(vector_of_int[2], 9);
 }
 
-
-TEST_F(TestLifecycleNodeParameters, loadVectorWithDefaultDeclaration) {
+TEST_F(TestLifecycleNodeParameters, loadVectorWithDefaultDeclaration)
+{
   std::vector<int64_t> default_vector_of_int = {4, 6, -3};
   romea::ros2::declare_vector_parameter_with_default<int64_t>(
     node, "vector_unset", default_vector_of_int);
 
   std::vector<int64_t> vector_of_int;
   EXPECT_NO_THROW(
-    {vector_of_int =
-      romea::ros2::get_vector_parameter<int64_t>(node, "vector_unset");});
+    { vector_of_int = romea::ros2::get_vector_parameter<int64_t>(node, "vector_unset"); });
 
   EXPECT_EQ(vector_of_int[0], 4);
   EXPECT_EQ(vector_of_int[1], 6);
   EXPECT_EQ(vector_of_int[2], -3);
 }
 
-
-TEST_F(TestLifecycleNodeParameters, loadEigenVector) {
+TEST_F(TestLifecycleNodeParameters, loadEigenVector)
+{
   romea::ros2::declare_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");
 
   Eigen::Vector3d eigen_vector3d;
-  EXPECT_NO_THROW(
-    {eigen_vector3d =
-      romea::ros2::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");});
+  EXPECT_NO_THROW({
+    eigen_vector3d = romea::ros2::get_eigen_vector_parameter<Eigen::Vector3d>(node, "vector3d");
+  });
 
   EXPECT_NEAR(eigen_vector3d.x(), 2.3, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 5.4, 0.000001);
@@ -148,9 +141,9 @@ TEST_F(TestLifecycleNodeParameters, loadUnsetEigenVector)
     node, "unset_vector", default_eigen_vector3d);
 
   Eigen::Vector3d eigen_vector3d;
-  EXPECT_NO_THROW(
-    {eigen_vector3d =
-      romea::ros2::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");});
+  EXPECT_NO_THROW({
+    eigen_vector3d = romea::ros2::get_eigen_vector_parameter<Eigen::Vector3d>(node, "unset_vector");
+  });
 
   EXPECT_NEAR(eigen_vector3d.x(), 2, 0.000001);
   EXPECT_NEAR(eigen_vector3d.y(), 3, 0.000001);
@@ -216,7 +209,6 @@ TEST_F(TestLifecycleNodeParameters, loadPublishRate)
   EXPECT_EQ(romea::ros2::get_publish_rate(node, "bar"), 20);
 }
 
-
 TEST_F(TestLifecycleNodeParameters, loadPIDParameters)
 {
   romea::ros2::declare_pid_parameters(node, "pid");
@@ -247,7 +239,6 @@ TEST_F(TestLifecycleNodeParameters, loadPIDParameters)
 //  EXPECT_NEAR(geodetic_coordinates.altitude,300.0,0.000001);
 //}
 
-
 // TEST_F(TestLifecycleNodeParameters, loadMapFloat)
 //{
 //  std::map<std::string,double> map;
@@ -259,7 +250,6 @@ TEST_F(TestLifecycleNodeParameters, loadPIDParameters)
 //  EXPECT_DOUBLE_EQ(map.at("bar"),-2.7);
 //  EXPECT_DOUBLE_EQ(map.at("baz"),5.5);
 //}
-
 
 int main(int argc, char ** argv)
 {

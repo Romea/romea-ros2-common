@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef TEST_UTILS_HPP_
 #define TEST_UTILS_HPP_
 
@@ -45,9 +44,7 @@ void fillEigenCovariance(EigenCovType & covariance, int start = 0)
 
 //-----------------------------------------------------------------------------
 template<typename MsgCovType, typename EigenCovType>
-void isSame(
-  const MsgCovType & msgCovariance,
-  const EigenCovType & obsCovariance)
+void isSame(const MsgCovType & msgCovariance, const EigenCovType & obsCovariance)
 {
   for (size_t n = 0; n < msgCovariance.size(); ++n) {
     EXPECT_DOUBLE_EQ(msgCovariance[n], obsCovariance(n));
@@ -56,9 +53,7 @@ void isSame(
 
 //-----------------------------------------------------------------------------
 template<typename EigenCovType>
-void isSame(
-  const EigenCovType & obsCovariance1,
-  const EigenCovType & obsCovariance2)
+void isSame(const EigenCovType & obsCovariance1, const EigenCovType & obsCovariance2)
 {
   for (int n = 0; n < obsCovariance1.cols() * obsCovariance1.rows(); ++n) {
     EXPECT_DOUBLE_EQ(obsCovariance2(n), obsCovariance2(n));

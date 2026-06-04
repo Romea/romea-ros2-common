@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef TEST_NODE_PUBLISHER_UTILS_HPP_
 #define TEST_NODE_PUBLISHER_UTILS_HPP_
 
@@ -24,17 +23,14 @@
 #include <string>
 
 // ros
-#include "tf2_ros/transform_listener.h"
+#include "geometry_msgs/msg/point_stamped.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "geometry_msgs/msg/point_stamped.hpp"
+#include "tf2_ros/transform_listener.h"
 
-
-inline void to_ros_msg(
-  const std::string & data,
-  std_msgs::msg::String & msg)
+inline void to_ros_msg(const std::string & data, std_msgs::msg::String & msg)
 {
   msg.data = data;
 }
@@ -53,7 +49,6 @@ inline void to_ros_odom_msg(
   msg.twist = data.twist;
 }
 
-
 inline void to_ros_msg(
   const rclcpp::Time & stamp,
   const std::string & frame_id,
@@ -67,36 +62,23 @@ inline void to_ros_msg(
   msg.point.z = data.z();
 }
 
-
 template<typename MsgType>
 class Subscription
 {
 public:
   template<typename Node>
-  Subscription(
-    std::shared_ptr<Node> node,
-    const std::string & topic_name)
-  : data_()
+  Subscription(std::shared_ptr<Node> node, const std::string & topic_name) : data_()
   {
     auto callback = std::bind(&Subscription<MsgType>::cb_, this, std::placeholders::_1);
     sub_ = node->template create_subscription<MsgType>(topic_name, 0, callback);
   }
 
-  size_t get_publisher_count()const
-  {
-    return sub_->get_publisher_count();
-  }
+  size_t get_publisher_count() const { return sub_->get_publisher_count(); }
 
-  const MsgType & get_received_data() const
-  {
-    return data_;
-  }
+  const MsgType & get_received_data() const { return data_; }
 
 private:
-  void cb_(typename MsgType::ConstSharedPtr msg)
-  {
-    data_ = *msg;
-  }
+  void cb_(typename MsgType::ConstSharedPtr msg) { data_ = *msg; }
 
   MsgType data_;
   std::shared_ptr<rclcpp::Subscription<MsgType>> sub_;

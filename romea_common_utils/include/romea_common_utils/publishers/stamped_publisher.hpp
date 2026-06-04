@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_PUBLISHER_HPP_
-
 
 // std
 #include <memory>
@@ -31,7 +29,6 @@
 // romea core
 #include "romea_core_common/time/Time.hpp"
 
-
 namespace romea
 {
 namespace ros2
@@ -45,7 +42,7 @@ public:
 
   virtual ~StampedPublisherBase() = default;
 
-  virtual std::string get_topic_name()const = 0;
+  virtual std::string get_topic_name() const = 0;
 
   virtual void activate() = 0;
 
@@ -58,14 +55,13 @@ public:
   virtual void publish(const rclcpp::Time & stampe, const DataType & data) = 0;
 };
 
-
 template<typename DataType, typename MsgType, typename NodeType>
 class StampedPublisher
 {
 };
 
 template<typename DataType, typename MsgType>
-class StampedPublisher<DataType, MsgType, rclcpp::Node>: public StampedPublisherBase<DataType>
+class StampedPublisher<DataType, MsgType, rclcpp::Node> : public StampedPublisherBase<DataType>
 {
 public:
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
@@ -86,25 +82,13 @@ public:
 
   virtual ~StampedPublisher() = default;
 
-  std::string get_topic_name() const override
-  {
-    return pub_->get_topic_name();
-  }
+  std::string get_topic_name() const override { return pub_->get_topic_name(); }
 
-  void activate() override
-  {
-    is_activated_.store(true);
-  }
+  void activate() override { is_activated_.store(true); }
 
-  void deactivate() override
-  {
-    is_activated_.store(false);
-  }
+  void deactivate() override { is_activated_.store(false); }
 
-  bool is_activated() override
-  {
-    return is_activated_.load();
-  }
+  bool is_activated() override { return is_activated_.load(); }
 
 protected:
   void publish_message_(std::unique_ptr<MsgType> message)
@@ -151,10 +135,9 @@ protected:
   rclcpp::Logger logger_;
 };
 
-
 template<typename DataType, typename MsgType>
-class StampedPublisher<DataType, MsgType,
-    rclcpp_lifecycle::LifecycleNode>: public StampedPublisherBase<DataType>
+class StampedPublisher<DataType, MsgType, rclcpp_lifecycle::LifecycleNode>
+: public StampedPublisherBase<DataType>
 {
 public:
   using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
@@ -175,37 +158,18 @@ public:
 
   virtual ~StampedPublisher() = default;
 
+  std::string get_topic_name() const { return pub_->get_topic_name(); }
 
-  std::string get_topic_name()const
-  {
-    return pub_->get_topic_name();
-  }
+  void activate() override { pub_->on_activate(); }
 
-  void activate() override
-  {
-    pub_->on_activate();
-  }
+  void deactivate() override { pub_->on_deactivate(); }
 
-  void deactivate() override
-  {
-    pub_->on_deactivate();
-  }
-
-  bool is_activated() override
-  {
-    return pub_->is_activated();
-  }
+  bool is_activated() override { return pub_->is_activated(); }
 
 protected:
-  void publish_message_(std::unique_ptr<MsgType> message)
-  {
-    pub_->publish(std::move(message));
-  }
+  void publish_message_(std::unique_ptr<MsgType> message) { pub_->publish(std::move(message)); }
 
-  void publish_message_(const MsgType & message)
-  {
-    pub_->publish(message);
-  }
+  void publish_message_(const MsgType & message) { pub_->publish(message); }
 
 protected:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;

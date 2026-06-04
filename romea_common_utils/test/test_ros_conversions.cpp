@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // gtest
 #include "gtest/gtest.h"
 
 // local
-#include "romea_common_utils/conversions/transform_conversions.hpp"
-#include "romea_common_utils/conversions/geometry_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
+#include "romea_common_utils/conversions/geometry_conversions.hpp"
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 
 using GeometryMsgVector3 = geometry_msgs::msg::Vector3;
 using GeometryMsgQuaternion = geometry_msgs::msg::Quaternion;
 using GeometryMsgTransform = geometry_msgs::msg::Transform;
 using DiagnosticMsgDiagnosticStatus = diagnostic_msgs::msg::DiagnosticStatus;
-
 
 //-----------------------------------------------------------------------------
 TEST(TestRosConversions, testvector3Conversion)
@@ -62,10 +60,9 @@ TEST(TestRosConversions, testQuaternionConversion)
   double pitch = -0.9;
   double yaw = -2.5;
 
-  Eigen::Quaterniond quaternion =
-    Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
-    Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
-    Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
+  Eigen::Quaterniond quaternion = Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
+                                  Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
+                                  Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
 
   GeometryMsgQuaternion quaternion_msg;
   romea::ros2::to_ros_msg(quaternion, quaternion_msg);
@@ -91,10 +88,9 @@ TEST(TestRosConversions, testTransformConversion)
   double pitch = 1.2;
   double yaw = 3.2;
 
-  Eigen::Quaterniond quaternion =
-    Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
-    Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
-    Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
+  Eigen::Quaterniond quaternion = Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitZ()) *
+                                  Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitY()) *
+                                  Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitX());
 
   Eigen::Matrix3d rotation = quaternion.toRotationMatrix();
 
@@ -127,8 +123,7 @@ TEST(TestRosConversions, testTransformConversion)
 TEST(TestRosConversions, testDiagnosticConversion)
 {
   romea::core::DiagnosticReport report;
-  report.diagnostics.push_back(
-    romea::core::Diagnostic(romea::core::DiagnosticStatus::OK, "foo"));
+  report.diagnostics.push_back(romea::core::Diagnostic(romea::core::DiagnosticStatus::OK, "foo"));
   report.diagnostics.push_back(
     romea::core::Diagnostic(romea::core::DiagnosticStatus::ERROR, "bar"));
   report.info["foo"] = "valid";

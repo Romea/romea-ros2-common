@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST3D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__POSE_AND_TWIST3D_CONVERSIONS_HPP_
-
 
 // std
 #include <string>
@@ -24,8 +22,8 @@
 #include "nav_msgs/msg/odometry.hpp"
 
 // romea core
-#include "romea_core_common/time/Time.hpp"
 #include "romea_core_common/geometry/PoseAndTwist3D.hpp"
+#include "romea_core_common/time/Time.hpp"
 
 // local
 #include "romea_common_utils/conversions/pose3d_conversions.hpp"
@@ -36,7 +34,7 @@ namespace romea
 namespace ros2
 {
 
-void  to_ros_odom_msg(
+void to_ros_odom_msg(
   const rclcpp::Time & stamp,
   const core::PoseAndTwist3D & poseAndBodyTwist3D,
   const std::string & frame_id,

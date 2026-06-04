@@ -19,22 +19,16 @@
 #include "gtest/gtest.h"
 
 // local
-#include "test_utils.hpp"
 #include "romea_common_utils/conversions/pose2d_conversions.hpp"
+#include "test_utils.hpp"
 
 //-----------------------------------------------------------------------------
 class TestPose2DConversion : public ::testing::Test
 {
 public:
-  TestPose2DConversion()
-  : stamp(1000),
-    frame_id("foo"),
-    romea_pose2d(),
-    ros_pose2d_msg()
-  {
-  }
+  TestPose2DConversion() : stamp(1000), frame_id("foo"), romea_pose2d(), ros_pose2d_msg() {}
 
-  void SetUp()override
+  void SetUp() override
   {
     romea_pose2d.position.x() = 1;
     romea_pose2d.position.y() = 2;

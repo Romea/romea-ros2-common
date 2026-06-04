@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <memory>
 
@@ -20,32 +19,22 @@
 #include "gtest/gtest.h"
 
 // ros
-#include "tf2_ros/transform_broadcaster.h"
-#include "tf2_ros/static_transform_broadcaster.h"
 #include "rclcpp/rclcpp.hpp"
+#include "tf2_ros/static_transform_broadcaster.h"
+#include "tf2_ros/transform_broadcaster.h"
 
 // local
-#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
-
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 
 class TestRosTransform : public ::testing::Test
 {
 protected:
-  static void SetUpTestCase()
-  {
-    rclcpp::init(0, nullptr);
-  }
+  static void SetUpTestCase() { rclcpp::init(0, nullptr); }
 
-  static void TearDownTestCase()
-  {
-    rclcpp::shutdown();
-  }
+  static void TearDownTestCase() { rclcpp::shutdown(); }
 
-  void SetUp() override
-  {
-    node = std::make_shared<rclcpp::Node>("test_ros_transform");
-  }
+  void SetUp() override { node = std::make_shared<rclcpp::Node>("test_ros_transform"); }
 
   void SleedpAndSpinSome()
   {
@@ -55,7 +44,6 @@ protected:
 
   std::shared_ptr<rclcpp::Node> node;
 };
-
 
 TEST_F(TestRosTransform, DISABLED_lookupTransformOnce)
 {
@@ -79,13 +67,10 @@ TEST_F(TestRosTransform, DISABLED_lookupTransformOnce)
   SleedpAndSpinSome();
 
   Eigen::Affine3d transform;
-  EXPECT_NO_THROW(
-    {transform = romea::lookupTransformOnce(
-        node,
-        tf_buffer,
-        "a", "b",
-        node->get_clock()->now(),
-        rclcpp::Duration::from_seconds(10));});
+  EXPECT_NO_THROW({
+    transform = romea::lookupTransformOnce(
+      node, tf_buffer, "a", "b", node->get_clock()->now(), rclcpp::Duration::from_seconds(10));
+  });
 
   EXPECT_NEAR(transform.linear()(0, 0), 1., 0.000001);
   EXPECT_NEAR(transform.linear()(1, 1), 1., 0.000001);
@@ -95,7 +80,6 @@ TEST_F(TestRosTransform, DISABLED_lookupTransformOnce)
   EXPECT_NEAR(transform.translation().y(), 2., 0.000001);
   EXPECT_NEAR(transform.translation().z(), 3., 0.000001);
 }
-
 
 int main(int argc, char ** argv)
 {

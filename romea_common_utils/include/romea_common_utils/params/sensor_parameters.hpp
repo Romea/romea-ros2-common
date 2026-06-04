@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__SENSOR_PARAMETERS_HPP_
 

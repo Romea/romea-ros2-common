@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE2D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__POSE2D_CONVERSIONS_HPP_
-
 
 // std
 #include <string>
@@ -24,22 +22,19 @@
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
 // romea
-#include "romea_core_common/time/Time.hpp"
 #include "romea_core_common/geometry/Pose2D.hpp"
+#include "romea_core_common/time/Time.hpp"
 
 // romea ros
 #include "romea_common_msgs/msg/pose2_d_stamped.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
-
 
 namespace romea
 {
 namespace ros2
 {
 
-void to_ros_msg(
-  const core::Pose2D & romea_pose2d,
-  romea_common_msgs::msg::Pose2D & ros_pose2d_msg);
+void to_ros_msg(const core::Pose2D & romea_pose2d, romea_common_msgs::msg::Pose2D & ros_pose2d_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
@@ -48,8 +43,7 @@ void to_ros_msg(
   romea_common_msgs::msg::Pose2DStamped & ros_pose2d_msg);
 
 void to_ros_transform_msg(
-  const core::Pose2D & romea_pose2d,
-  geometry_msgs::msg::Transform & ros_transform_msg);
+  const core::Pose2D & romea_pose2d, geometry_msgs::msg::Transform & ros_transform_msg);
 
 void to_ros_transform_msg(
   const rclcpp::Time & stamp,
@@ -58,9 +52,7 @@ void to_ros_transform_msg(
   const std::string & child_frame_id,
   geometry_msgs::msg::TransformStamped & ros_transform_msg);
 
-void to_romea(
-  const romea_common_msgs::msg::Pose2D & msg,
-  core::Pose2D & romea_pose_2d);
+void to_romea(const romea_common_msgs::msg::Pose2D & msg, core::Pose2D & romea_pose_2d);
 
 core::Pose2D to_romea(const romea_common_msgs::msg::Pose2D & msg);
 

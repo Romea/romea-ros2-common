@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__EIGEN_PARAMETERS_HPP_
 
@@ -21,9 +20,9 @@
 
 // std
 #include <map>
-#include <vector>
 #include <memory>
 #include <string>
+#include <vector>
 
 // romea core
 #include "romea_core_common/containers/Eigen/VectorOfEigenVector.hpp"
@@ -41,8 +40,7 @@ namespace ros2
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_name)
 {
   declare_vector_parameter<typename EigenVector::Scalar>(node, param_name);
 }
@@ -50,9 +48,7 @@ inline void declare_eigen_vector_parameter(
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_vector_parameter_with_default(
-  std::shared_ptr<Node> node,
-  const std::string & param_name,
-  const EigenVector & default_values)
+  std::shared_ptr<Node> node, const std::string & param_name, const EigenVector & default_values)
 {
   using StdVector = std::vector<typename EigenVector::Scalar>;
   StdVector default_vector(default_values.data(), default_values.data() + default_values.size());
@@ -64,12 +60,9 @@ inline void declare_eigen_vector_parameter_with_default(
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
-  declare_eigen_vector_parameter<EigenVector>(
-    node, full_param_name(param_namespace, param_name));
+  declare_eigen_vector_parameter<EigenVector>(node, full_param_name(param_namespace, param_name));
 }
 
 //-----------------------------------------------------------------------------
@@ -84,12 +77,10 @@ inline void declare_eigen_vector_parameter_with_default(
     node, full_param_name(param_namespace, param_name), default_values);
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline EigenVector get_eigen_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_name)
 {
   return EigenVector(get_vector_parameter<typename EigenVector::Scalar>(node, param_name).data());
 }
@@ -97,14 +88,11 @@ inline EigenVector get_eigen_vector_parameter(
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline EigenVector get_eigen_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
   return get_eigen_vector_parameter<EigenVector>(
     node, full_param_name(param_namespace, param_name));
 }
-
 
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
@@ -116,18 +104,15 @@ inline void declare_eigen_xyz_vector_parameter(std::shared_ptr<Node> node)
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_xyz_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
-  declare_eigen_vector_parameter<EigenVector>(
-    node, full_param_name(param_namespace, "xyz"));
+  declare_eigen_vector_parameter<EigenVector>(node, full_param_name(param_namespace, "xyz"));
 }
 
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_xyz_vector_parameter_with_default(
-  std::shared_ptr<Node> node,
-  const EigenVector & default_values = EigenVector::Zero())
+  std::shared_ptr<Node> node, const EigenVector & default_values = EigenVector::Zero())
 {
   declare_eigen_vector_parameter_with_default<EigenVector>(node, "xyz", default_values);
 }
@@ -153,21 +138,17 @@ inline EigenVector get_eigen_xyz_vector_parameter(std::shared_ptr<Node> node)
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline EigenVector get_eigen_xyz_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
-  return get_eigen_vector_parameter<EigenVector>(
-    node, full_param_name(param_namespace, "xyz"));
+  return get_eigen_vector_parameter<EigenVector>(node, full_param_name(param_namespace, "xyz"));
 }
 
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline void declare_eigen_rpy_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
-  declare_eigen_vector_parameter<EigenVector>(
-    node, full_param_name(param_namespace, "rpy"));
+  declare_eigen_vector_parameter<EigenVector>(node, full_param_name(param_namespace, "rpy"));
 }
 
 //-----------------------------------------------------------------------------
@@ -199,13 +180,10 @@ inline EigenVector get_eigen_rpy_vector_parameter(std::shared_ptr<Node> node)
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
 inline EigenVector get_eigen_rpy_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
-  return get_eigen_vector_parameter<EigenVector>(
-    node, full_param_name(param_namespace, "rpy"));
+  return get_eigen_vector_parameter<EigenVector>(node, full_param_name(param_namespace, "rpy"));
 }
-
 
 //-----------------------------------------------------------------------------
 template<typename EigenAffine, typename Node>
@@ -235,8 +213,7 @@ void declare_eigen_rigid_transformation_parameter_with_default(
 //-----------------------------------------------------------------------------
 template<typename EigenAffine, typename Node>
 void declare_eigen_rigid_transformation_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
   using Scalar = typename EigenAffine::Scalar;
   using EigenVector = Eigen::Matrix<Scalar, 3, 1>;
@@ -264,8 +241,7 @@ void declare_eigen_rigid_transformation_parameter_with_default(
 //-----------------------------------------------------------------------------
 template<typename EigenAffine, typename Node>
 inline EigenAffine get_eigen_rigid_transformation_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace)
+  std::shared_ptr<Node> node, const std::string & param_namespace)
 {
   using Scalar = typename EigenAffine::Scalar;
   using EigenVector = Eigen::Matrix<Scalar, 3, 1>;
@@ -274,7 +250,6 @@ inline EigenAffine get_eigen_rigid_transformation_parameter(
   auto translation = get_eigen_xyz_vector_parameter<EigenVector>(node, param_namespace);
   return core::rigid_transformation3<Scalar>(translation, rotation);
 }
-
 
 //-----------------------------------------------------------------------------
 template<typename EigenVector, typename Node>
@@ -312,12 +287,11 @@ inline void declare_eigen_vector_parameters_with_default(
   using StdVector = std::vector<typename EigenVector::Scalar>;
 
   for (size_t i = 0; i < params_names.size(); ++i) {
-    StdVector default_vector(default_values[i].data(),
-      default_values[i].data() + default_values[i].size());
+    StdVector default_vector(
+      default_values[i].data(), default_values[i].data() + default_values[i].size());
 
     declare_parameter_with_default<StdVector>(
-      node, params_namespace, params_names[i],
-      default_values[i]);
+      node, params_namespace, params_names[i], default_values[i]);
   }
 }
 

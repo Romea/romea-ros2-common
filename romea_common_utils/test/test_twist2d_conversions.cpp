@@ -19,22 +19,16 @@
 #include "gtest/gtest.h"
 
 // local
-#include "test_utils.hpp"
 #include "romea_common_utils/conversions/twist2d_conversions.hpp"
+#include "test_utils.hpp"
 
 //-----------------------------------------------------------------------------
 class TestTwist2DConversion : public ::testing::Test
 {
 public:
-  TestTwist2DConversion()
-  : stamp(1000),
-    frame_id("foo"),
-    romea_twist2d(),
-    ros_twist2d_msg()
-  {
-  }
+  TestTwist2DConversion() : stamp(1000), frame_id("foo"), romea_twist2d(), ros_twist2d_msg() {}
 
-  void SetUp()override
+  void SetUp() override
   {
     romea_twist2d.linearSpeeds.x() = 1;
     romea_twist2d.linearSpeeds.y() = 2;

@@ -17,9 +17,9 @@
 
 #include "rclcpp/qos.hpp"
 
-namespace  romea
+namespace romea
 {
-namespace  ros2
+namespace ros2
 {
 
 rclcpp::QoS sensor_data_qos();

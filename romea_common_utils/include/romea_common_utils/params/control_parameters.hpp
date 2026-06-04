@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PARAMS__CONTROL_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__CONTROL_PARAMETERS_HPP_
 
@@ -33,9 +32,7 @@ namespace ros2
 
 //-----------------------------------------------------------------------------
 template<typename Node>
-inline void declare_pid_parameters(
-  std::shared_ptr<Node> node,
-  const std::string & ns)
+inline void declare_pid_parameters(std::shared_ptr<Node> node, const std::string & ns)
 {
   declare_parameter<double>(node, ns, "kp");
   declare_parameter<double>(node, ns, "ki");
@@ -45,12 +42,9 @@ inline void declare_pid_parameters(
   declare_parameter<double>(node, ns, "error_epsilon");
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename Node>
-inline core::PID::Parameters get_pid_parameters(
-  std::shared_ptr<Node> node,
-  const std::string & ns)
+inline core::PID::Parameters get_pid_parameters(std::shared_ptr<Node> node, const std::string & ns)
 {
   return {
     get_parameter<double>(node, ns, "kp"),
@@ -58,8 +52,7 @@ inline core::PID::Parameters get_pid_parameters(
     get_parameter<double>(node, ns, "kd"),
     get_parameter<double>(node, ns, "imin"),
     get_parameter<double>(node, ns, "imax"),
-    get_parameter<double>(node, ns, "error_epsilon")
-  };
+    get_parameter<double>(node, ns, "error_epsilon")};
 }
 
 }  // namespace ros2

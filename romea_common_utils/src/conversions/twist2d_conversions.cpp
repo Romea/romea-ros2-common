@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <string>
 
@@ -24,11 +23,9 @@ namespace romea
 namespace ros2
 {
 
-
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const core::Twist2D & romea_twist2d,
-  romea_common_msgs::msg::Twist2D & ros_twist2d_msg)
+  const core::Twist2D & romea_twist2d, romea_common_msgs::msg::Twist2D & ros_twist2d_msg)
 {
   ros_twist2d_msg.linear_speeds.x = romea_twist2d.linearSpeeds.x();
   ros_twist2d_msg.linear_speeds.y = romea_twist2d.linearSpeeds.y();
@@ -51,11 +48,9 @@ void to_ros_msg(
   to_ros_msg(romea_twist_2d, ros_twist2d_msg.twist);
 }
 
-
 //-----------------------------------------------------------------------------
 void to_romea(
-  const romea_common_msgs::msg::Twist2D & ros_twist2d_msg,
-  core::Twist2D & romea_twist2d)
+  const romea_common_msgs::msg::Twist2D & ros_twist2d_msg, core::Twist2D & romea_twist2d)
 {
   romea_twist2d.linearSpeeds.x() = ros_twist2d_msg.linear_speeds.x;
   romea_twist2d.linearSpeeds.y() = ros_twist2d_msg.linear_speeds.y;

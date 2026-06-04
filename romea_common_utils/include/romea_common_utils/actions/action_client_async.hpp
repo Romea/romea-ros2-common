@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__ACTIONS__ACTION_CLIENT_ASYNC_HPP_
 #define ROMEA_COMMON_UTILS__ACTIONS__ACTION_CLIENT_ASYNC_HPP_
 
 // std
-#include <memory>
-#include <string>
 #include <chrono>
+#include <memory>
 #include <sstream>
+#include <string>
 
 #include "romea_common_utils/actions/action_client_base.hpp"
 
@@ -53,9 +52,7 @@ public:
   }
 
   template<typename RepT, typename RatioT>
-  std::shared_ptr<Result> send_goal(
-    Goal goal,
-    std::chrono::duration<RepT, RatioT> timeout)
+  std::shared_ptr<Result> send_goal(Goal goal, std::chrono::duration<RepT, RatioT> timeout)
   {
     if (!this->server_is_always_ready()) {
       return nullptr;
@@ -63,9 +60,9 @@ public:
 
     auto future_goal_handle = this->client_->async_send_goal(goal, this->send_goal_options_);
 
-    if (!this->wait_goal_handle(future_goal_handle, timeout) ||
-      !this->goal_is_accepted_(future_goal_handle))
-    {
+    if (
+      !this->wait_goal_handle(future_goal_handle, timeout) ||
+      !this->goal_is_accepted_(future_goal_handle)) {
       return nullptr;
     }
 
@@ -137,7 +134,6 @@ public:
     }
   }
 };
-
 
 }  // namespace romea
 

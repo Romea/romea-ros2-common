@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSITION3D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__POSITION3D_CONVERSIONS_HPP_
 
@@ -20,14 +19,13 @@
 #include <string>
 
 // romea
-#include "romea_core_common/time/Time.hpp"
 #include "romea_core_common/geometry/Position3D.hpp"
+#include "romea_core_common/time/Time.hpp"
 
 // romea ros
 #include "romea_common_msgs/msg/position3_d.hpp"
 #include "romea_common_msgs/msg/position3_d_stamped.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
-
 
 namespace romea
 {
@@ -44,10 +42,7 @@ void to_ros_msg(
   const core::Position3D & position2D,
   romea_common_msgs::msg::Position3DStamped & ros_position2d_stamped);
 
-
-void to_romea(
-  const romea_common_msgs::msg::Position3D & msg,
-  core::Position3D & position3d);
+void to_romea(const romea_common_msgs::msg::Position3D & msg, core::Position3D & position3d);
 
 core::Position3D to_romea(const romea_common_msgs::msg::Position3D & msg);
 

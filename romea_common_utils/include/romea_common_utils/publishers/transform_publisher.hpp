@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__TRANSFORM_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__TRANSFORM_PUBLISHER_HPP_
 
-
 // std
-#include <string>
 #include <memory>
+#include <string>
 
 // ros
 #include "geometry_msgs/msg/transform_stamped.hpp"
@@ -27,9 +25,9 @@
 #include "tf2_ros/qos.hpp"
 
 // local
-#include "romea_common_utils/publishers/stamped_publisher.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
 #include "romea_common_utils/conversions/transform_conversions.hpp"
+#include "romea_common_utils/publishers/stamped_publisher.hpp"
 
 namespace romea
 {
@@ -52,13 +50,9 @@ public:
 
   virtual ~TransformPublisher() = default;
 
-  virtual void publish(
-    const rclcpp::Time & stamp,
-    const DataType & data);
+  virtual void publish(const rclcpp::Time & stamp, const DataType & data);
 
-  virtual void publish(
-    const core::Duration & duration,
-    const DataType & data);
+  virtual void publish(const core::Duration & duration, const DataType & data);
 
 private:
   static Options make_options();
@@ -74,8 +68,7 @@ TransformPublisher<DataType, NodeType>::TransformPublisher(
   const std::string & frame_id,
   const std::string & child_frame_id,
   const bool & activated)
-: Base(node, "/tf", tf2_ros::DynamicBroadcasterQoS(), make_options(), activated),
-  message_()
+: Base(node, "/tf", tf2_ros::DynamicBroadcasterQoS(), make_options(), activated), message_()
 {
   assert(!frame_id.empty());
   assert(!child_frame_id.empty());
@@ -110,8 +103,7 @@ TransformPublisher<DataType, NodeType>::make_options()
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void TransformPublisher<DataType, NodeType>::publish(
-  const rclcpp::Time & stamp,
-  const DataType & data)
+  const rclcpp::Time & stamp, const DataType & data)
 {
   message_.transforms[0].header.stamp = stamp;
   to_ros_transform_msg(data, message_.transforms[0].transform);
@@ -121,27 +113,21 @@ void TransformPublisher<DataType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void TransformPublisher<DataType, NodeType>::publish(
-  const core::Duration & duration,
-  const DataType & data)
+  const core::Duration & duration, const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
-std::shared_ptr<TransformPublisher<DataType, NodeType>>
-make_transform_publisher(
+std::shared_ptr<TransformPublisher<DataType, NodeType>> make_transform_publisher(
   std::shared_ptr<NodeType> node,
   const std::string & frame_id,
   const std::string & child_frame_id,
   const bool & activated)
 {
   using Publisher = TransformPublisher<DataType, NodeType>;
-  return std::make_shared<Publisher>(
-    node,
-    frame_id,
-    child_frame_id,
-    activated);
+  return std::make_shared<Publisher>(node, frame_id, child_frame_id, activated);
 }
 
 }  // namespace ros2

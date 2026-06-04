@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__SERVICES__SERVICE_CLIENT_ASYNC_HPP_
 #define ROMEA_COMMON_UTILS__SERVICES__SERVICE_CLIENT_ASYNC_HPP_
 
 // std
-#include <memory>
-#include <string>
 #include <chrono>
+#include <memory>
 #include <sstream>
+#include <string>
 
 // ros
 #include "rclcpp/rclcpp.hpp"
@@ -70,9 +69,7 @@ public:
   }
 
   template<typename RepT = int64_t, typename RatioT = std::milli>
-  Response send_request(
-    Request request,
-    const std::chrono::duration<RepT, RatioT> & timeout)
+  Response send_request(Request request, const std::chrono::duration<RepT, RatioT> & timeout)
   {
     if (!service_server_is_always_ready()) {
       return nullptr;

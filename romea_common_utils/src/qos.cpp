@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "romea_common_utils/qos.hpp"
 
 namespace romea
@@ -29,15 +28,13 @@ rclcpp::QoS sensor_data_qos()
 //-----------------------------------------------------------------------------
 rclcpp::QoS best_effort(const size_t & history_size)
 {
-  return rclcpp::QoS(rclcpp::KeepLast(history_size))
-         .best_effort().durability_volatile();
+  return rclcpp::QoS(rclcpp::KeepLast(history_size)).best_effort().durability_volatile();
 }
 
 //-----------------------------------------------------------------------------
 rclcpp::QoS reliable(const size_t & history_size)
 {
-  return rclcpp::QoS(rclcpp::KeepLast(history_size))
-         .reliable().durability_volatile();
+  return rclcpp::QoS(rclcpp::KeepLast(history_size)).reliable().durability_volatile();
 }
 
 //-----------------------------------------------------------------------------

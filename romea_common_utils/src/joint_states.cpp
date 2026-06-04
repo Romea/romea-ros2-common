@@ -14,10 +14,10 @@
 
 // std
 #include <cassert>
+#include <limits>
 #include <memory>
 #include <string>
 #include <vector>
-#include <limits>
 
 // local
 #include "romea_common_utils/joint_states.hpp"
@@ -25,9 +25,7 @@
 namespace
 {
 
-void fill(
-  sensor_msgs::msg::JointState & joint_states,
-  const size_t & number_of_joints)
+void fill(sensor_msgs::msg::JointState & joint_states, const size_t & number_of_joints)
 {
   joint_states.name.resize(number_of_joints);
   joint_states.position.resize(number_of_joints, std::numeric_limits<double>::quiet_NaN());
@@ -35,9 +33,7 @@ void fill(
   joint_states.effort.resize(number_of_joints, std::numeric_limits<double>::quiet_NaN());
 }
 
-void fill(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::vector<std::string> & joint_names)
+void fill(sensor_msgs::msg::JointState & joint_states, const std::vector<std::string> & joint_names)
 {
   joint_states.name = joint_names;
   joint_states.position.resize(joint_names.size(), std::numeric_limits<double>::quiet_NaN());
@@ -52,10 +48,8 @@ namespace romea
 namespace ros2
 {
 
-
 //-----------------------------------------------------------------------------
-sensor_msgs::msg::JointState make_joint_state_msg(
-  const size_t & number_of_joints)
+sensor_msgs::msg::JointState make_joint_state_msg(const size_t & number_of_joints)
 {
   auto msg = sensor_msgs::msg::JointState();
   fill(msg, number_of_joints);
@@ -63,8 +57,7 @@ sensor_msgs::msg::JointState make_joint_state_msg(
 }
 
 //-----------------------------------------------------------------------------
-sensor_msgs::msg::JointState make_joint_state_msg(
-  const std::vector<std::string> joint_names)
+sensor_msgs::msg::JointState make_joint_state_msg(const std::vector<std::string> joint_names)
 {
   auto msg = sensor_msgs::msg::JointState();
   fill(msg, joint_names);
@@ -90,13 +83,9 @@ std::shared_ptr<sensor_msgs::msg::JointState> make_shared_joint_state_msg(
 
 //-----------------------------------------------------------------------------
 size_t get_joint_id(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::string & joint_name)
+  const sensor_msgs::msg::JointState & joint_states, const std::string & joint_name)
 {
-  auto it = std::find(
-    joint_states.name.cbegin(),
-    joint_states.name.cend(),
-    joint_name);
+  auto it = std::find(joint_states.name.cbegin(), joint_states.name.cend(), joint_name);
 
   assert(it != joint_states.name.end());
   return std::distance(joint_states.name.cbegin(), it);
@@ -104,13 +93,9 @@ size_t get_joint_id(
 
 //-----------------------------------------------------------------------------
 std::optional<size_t> find_joint_id(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::string & joint_name)
+  const sensor_msgs::msg::JointState & joint_states, const std::string & joint_name)
 {
-  auto it = std::find(
-    joint_states.name.cbegin(),
-    joint_states.name.cend(),
-    joint_name);
+  auto it = std::find(joint_states.name.cbegin(), joint_states.name.cend(), joint_name);
 
   if (it != joint_states.name.end()) {
     return std::distance(joint_states.name.cbegin(), it);
@@ -119,54 +104,41 @@ std::optional<size_t> find_joint_id(
   }
 }
 
-
 //-----------------------------------------------------------------------------
-double get_position(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id)
+double get_position(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id)
 {
   return joint_states.position[joint_id];
 }
 
 //-----------------------------------------------------------------------------
-double get_velocity(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id)
+double get_velocity(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id)
 {
   return joint_states.velocity[joint_id];
 }
 
 //-----------------------------------------------------------------------------
-double get_effort(
-  const sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id)
+double get_effort(const sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id)
 {
   return joint_states.effort[joint_id];
 }
 
 //-----------------------------------------------------------------------------
 void set_position(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & position)
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & position)
 {
   joint_states.position[joint_id] = position;
 }
 
 //-----------------------------------------------------------------------------
 void set_velocity(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & velocity)
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & velocity)
 {
   joint_states.velocity[joint_id] = velocity;
 }
 
 //-----------------------------------------------------------------------------
 void set_effort(
-  sensor_msgs::msg::JointState & joint_states,
-  const std::size_t joint_id,
-  const double & effort)
+  sensor_msgs::msg::JointState & joint_states, const std::size_t joint_id, const double & effort)
 {
   joint_states.effort[joint_id] = effort;
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 
@@ -22,8 +21,8 @@
 #include <utility>
 
 // local
-#include "romea_common_utils/publishers/stamped_publisher.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/publishers/stamped_publisher.hpp"
 
 namespace romea
 {
@@ -45,14 +44,9 @@ public:
     const rclcpp::QoS & qos,
     const bool & activated);
 
-  void publish(
-    const rclcpp::Time & stamp,
-    const DataType & data) override;
+  void publish(const rclcpp::Time & stamp, const DataType & data) override;
 
-
-  void publish(
-    const core::Duration & duration,
-    const DataType & data) override;
+  void publish(const core::Duration & duration, const DataType & data) override;
 
 private:
   std::string frame_id_;
@@ -66,8 +60,7 @@ StampedDataPublisher<DataType, MsgType, NodeType>::StampedDataPublisher(
   const std::string & frame_id,
   const rclcpp::QoS & qos,
   const bool & activated)
-: Base(node, topic_name, qos, Options(), activated),
-  frame_id_(frame_id)
+: Base(node, topic_name, qos, Options(), activated), frame_id_(frame_id)
 {
   assert(!frame_id.empty());
 }
@@ -75,8 +68,7 @@ StampedDataPublisher<DataType, MsgType, NodeType>::StampedDataPublisher(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
 void StampedDataPublisher<DataType, MsgType, NodeType>::publish(
-  const rclcpp::Time & stamp,
-  const DataType & data)
+  const rclcpp::Time & stamp, const DataType & data)
 {
   auto msg = std::make_unique<MsgType>();
   to_ros_msg(stamp, frame_id_, data, *msg.get());
@@ -86,16 +78,14 @@ void StampedDataPublisher<DataType, MsgType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
 void StampedDataPublisher<DataType, MsgType, NodeType>::publish(
-  const core::Duration & duration,
-  const DataType & data)
+  const core::Duration & duration, const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MsgType, typename NodeType>
-std::shared_ptr<StampedDataPublisher<DataType, MsgType, NodeType>>
-make_stamped_data_publisher(
+std::shared_ptr<StampedDataPublisher<DataType, MsgType, NodeType>> make_stamped_data_publisher(
   std::shared_ptr<NodeType> node,
   const std::string & topic_name,
   const std::string & frame_id,

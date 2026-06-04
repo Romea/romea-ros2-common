@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__POSE3D_CONVERSIONS_HPP_
 
@@ -20,16 +19,15 @@
 #include <string>
 
 // ros
-#include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
 
 // romea core
-#include "romea_core_common/time/Time.hpp"
 #include "romea_core_common/geometry/Pose3D.hpp"
+#include "romea_core_common/time/Time.hpp"
 
 // romea ros
 #include "romea_common_utils/conversions/time_conversions.hpp"
-
 
 namespace romea
 {
@@ -37,9 +35,7 @@ namespace ros2
 {
 
 void to_ros_transform_msg(
-  const core::Pose3D & romea_pose_3d,
-  geometry_msgs::msg::Transform & ros_transform_msg);
-
+  const core::Pose3D & romea_pose_3d, geometry_msgs::msg::Transform & ros_transform_msg);
 
 void to_ros_transform_msg(
   const rclcpp::Time & stamp,
@@ -49,8 +45,7 @@ void to_ros_transform_msg(
   geometry_msgs::msg::TransformStamped & tf_msg);
 
 void to_ros_msg(
-  const core::Pose3D & romea_pose_3d,
-  geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
+  const core::Pose3D & romea_pose_3d, geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
@@ -58,10 +53,8 @@ void to_ros_msg(
   const core::Pose3D & romea_pose_3d,
   geometry_msgs::msg::PoseWithCovarianceStamped & ros_pose_msg);
 
-
 void to_romea(
-  const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg,
-  core::Pose3D & romea_pose_3d);
+  const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg, core::Pose3D & romea_pose_3d);
 
 core::Pose3D to_romea(const geometry_msgs::msg::PoseWithCovariance & ros_pose_msg);
 

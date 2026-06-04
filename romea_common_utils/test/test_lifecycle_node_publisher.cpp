@@ -23,28 +23,22 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 // local
-#include "test_node_publisher_utils.hpp"
-#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
 #include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/publishers/data_publisher.hpp"
-#include "romea_common_utils/publishers/stamped_data_publisher.hpp"
-#include "romea_common_utils/publishers/odom_publisher.hpp"
-#include "romea_common_utils/publishers/transform_publisher.hpp"
 #include "romea_common_utils/publishers/diagnostic_publisher.hpp"
+#include "romea_common_utils/publishers/odom_publisher.hpp"
+#include "romea_common_utils/publishers/stamped_data_publisher.hpp"
+#include "romea_common_utils/publishers/transform_publisher.hpp"
+#include "test_node_publisher_utils.hpp"
 
 class TestLifecycleNodePublisher : public ::testing::Test
 {
 protected:
-  static void SetUpTestCase()
-  {
-    rclcpp::init(0, nullptr);
-  }
+  static void SetUpTestCase() { rclcpp::init(0, nullptr); }
 
-  static void TearDownTestCase()
-  {
-    rclcpp::shutdown();
-  }
+  static void TearDownTestCase() { rclcpp::shutdown(); }
 
   void SetUp() override
   {
@@ -60,11 +54,10 @@ protected:
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node;
 };
 
-
 TEST_F(TestLifecycleNodePublisher, testMessagePublisher)
 {
-  auto pub = romea::ros2::make_data_publisher<std::string,
-      std_msgs::msg::String>(node, "foo", 1, false);
+  auto pub =
+    romea::ros2::make_data_publisher<std::string, std_msgs::msg::String>(node, "foo", 1, false);
 
   Subscription<std_msgs::msg::String> sub(node, "foo");
   pub->activate();
@@ -76,11 +69,11 @@ TEST_F(TestLifecycleNodePublisher, testMessagePublisher)
   EXPECT_STREQ(sub.get_received_data().data.c_str(), "bar");
 }
 
-
 TEST_F(TestLifecycleNodePublisher, testStampedDataPublisher)
 {
-  auto pub = romea::ros2::make_stamped_data_publisher<Eigen::Vector3d,
-      geometry_msgs::msg::PointStamped>(node, "foo", "bar", 1, false);
+  auto pub =
+    romea::ros2::make_stamped_data_publisher<Eigen::Vector3d, geometry_msgs::msg::PointStamped>(
+      node, "foo", "bar", 1, false);
 
   Subscription<geometry_msgs::msg::PointStamped> sub(node, "foo");
   pub->activate();
@@ -97,11 +90,10 @@ TEST_F(TestLifecycleNodePublisher, testStampedDataPublisher)
   EXPECT_DOUBLE_EQ(sub.get_received_data().point.z, 3);
 }
 
-
 TEST_F(TestLifecycleNodePublisher, testOdomPublisher)
 {
-  auto pub = romea::ros2::make_odom_publisher<nav_msgs::msg::Odometry>(
-    node, "odom", "foo", "bar", 1, false);
+  auto pub =
+    romea::ros2::make_odom_publisher<nav_msgs::msg::Odometry>(node, "odom", "foo", "bar", 1, false);
   Subscription<nav_msgs::msg::Odometry> sub(node, "odom");
   pub->activate();
 
@@ -114,7 +106,6 @@ TEST_F(TestLifecycleNodePublisher, testOdomPublisher)
   EXPECT_STREQ(sub.get_received_data().header.frame_id.c_str(), "foo");
   EXPECT_STREQ(sub.get_received_data().child_frame_id.c_str(), "bar");
 }
-
 
 TEST_F(TestLifecycleNodePublisher, testDiagnosticPublisher)
 {

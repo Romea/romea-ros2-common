@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__DATA_PUBLISHER_HPP_
 
-
 // std
-#include <string>
 #include <memory>
+#include <string>
 
 // ros
 #include "realtime_tools/realtime_publisher.h"
@@ -33,14 +31,12 @@ template<class DataType, class MessageType>
 class RealtimeMessagePublisher
 {
 private:
-  using Publisher = rclcpp::Publisher<MessageType>
-    using RTPublisher = realtime_tools::RealtimePublisher<MessageType>;
+  using Publisher = rclcpp::Publisher<MessageType> using RTPublisher =
+    realtime_tools::RealtimePublisher<MessageType>;
 
 public:
   RealtimeMessagePublisher(
-    std::shared<rclcpp::Node> node,
-    const std::string & topic_name,
-    const rclcpp::QoS & qos);
+    std::shared<rclcpp::Node> node, const std::string & topic_name, const rclcpp::QoS & qos);
 
   void publish(const DataType & data);
 
@@ -49,26 +45,21 @@ protected:
   std::share_ptr<RTPublisher> rt_pub_;
 };
 
-
 //-----------------------------------------------------------------------------
 template<class DataType, class MessageType>
 RealtimeMessagePublisher<DataType, MessageType>::MessagePublisher()
-  : pub_(nullptr),
-  rt_pub_(nullptr)
+: pub_(nullptr), rt_pub_(nullptr)
 {
 }
 
 //-----------------------------------------------------------------------------
 template<class DataType, class MessageType>
 RealtimeMessagePublisher<DataType, MessageType>::RealtimeMessagePublisher(
-  std::shared_ptr<rclcpp::Node> & node,
-  const std::string & topic_name,
-  const rclcpp::QoS & qos)
+  std::shared_ptr<rclcpp::Node> & node, const std::string & topic_name, const rclcpp::QoS & qos)
 : pub_(node->create_publisher<MessageType>(topic_name, qos)),
   rt_pub_(std::make_shared<RTPublisher>(pub_))
 {
 }
-
 
 //-----------------------------------------------------------------------------
 template<class DataType, class MessageType>

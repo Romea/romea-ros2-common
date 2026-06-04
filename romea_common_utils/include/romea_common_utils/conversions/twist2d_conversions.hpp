@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__TWIST2D_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__TWIST2D_CONVERSIONS_HPP_
 
@@ -26,15 +25,13 @@
 // romea core
 #include "romea_core_common/geometry/Twist2D.hpp"
 
-
 namespace romea
 {
 namespace ros2
 {
 
 void to_ros_msg(
-  const core::Twist2D & romea_twist2d,
-  romea_common_msgs::msg::Twist2D & ros_twist2d_msg);
+  const core::Twist2D & romea_twist2d, romea_common_msgs::msg::Twist2D & ros_twist2d_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
@@ -43,8 +40,7 @@ void to_ros_msg(
   romea_common_msgs::msg::Twist2DStamped & ros_twist2d_msg);
 
 void to_romea(
-  const romea_common_msgs::msg::Twist2D & ros_twist2d_msg,
-  core::Twist2D & romea_twist2d);
+  const romea_common_msgs::msg::Twist2D & ros_twist2d_msg, core::Twist2D & romea_twist2d);
 
 core::Twist2D to_romea(const romea_common_msgs::msg::Twist2D & ros_twist2d_msg);
 

@@ -21,10 +21,9 @@
 #include "tf2_eigen/tf2_eigen.hpp"
 #include "tf2_ros/transform_listener.h"
 
-
 // local
-#include "romea_common_utils/conversions/transform_conversions.hpp"
 #include "romea_common_utils/conversions/geometry_conversions.hpp"
+#include "romea_common_utils/conversions/transform_conversions.hpp"
 
 namespace romea
 {
@@ -32,16 +31,13 @@ namespace ros2
 {
 
 //-----------------------------------------------------------------------------
-void to_romea(
-  const geometry_msgs::msg::Transform & tranform_msg,
-  Eigen::Affine3d & eigen_transform)
+void to_romea(const geometry_msgs::msg::Transform & tranform_msg, Eigen::Affine3d & eigen_transform)
 {
   eigen_transform.translation() = Eigen::Vector3d(
-    tranform_msg.translation.x,
-    tranform_msg.translation.y,
-    tranform_msg.translation.z);
+    tranform_msg.translation.x, tranform_msg.translation.y, tranform_msg.translation.z);
 
-  Eigen::Quaterniond q(tranform_msg.rotation.w,
+  Eigen::Quaterniond q(
+    tranform_msg.rotation.w,
     tranform_msg.rotation.x,
     tranform_msg.rotation.y,
     tranform_msg.rotation.z);
@@ -51,8 +47,7 @@ void to_romea(
 
 //-----------------------------------------------------------------------------
 void to_ros_transform_msg(
-  const Eigen::Affine3d & eigen_transform,
-  geometry_msgs::msg::Transform & tranform_msg)
+  const Eigen::Affine3d & eigen_transform, geometry_msgs::msg::Transform & tranform_msg)
 {
   to_ros_msg(eigen_transform.translation(), tranform_msg.translation);
   to_ros_msg(eigen_transform.linear(), tranform_msg.rotation);

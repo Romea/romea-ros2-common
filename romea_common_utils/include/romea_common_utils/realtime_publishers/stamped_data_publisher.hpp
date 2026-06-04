@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__REALTIME_PUBLISHERS__STAMPED_DATA_PUBLISHER_HPP_
-
 
 // std
 #include <memory>
@@ -47,20 +45,15 @@ public:
     const std::string & frame_id,
     const rclcpp::QoS & qos);
 
-  void publish(
-    const rclcpp::Time & stamp,
-    const DataType & data);
+  void publish(const rclcpp::Time & stamp, const DataType & data);
 
-  void publish(
-    const core::Duration & duration,
-    const DataType & data);
+  void publish(const core::Duration & duration, const DataType & data);
 
 protected:
   std::string frame_id_;
   std::shared_ptr<Publisher> pub_;
   std::shared_ptr<RTPublisher> rt_pub_;
 };
-
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MessageType>
@@ -80,8 +73,7 @@ RealtimeStampedMessagePublisher<DataType, MessageType>::RealtimeStampedMessagePu
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MessageType>
 void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
-  const rclcpp::Time & stamp,
-  const DataType & data)
+  const rclcpp::Time & stamp, const DataType & data)
 {
   if (rt_pub_->trylock()) {
     to_ros_msg(stamp, frame_id_, data, rt_pub_->msg_);
@@ -92,8 +84,7 @@ void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename MessageType>
 void RealtimeStampedMessagePublisher<DataType, MessageType>::publish(
-  const core::Duration & duration,
-  const DataType & data)
+  const core::Duration & duration, const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }

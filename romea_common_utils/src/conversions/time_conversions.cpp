@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "romea_common_utils/conversions/time_conversions.hpp"
+
 #include <romea_core_common/time/Time.hpp>
 
 namespace romea::ros2

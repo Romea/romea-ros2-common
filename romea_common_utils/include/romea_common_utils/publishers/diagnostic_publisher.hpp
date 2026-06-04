@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PUBLISHERS__DIAGNOSTIC_PUBLISHER_HPP_
 #define ROMEA_COMMON_UTILS__PUBLISHERS__DIAGNOSTIC_PUBLISHER_HPP_
-
 
 // std
 #include <memory>
@@ -26,9 +24,9 @@
 #include "diagnostic_msgs/msg/diagnostic_array.hpp"
 
 // local
-#include "romea_common_utils/publishers/stamped_publisher.hpp"
-#include "romea_common_utils/conversions/time_conversions.hpp"
 #include "romea_common_utils/conversions/diagnostic_conversions.hpp"
+#include "romea_common_utils/conversions/time_conversions.hpp"
+#include "romea_common_utils/publishers/stamped_publisher.hpp"
 
 namespace romea
 {
@@ -36,8 +34,8 @@ namespace ros2
 {
 
 template<typename DataType, typename NodeType>
-class DiagnosticPublisher : public StampedPublisher<DataType, diagnostic_msgs::msg::DiagnosticArray,
-    NodeType>
+class DiagnosticPublisher
+: public StampedPublisher<DataType, diagnostic_msgs::msg::DiagnosticArray, NodeType>
 {
 private:
   using Base = StampedPublisher<DataType, diagnostic_msgs::msg::DiagnosticArray, NodeType>;
@@ -53,18 +51,12 @@ public:
     const rclcpp::QoS & qos,
     const bool & activated);
 
-  void publish(
-    const core::Duration & duration,
-    const DataType & data);
+  void publish(const core::Duration & duration, const DataType & data);
 
-  void publish(
-    const rclcpp::Time & stamp,
-    const DataType & data);
+  void publish(const rclcpp::Time & stamp, const DataType & data);
 
 private:
-  void publish_(
-    const rclcpp::Time & stamp,
-    const DataType & data);
+  void publish_(const rclcpp::Time & stamp, const DataType & data);
 
 private:
   std::string diagnostic_name_;
@@ -72,7 +64,6 @@ private:
   rclcpp::Time next_time_;
   rclcpp::Duration diagnostic_period_;
 };
-
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
@@ -95,8 +86,7 @@ DiagnosticPublisher<DataType, NodeType>::DiagnosticPublisher(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void DiagnosticPublisher<DataType, NodeType>::publish(
-  const core::Duration & duration,
-  const DataType & data)
+  const core::Duration & duration, const DataType & data)
 {
   publish(to_ros_time(duration), data);
 }
@@ -104,8 +94,7 @@ void DiagnosticPublisher<DataType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void DiagnosticPublisher<DataType, NodeType>::publish(
-  const rclcpp::Time & stamp,
-  const DataType & data)
+  const rclcpp::Time & stamp, const DataType & data)
 {
   if (stamp > next_time_) {
     publish_(stamp, data);
@@ -116,8 +105,7 @@ void DiagnosticPublisher<DataType, NodeType>::publish(
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
 void DiagnosticPublisher<DataType, NodeType>::publish_(
-  const rclcpp::Time & stamp,
-  const DataType & data)
+  const rclcpp::Time & stamp, const DataType & data)
 {
   auto msg = std::make_unique<diagnostic_msgs::msg::DiagnosticArray>();
   msg->header.stamp = stamp;
@@ -128,8 +116,7 @@ void DiagnosticPublisher<DataType, NodeType>::publish_(
 
 //-----------------------------------------------------------------------------
 template<typename DataType, typename NodeType>
-std::shared_ptr<DiagnosticPublisher<DataType, NodeType>>
-make_diagnostic_publisher(
+std::shared_ptr<DiagnosticPublisher<DataType, NodeType>> make_diagnostic_publisher(
   std::shared_ptr<NodeType> node,
   const std::string & diagnostic_name,
   const double & diagnostic_period,
@@ -140,17 +127,10 @@ make_diagnostic_publisher(
 {
   using Publisher = DiagnosticPublisher<DataType, NodeType>;
   return std::make_shared<Publisher>(
-    node,
-    diagnostic_name,
-    diagnostic_period,
-    hardware_id,
-    topic_name,
-    qos,
-    activated);
+    node, diagnostic_name, diagnostic_period, hardware_id, topic_name, qos, activated);
 }
 
 }  // namespace ros2
 }  // namespace romea
-
 
 #endif  // ROMEA_COMMON_UTILS__PUBLISHERS__DIAGNOSTIC_PUBLISHER_HPP_

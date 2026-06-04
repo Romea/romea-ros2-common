@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
 #define ROMEA_COMMON_UTILS__PARAMS__NODE_PARAMETERS_HPP_
 
@@ -32,9 +31,7 @@ namespace ros2
 {
 
 //-----------------------------------------------------------------------------
-inline std::string full_param_name(
-  const std::string & ns,
-  const std::string & param_name)
+inline std::string full_param_name(const std::string & ns, const std::string & param_name)
 {
   return ns.empty() ? param_name : ns + "." + param_name;
 }
@@ -45,7 +42,7 @@ inline void declare_parameter(
   std::shared_ptr<Node> node,
   const std::string & param_name,
   const rcl_interfaces::msg::ParameterDescriptor & parameter_descriptor =
-  rcl_interfaces::msg::ParameterDescriptor())
+    rcl_interfaces::msg::ParameterDescriptor())
 {
   try {
     node->template declare_parameter<T>(param_name, parameter_descriptor);
@@ -57,9 +54,7 @@ inline void declare_parameter(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline void declare_parameter_with_default(
-  std::shared_ptr<Node> node,
-  const std::string & param_name,
-  const T & default_value)
+  std::shared_ptr<Node> node, const std::string & param_name, const T & default_value)
 {
   try {
     node->template declare_parameter<T>(param_name, default_value);
@@ -68,13 +63,10 @@ inline void declare_parameter_with_default(
   }
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline void declare_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
   declare_parameter<T>(node, full_param_name(param_namespace, param_name));
 }
@@ -88,8 +80,7 @@ inline void declare_parameter_with_default(
   const T & default_value)
 {
   declare_parameter_with_default<T>(
-    node, full_param_name(param_namespace, param_name),
-    default_value);
+    node, full_param_name(param_namespace, param_name), default_value);
 }
 
 //-----------------------------------------------------------------------------
@@ -133,9 +124,7 @@ inline void declare_parameters_with_default(
 
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
-inline T get_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
+inline T get_parameter(std::shared_ptr<Node> node, const std::string & param_name)
 {
   T value;
   if (!node->template get_parameter(param_name, value)) {
@@ -151,20 +140,15 @@ inline T get_parameter(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline T get_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
   return get_parameter<T>(node, full_param_name(param_namespace, param_name));
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline T get_parameter_or(
-  std::shared_ptr<Node> node,
-  const std::string & param_name,
-  const T & default_value)
+  std::shared_ptr<Node> node, const std::string & param_name, const T & default_value)
 {
   T value;
   node->template get_parameter_or(param_name, value, default_value);
@@ -185,12 +169,9 @@ inline T get_parameter_or(
   return value;
 }
 
-
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
-inline void declare_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
+inline void declare_vector_parameter(std::shared_ptr<Node> node, const std::string & param_name)
 {
   node->template declare_parameter<std::vector<T>>(param_name);
 }
@@ -198,9 +179,7 @@ inline void declare_vector_parameter(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline void declare_vector_parameter_with_default(
-  std::shared_ptr<Node> node,
-  const std::string & param_name,
-  const std::vector<T> & default_values)
+  std::shared_ptr<Node> node, const std::string & param_name, const std::vector<T> & default_values)
 {
   node->template declare_parameter<std::vector<T>>(param_name, default_values);
 }
@@ -208,9 +187,7 @@ inline void declare_vector_parameter_with_default(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline void declare_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
   declare_vector_parameter<T>(node, full_param_name(param_namespace, param_name));
 }
@@ -218,8 +195,7 @@ inline void declare_vector_parameter(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline std::vector<T> get_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_name)
 {
   return get_parameter<std::vector<T>>(node, param_name);
 }
@@ -227,13 +203,10 @@ inline std::vector<T> get_vector_parameter(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline std::vector<T> get_vector_parameter(
-  std::shared_ptr<Node> node,
-  const std::string & param_namespace,
-  const std::string & param_name)
+  std::shared_ptr<Node> node, const std::string & param_namespace, const std::string & param_name)
 {
   return get_vector_parameter<T>(node, full_param_name(param_namespace, param_name));
 }
-
 
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
@@ -253,8 +226,7 @@ inline std::vector<T> get_parameters(
 //-----------------------------------------------------------------------------
 template<typename T, typename Node>
 inline std::map<std::string, T> get_parameters(
-  std::shared_ptr<Node> node,
-  const std::string & params_namespace)
+  std::shared_ptr<Node> node, const std::string & params_namespace)
 {
   std::map<std::string, T> map;
   if (!node->template get_parameters(params_namespace, map)) {
@@ -270,19 +242,16 @@ inline std::map<std::string, T> get_parameters(
 //-----------------------------------------------------------------------------
 template<typename ParameterType>
 ParameterType get_parameter_value(
-  const std::vector<rclcpp::Parameter> & parameters,
-  const std::string & parameter_name)
+  const std::vector<rclcpp::Parameter> & parameters, const std::string & parameter_name)
 {
   auto it = std::find_if(
-    parameters.begin(), parameters.end(),
-    [parameter_name](const rclcpp::Parameter & parameter) {
+    parameters.begin(), parameters.end(), [parameter_name](const rclcpp::Parameter & parameter) {
       return parameter.get_name() == parameter_name;
-    }
-  );
+    });
 
   if (it == parameters.end()) {
     throw std::runtime_error(
-            "Parameter called " + parameter_name + " does not exist in parameters list");
+      "Parameter called " + parameter_name + " does not exist in parameters list");
   }
 
   return it->template get_value<ParameterType>();
@@ -296,11 +265,9 @@ ParameterType get_parameter_value_or(
   const ParameterType & default_value)
 {
   auto it = std::find_if(
-    parameters.begin(), parameters.end(),
-    [parameter_name](const rclcpp::Parameter & parameter) {
+    parameters.begin(), parameters.end(), [parameter_name](const rclcpp::Parameter & parameter) {
       return parameter.get_name() == parameter_name;
-    }
-  );
+    });
 
   if (it != parameters.end()) {
     return it->template get_value<ParameterType>();
@@ -308,7 +275,6 @@ ParameterType get_parameter_value_or(
     return default_value;
   }
 }
-
 
 }  // namespace ros2
 }  // namespace romea

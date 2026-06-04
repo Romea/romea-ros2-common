@@ -157,5 +157,3 @@ In this example:
 * the device meta-description is loaded from the provided YAML file
 
 All parameters are automatically handled by the helper system, so no manual parsing is required in the script.
-
-

@@ -24,8 +24,7 @@
 class URDFBroadcaster : public rclcpp::Node
 {
 public:
-  URDFBroadcaster()
-  : Node("robot_description_node")
+  URDFBroadcaster() : Node("robot_description_node")
   {
     std::string urdf_xml = this->declare_parameter("robot_description", std::string(""));
     if (urdf_xml.empty()) {
@@ -42,15 +41,11 @@ public:
     description_pub_->publish(std::move(msg));
 
     shutdown_timer_ = this->create_wall_timer(
-      std::chrono::seconds(timeout),
-      std::bind(&URDFBroadcaster::shutdown_node, this));
+      std::chrono::seconds(timeout), std::bind(&URDFBroadcaster::shutdown_node, this));
   }
 
 private:
-  void shutdown_node()
-  {
-    rclcpp::shutdown();
-  }
+  void shutdown_node() { rclcpp::shutdown(); }
 
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr description_pub_;
   rclcpp::TimerBase::SharedPtr timer_;

@@ -22,8 +22,8 @@
 #include "romea_core_common/math/EulerAngles.hpp"
 
 // local
-#include "test_utils.hpp"
 #include "romea_common_utils/conversions/pose3d_conversions.hpp"
+#include "test_utils.hpp"
 
 //-----------------------------------------------------------------------------
 class TestPose3DConversion : public ::testing::Test
@@ -39,7 +39,7 @@ public:
   {
   }
 
-  void SetUp()override
+  void SetUp() override
   {
     romea_pose3d.position.x() = 1;
     romea_pose3d.position.y() = 2;
