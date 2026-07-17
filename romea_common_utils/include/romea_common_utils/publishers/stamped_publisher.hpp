@@ -20,14 +20,11 @@
 #include <string>
 #include <utility>
 
-// ros
-#include "rclcpp/node.hpp"
-#include "rclcpp/publisher.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "rclcpp_lifecycle/lifecycle_publisher.hpp"
-
 // romea core
 #include "romea_core_common/time/Time.hpp"
+
+// local
+#include "romea_common_utils/publishers/ros_publisher.hpp"
 
 namespace romea
 {
@@ -56,123 +53,42 @@ public:
 };
 
 template<typename DataType, typename MsgType, typename NodeType>
-class StampedPublisher
-{
-};
-
-template<typename DataType, typename MsgType>
-class StampedPublisher<DataType, MsgType, rclcpp::Node> : public StampedPublisherBase<DataType>
+class StampedPublisher : public StampedPublisherBase<DataType>
 {
 public:
-  using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
+  using Options = typename ROSPublisher<MsgType, NodeType>::Options;
 
 public:
   StampedPublisher(
-    std::shared_ptr<rclcpp::Node> node,
+    std::shared_ptr<NodeType> node,
     const std::string & topic_name,
     const rclcpp::QoS & qos,
     const Options & options,
     const bool & activated)
-  : is_activated_(activated),
-    pub_(node->create_publisher<MsgType>(topic_name, qos, options)),
-    should_log_(true),
-    logger_(rclcpp::get_logger("Publisher"))
+  : ros_publisher_(node, topic_name, qos, options, activated)
   {
   }
 
   virtual ~StampedPublisher() = default;
 
-  std::string get_topic_name() const override { return pub_->get_topic_name(); }
+  std::string get_topic_name() const override { return ros_publisher_.get_topic_name(); }
 
-  void activate() override { is_activated_.store(true); }
+  void activate() override { ros_publisher_.activate(); }
 
-  void deactivate() override { is_activated_.store(false); }
+  void deactivate() override { ros_publisher_.deactivate(); }
 
-  bool is_activated() override { return is_activated_.load(); }
+  bool is_activated() override { return ros_publisher_.is_activated(); }
 
 protected:
   void publish_message_(std::unique_ptr<MsgType> message)
   {
-    if (!this->is_activated()) {
-      log_publisher_not_enabled();
-      return;
-    }
-    pub_->publish(std::move(message));
+    ros_publisher_.publish(std::move(message));
   }
 
-  void publish_message_(const MsgType & message)
-  {
-    if (!this->is_activated()) {
-      log_publisher_not_enabled();
-      return;
-    }
-
-    pub_->publish(message);
-  }
-
-  void log_publisher_not_enabled()
-  {
-    // Nothing to do if we are not meant to log
-    if (!should_log_) {
-      return;
-    }
-
-    // Log the message
-    RCLCPP_WARN(
-      logger_,
-      "Trying to publish message on the topic '%s', but the publisher is not activated",
-      this->get_topic_name().c_str());
-
-    // We stop logging until the flag gets enabled again
-    should_log_ = false;
-  }
+  void publish_message_(const MsgType & message) { ros_publisher_.publish(message); }
 
 protected:
-  std::atomic<bool> is_activated_;
-  std::shared_ptr<rclcpp::Publisher<MsgType>> pub_;
-
-  bool should_log_;
-  rclcpp::Logger logger_;
-};
-
-template<typename DataType, typename MsgType>
-class StampedPublisher<DataType, MsgType, rclcpp_lifecycle::LifecycleNode>
-: public StampedPublisherBase<DataType>
-{
-public:
-  using Options = rclcpp::PublisherOptionsWithAllocator<std::allocator<void>>;
-
-public:
-  StampedPublisher(
-    std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node,
-    const std::string & topic_name,
-    const rclcpp::QoS & qos,
-    const Options & options,
-    const bool & activated)
-  : pub_(node->create_publisher<MsgType>(topic_name, qos, options))
-  {
-    if (activated) {
-      pub_->on_activate();
-    }
-  }
-
-  virtual ~StampedPublisher() = default;
-
-  std::string get_topic_name() const { return pub_->get_topic_name(); }
-
-  void activate() override { pub_->on_activate(); }
-
-  void deactivate() override { pub_->on_deactivate(); }
-
-  bool is_activated() override { return pub_->is_activated(); }
-
-protected:
-  void publish_message_(std::unique_ptr<MsgType> message) { pub_->publish(std::move(message)); }
-
-  void publish_message_(const MsgType & message) { pub_->publish(message); }
-
-protected:
-  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MsgType>> pub_;
+  ROSPublisher<MsgType, NodeType> ros_publisher_;
 };
 
 }  // namespace ros2

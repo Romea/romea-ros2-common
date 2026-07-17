@@ -29,6 +29,7 @@
 #include "romea_common_utils/publishers/data_publisher.hpp"
 #include "romea_common_utils/publishers/diagnostic_publisher.hpp"
 #include "romea_common_utils/publishers/odom_publisher.hpp"
+#include "romea_common_utils/publishers/ros_publisher.hpp"
 #include "romea_common_utils/publishers/stamped_data_publisher.hpp"
 #include "romea_common_utils/publishers/transform_publisher.hpp"
 
@@ -49,6 +50,49 @@ protected:
 
   std::shared_ptr<rclcpp::Node> node;
 };
+
+TEST_F(TestNodePublisher, testROSPublisher)
+{
+  using Publisher = romea::ros2::ROSPublisher<std_msgs::msg::String, rclcpp::Node>;
+
+  Publisher pub(node, "ros_message", 1, Publisher::Options(), true);
+  Subscription<std_msgs::msg::String> sub(node, "ros_message");
+
+  std_msgs::msg::String msg;
+  msg.data = "bar";
+  pub.publish(msg);
+  SleedpAndSpinSome();
+
+  EXPECT_TRUE(pub.is_activated());
+  EXPECT_EQ(sub.get_publisher_count(), 1U);
+  EXPECT_STREQ(sub.get_received_data().data.c_str(), "bar");
+}
+
+TEST_F(TestNodePublisher, testROSPublisherActivation)
+{
+  using Publisher = romea::ros2::ROSPublisher<std_msgs::msg::String, rclcpp::Node>;
+
+  Publisher pub(node, "ros_unique_message", 1, Publisher::Options(), false);
+  Subscription<std_msgs::msg::String> sub(node, "ros_unique_message");
+
+  auto msg = std::make_unique<std_msgs::msg::String>();
+  msg->data = "before_activation";
+  pub.publish(std::move(msg));
+  SleedpAndSpinSome();
+
+  EXPECT_FALSE(pub.is_activated());
+  EXPECT_TRUE(sub.get_received_data().data.empty());
+
+  pub.activate();
+  msg = std::make_unique<std_msgs::msg::String>();
+  msg->data = "after_activation";
+  pub.publish(std::move(msg));
+  SleedpAndSpinSome();
+
+  EXPECT_TRUE(pub.is_activated());
+  EXPECT_EQ(sub.get_publisher_count(), 1U);
+  EXPECT_STREQ(sub.get_received_data().data.c_str(), "after_activation");
+}
 
 TEST_F(TestNodePublisher, testDataPublisher)
 {
