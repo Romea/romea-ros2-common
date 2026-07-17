@@ -14,6 +14,8 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+    msg/DataLogger.msg
+    msg/FSMLogger.msg
     msg/Position2D.msg
     msg/Position3D.msg
     msg/Pose2D.msg
