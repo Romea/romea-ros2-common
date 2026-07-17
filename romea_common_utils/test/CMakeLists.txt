@@ -39,3 +39,6 @@ target_link_libraries(${PROJECT_NAME}_test_twist2d_conversions ${PROJECT_NAME})
 
 ament_add_gtest(${PROJECT_NAME}_test_twist3d_conversions test_twist3d_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_twist3d_conversions ${PROJECT_NAME})
+
+ament_add_gtest(${PROJECT_NAME}_test_topic_logger test_topic_logger.cpp)
+target_link_libraries(${PROJECT_NAME}_test_topic_logger ${PROJECT_NAME})
