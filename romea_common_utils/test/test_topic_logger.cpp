@@ -14,6 +14,7 @@
 
 // gtest
 #include <rclcpp/node.hpp>
+
 #include "gtest/gtest.h"
 
 // romea
@@ -53,7 +54,7 @@ TEST_F(TestTopicLogger, basic)
   SleedpAndSpinSome();
 
   {
-    auto msg = sub.get_received_data();
+    const auto & msg = sub.get_received_data();
     ASSERT_EQ(msg.names.size(), 2);
     ASSERT_EQ(msg.values.size(), 2);
 
@@ -70,7 +71,7 @@ TEST_F(TestTopicLogger, basic)
   SleedpAndSpinSome();
 
   {
-    auto msg = sub.get_received_data();
+    const auto & msg = sub.get_received_data();
     ASSERT_EQ(msg.names.size(), 2);
     ASSERT_EQ(msg.values.size(), 2);
 
