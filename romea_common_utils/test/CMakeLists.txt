@@ -7,6 +7,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ament_add_gtest(${PROJECT_NAME}_test_ros_conversions test_ros_conversions.cpp)
 target_link_libraries(${PROJECT_NAME}_test_ros_conversions ${PROJECT_NAME})
 
+ament_add_gtest(${PROJECT_NAME}_test_fsm_conversions test_fsm_conversions.cpp)
+target_link_libraries(${PROJECT_NAME}_test_fsm_conversions ${PROJECT_NAME})
+
 ament_add_gtest(${PROJECT_NAME}_test_node_parameters test_node_parameters.cpp)
 target_link_libraries(${PROJECT_NAME}_test_node_parameters ${PROJECT_NAME})
 

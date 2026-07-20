@@ -14,6 +14,7 @@ The package provides conversion helpers between ROMEA data structures and ROS2 m
 - pose 2D / 3D conversions
 - twist 2D / 3D conversions
 - pose and twist 2D / 3D conversions
+- finite-state-machine conversions
 - transform conversions
 - time conversions
 
@@ -54,6 +55,14 @@ Available publishers:
 - `TransformPublisher`
 
 It also provides base publisher classes used to factorize common publishing behavior.
+
+`StampedDataPublisher` can be used with an empty `frame_id` for stamped messages that carry time but are not attached to a spatial frame, such as `FSMEvent`.
+
+---
+
+### Logging
+
+The package provides lightweight ROS2 logging helpers. `TopicLogger` publishes `romea_common_msgs/msg/DataLogger` debug data, commonly on `debug/<logger_name>` topics when the owning component enables debug logging. `ConsoleFSMLogger` prints finite-state-machine transitions consistently.
 
 ---
 

@@ -62,7 +62,6 @@ StampedDataPublisher<DataType, MsgType, NodeType>::StampedDataPublisher(
   const bool & activated)
 : Base(node, topic_name, qos, Options(), activated), frame_id_(frame_id)
 {
-  assert(!frame_id.empty());
 }
 
 //-----------------------------------------------------------------------------

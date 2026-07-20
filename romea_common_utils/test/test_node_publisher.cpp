@@ -127,6 +127,26 @@ TEST_F(TestNodePublisher, testStampedDataPublisher)
   EXPECT_DOUBLE_EQ(sub.get_received_data().point.z, 3);
 }
 
+TEST_F(TestNodePublisher, testStampedDataPublisherWithEmptyFrameId)
+{
+  auto pub =
+    romea::ros2::make_stamped_data_publisher<Eigen::Vector3d, geometry_msgs::msg::PointStamped>(
+      node, "foo_empty_frame", "", 1, true);
+
+  Subscription<geometry_msgs::msg::PointStamped> sub(node, "foo_empty_frame");
+
+  rclcpp::Time t = node->get_clock()->now();
+  pub->publish(t, Eigen::Vector3d(4, 5, 6));
+  SleedpAndSpinSome();
+
+  EXPECT_EQ(sub.get_publisher_count(), 1U);
+  EXPECT_EQ(romea::ros2::extract_duration(sub.get_received_data()).count(), t.nanoseconds());
+  EXPECT_TRUE(sub.get_received_data().header.frame_id.empty());
+  EXPECT_DOUBLE_EQ(sub.get_received_data().point.x, 4);
+  EXPECT_DOUBLE_EQ(sub.get_received_data().point.y, 5);
+  EXPECT_DOUBLE_EQ(sub.get_received_data().point.z, 6);
+}
+
 TEST_F(TestNodePublisher, testOdomPublisher)
 {
   auto pub =

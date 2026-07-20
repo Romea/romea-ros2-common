@@ -15,7 +15,8 @@ find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
     msg/DataLogger.msg
-    msg/FSMLogger.msg
+    msg/FSMState.msg
+    msg/FSMEvent.msg
     msg/Position2D.msg
     msg/Position3D.msg
     msg/Pose2D.msg
@@ -31,4 +32,3 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()
-

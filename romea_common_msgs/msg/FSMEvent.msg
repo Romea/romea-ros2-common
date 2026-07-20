@@ -1,0 +1,4 @@
+std_msgs/Header header
+romea_common_msgs/FSMState previous_state
+romea_common_msgs/FSMState current_state
+string description

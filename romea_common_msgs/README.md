@@ -8,6 +8,8 @@ This package provides a set of ROS2 message definitions similar to some messages
 - **Position2D**: Encodes 2D position data with its covariance.
 - **Pose2D**: Combines position and orientation in 2D space with its covariance.
 - **PoseAndTwist2D**: A 2D equivalent to `nav_msgs::Odometry`, combining pose and twist information.
+- **DataLogger**: Carries named debug values published by runtime loggers.
+- **FSMState**: Represents a finite-state-machine state with a stable numeric id and readable name.
+- **FSMEvent**: Represents a finite-state-machine transition with previous state, current state, timestamp and description.
 
 These messages are primarily designed for and used by localization algorithms developed within the ROMEA ecosystem 
-

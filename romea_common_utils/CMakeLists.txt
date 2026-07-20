@@ -39,6 +39,7 @@ find_package(romea_common_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
     src/conversions/diagnostic_conversions.cpp
+    src/conversions/fsm_conversions.cpp
     src/conversions/time_conversions.cpp
     src/conversions/geometry_conversions.cpp
     src/conversions/transform_conversions.cpp
