@@ -15,6 +15,9 @@
 #ifndef ROMEA_COMMON_UTILS__CONVERSIONS__FSM_CONVERSIONS_HPP_
 #define ROMEA_COMMON_UTILS__CONVERSIONS__FSM_CONVERSIONS_HPP_
 
+// std
+#include <string>
+
 // ros
 #include "rclcpp/time.hpp"
 
@@ -32,14 +35,12 @@ namespace ros2
 {
 
 void to_ros_msg(
-  const core::FSMState & romea_fsm_state,
-  romea_common_msgs::msg::FSMState & ros_fsm_state_msg);
+  const core::FSMState & romea_fsm_state, romea_common_msgs::msg::FSMState & ros_fsm_state_msg);
 
 romea_common_msgs::msg::FSMState to_ros_msg(const core::FSMState & romea_fsm_state);
 
 void to_ros_msg(
-  const core::FSMEvent & romea_fsm_event,
-  romea_common_msgs::msg::FSMEvent & ros_fsm_event_msg);
+  const core::FSMEvent & romea_fsm_event, romea_common_msgs::msg::FSMEvent & ros_fsm_event_msg);
 
 void to_ros_msg(
   const rclcpp::Time & stamp,
@@ -53,8 +54,7 @@ void to_ros_msg(
   romea_common_msgs::msg::FSMEvent & ros_fsm_event_msg);
 
 romea_common_msgs::msg::FSMEvent to_ros_msg(
-  const rclcpp::Time & stamp,
-  const core::FSMEvent & romea_fsm_event);
+  const rclcpp::Time & stamp, const core::FSMEvent & romea_fsm_event);
 
 void to_romea(const romea_common_msgs::msg::FSMState & msg, core::FSMState & fsm_state);
 

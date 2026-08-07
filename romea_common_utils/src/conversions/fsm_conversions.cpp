@@ -22,8 +22,7 @@ namespace ros2
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const core::FSMState & romea_fsm_state,
-  romea_common_msgs::msg::FSMState & ros_fsm_state_msg)
+  const core::FSMState & romea_fsm_state, romea_common_msgs::msg::FSMState & ros_fsm_state_msg)
 {
   ros_fsm_state_msg.name = romea_fsm_state.name;
   ros_fsm_state_msg.id = romea_fsm_state.id;
@@ -39,8 +38,7 @@ romea_common_msgs::msg::FSMState to_ros_msg(const core::FSMState & romea_fsm_sta
 
 //-----------------------------------------------------------------------------
 void to_ros_msg(
-  const core::FSMEvent & romea_fsm_event,
-  romea_common_msgs::msg::FSMEvent & ros_fsm_event_msg)
+  const core::FSMEvent & romea_fsm_event, romea_common_msgs::msg::FSMEvent & ros_fsm_event_msg)
 {
   to_ros_msg(romea_fsm_event.previous_state, ros_fsm_event_msg.previous_state);
   to_ros_msg(romea_fsm_event.current_state, ros_fsm_event_msg.current_state);
@@ -70,8 +68,7 @@ void to_ros_msg(
 
 //-----------------------------------------------------------------------------
 romea_common_msgs::msg::FSMEvent to_ros_msg(
-  const rclcpp::Time & stamp,
-  const core::FSMEvent & romea_fsm_event)
+  const rclcpp::Time & stamp, const core::FSMEvent & romea_fsm_event)
 {
   romea_common_msgs::msg::FSMEvent ros_fsm_event_msg;
   to_ros_msg(stamp, romea_fsm_event, ros_fsm_event_msg);

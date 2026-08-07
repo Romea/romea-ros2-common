@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "gtest/gtest.h"
-
 #include "romea_common_utils/conversions/fsm_conversions.hpp"
 
 TEST(TestFSMConversions, from_romea_to_ros_state_msg)

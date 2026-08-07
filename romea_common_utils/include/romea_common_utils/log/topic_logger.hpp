@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_COMMON_UTILS__LOG__TOPICLOGGER_HPP_
-#define ROMEA_COMMON_UTILS__LOG__TOPICLOGGER_HPP_
+#ifndef ROMEA_COMMON_UTILS__LOG__TOPIC_LOGGER_HPP_
+#define ROMEA_COMMON_UTILS__LOG__TOPIC_LOGGER_HPP_
 
+// std
 #include <memory>
+#include <string>
+#include <utility>
+
+// ros2
 #include <rclcpp/logging.hpp>
+
+// romea
 #include <romea_common_msgs/msg/data_logger.hpp>
 #include <romea_common_utils/publishers/ros_publisher.hpp>
 #include <romea_core_common/log/Logger.hpp>
@@ -38,8 +45,7 @@ public:
     const rclcpp::QoS & qos,
     const Options & options,
     bool activated)
-  : node_(std::move(node)),
-    pub_(node_, topic_name, qos, options, activated)
+  : node_(std::move(node)), pub_(node_, topic_name, qos, options, activated)
   {
   }
 
@@ -86,4 +92,4 @@ private:
 
 }  // namespace romea::ros2
 
-#endif
+#endif  // ROMEA_COMMON_UTILS__LOG__TOPIC_LOGGER_HPP_
